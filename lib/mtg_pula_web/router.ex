@@ -1,0 +1,34 @@
+defmodule MtgPulaWeb.Router do
+  use MtgPulaWeb, :router
+  use Plug.ErrorHandler
+
+  defp handle_errors(conn, %{reason: %Phoenix.Router.NoRouteError{message: message}}) do
+    conn |> json(%{errors: message})|>halt()
+   end
+
+   defp handle_errors(conn, %{reason: %{message: message}})do
+    conn|> json(%{errors: message}) |>halt()
+   end
+  pipeline :api do
+    plug :accepts, ["json"]
+    plug :fetch_session
+  end
+  pipeline :auth do
+    plug MtgPulaWeb.Auth.Pipeline
+    plug MtgPulaWeb.Auth.SetAccount
+  end
+  scope "/api", MtgPulaWeb do
+    pipe_through :api
+
+    get "/", DeafaultController, :index
+
+    post "/accounts/create", AccountController, :create
+    post "/accounts/sign_in", AccountController, :sign_in
+  end
+  scope "/api", MtgPulaWeb do
+    pipe_through [:api, :auth]
+    get "/accounts/by_id/:id", AccountController, :show
+    patch "/accounts/update", AccountController, :update
+    post "/accounts/sign_out", AccountController, :sign_out
+  end
+end
