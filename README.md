@@ -29,3 +29,7 @@
 * test schemas  - Complete!
  * add unit tests for schema - Complete!
 
+* Create endpoints for each schema Crud Operation
+ 
+* define tournament pairing logic 
+
