@@ -20,7 +20,7 @@
 *gives endpoints to create, manage and run tournaments
 *defined by tournament, players and matches schema
 
-###To Do/Done:
+### To Do/Done:
 
 * define schemas - Complete!
    * generate - Complete!
