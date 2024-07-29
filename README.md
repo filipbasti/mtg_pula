@@ -16,9 +16,9 @@
 
 
 ## Module 2 - Tournament
-*defines tournament logic 
-*gives endpoints to create, manage and run tournaments
-*defined by tournament, players and matches schema
+* defines tournament logic 
+* gives endpoints to create, manage and run tournaments
+* defined by tournament, players and matches schema
 
 ### To Do/Done:
 
