@@ -1,18 +1,19 @@
-# MtgPula
+# MtgPula #
 
-To start your Phoenix server:
+ ## Module 1  - accounts and users
+* defines authentication and authorization logic
+* defines user parameters
+### To Do: 
+* register controller - Complete!
+* login controller - Complete!
+  * returns token and saves it in database
+  * saves account into session
+* signout complete - Complete
+  * revokes tokens from database
+  * dismantles the session
+* "middleware" to check if the user changing data is that user
+  * needs to be refactored to be reusable
 
-  * Run `mix setup` to install and setup dependencies
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
-
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
-
-## Learn more
-
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+## Module 2 - Tournament
+### TBD
