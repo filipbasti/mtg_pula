@@ -11,9 +11,21 @@
 * signout complete - Complete
   * revokes tokens from database
   * dismantles the session
-* "middleware" to check if the user changing data is that user
-  * needs to be refactored to be reusable
+* "middleware" to check if the user changing data is that user - complete!
+  * needs to be refactored to be reusable - complete!
 
 
 ## Module 2 - Tournament
-### TBD
+*defines tournament logic 
+*gives endpoints to create, manage and run tournaments
+*defined by tournament, players and matches schema
+
+###To Do/Done:
+
+* define schemas - Complete!
+   * generate - Complete!
+   * refactor for needs? - Complete!
+   
+* test schemas  - Complete!
+ * add unit tests for schema - Complete!
+
