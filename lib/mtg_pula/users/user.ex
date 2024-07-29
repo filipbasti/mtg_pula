@@ -1,7 +1,7 @@
 defmodule MtgPula.Users.User do
   use Ecto.Schema
   import Ecto.Changeset
-
+  @optional_fields [:id, :biography, :full_name, :gender, :inserted_at, :updated_at]
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "users" do
@@ -10,13 +10,17 @@ defmodule MtgPula.Users.User do
     field :biography, :string
     belongs_to :account, MtgPula.Accounts.Account
 
+    has_many :player, MtgPula.Tournaments.Player
+    has_many :tournament, MtgPula.Tournaments.Tournament
     timestamps(type: :utc_datetime)
   end
-
+  defp all_fields do
+    __MODULE__.__schema__(:fields)
+  end
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:full_name, :gender, :biography])
-    |> validate_required([:full_name, :gender, :biography])
+    |> cast(attrs, all_fields())
+    |> validate_required(all_fields() -- @optional_fields)
   end
 end

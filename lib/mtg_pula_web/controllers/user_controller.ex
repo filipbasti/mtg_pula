@@ -3,9 +3,9 @@ defmodule MtgPulaWeb.UserController do
 
   alias MtgPula.Users
   alias MtgPula.Users.User
-
   action_fallback MtgPulaWeb.FallbackController
-
+  import MtgPulaWeb.Auth.AuthorizedPlug
+  plug :is_authorized when action in [:update, :delete]
   def index(conn, _params) do
     users = Users.list_users()
     render(conn, :index, users: users)
@@ -15,7 +15,6 @@ defmodule MtgPulaWeb.UserController do
     with {:ok, %User{} = user} <- Users.create_user(user_params) do
       conn
       |> put_status(:created)
-
       |> render(:show, user: user)
     end
   end
@@ -25,10 +24,8 @@ defmodule MtgPulaWeb.UserController do
     render(conn, :show, user: user)
   end
 
-  def update(conn, %{"id" => id, "user" => user_params}) do
-    user = Users.get_user!(id)
-
-    with {:ok, %User{} = user} <- Users.update_user(user, user_params) do
+  def update(conn, %{"user" => user_params}) do
+    with {:ok, %User{} = user} <- Users.update_user(conn.assigns.account.user, user_params) do
       render(conn, :show, user: user)
     end
   end

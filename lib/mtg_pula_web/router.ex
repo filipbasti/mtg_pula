@@ -1,4 +1,5 @@
 defmodule MtgPulaWeb.Router do
+
   use MtgPulaWeb, :router
   use Plug.ErrorHandler
 
@@ -30,5 +31,8 @@ defmodule MtgPulaWeb.Router do
     get "/accounts/by_id/:id", AccountController, :show
     patch "/accounts/update", AccountController, :update
     post "/accounts/sign_out", AccountController, :sign_out
+    post "/accounts/refresh_session", AccountController, :refresh_session
+    put "/users/update", UserController, :update
+    post "/tournaments/create", TournamentController, :create
   end
 end
