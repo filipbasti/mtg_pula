@@ -44,7 +44,8 @@ defmodule MtgPula.MixProject do
       {:bandit, "~> 1.2"},
       {:bcrypt_elixir, "~> 3.0"},
       {:guardian, "~> 2.3"},
-      {:guardian_db, "~> 2.0"}
+      {:guardian_db, "~> 2.0"},
+      {:faker, "~> 0.18", only: :test}
 
 
     ]

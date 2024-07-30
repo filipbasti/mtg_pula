@@ -1,7 +1,6 @@
 defmodule MtgPula.Schema.AccountTest do
-  use ExUnit.Case
+  use MtgPula.Support.SchemaCase
   alias MtgPula.Accounts.Account
-  alias Ecto.Changeset
   @expected_fields_with_types [
     {:id, :binary_id},
     {:email, :string},
@@ -28,13 +27,7 @@ defmodule MtgPula.Schema.AccountTest do
 end
   describe "changeset/2" do
     test "returns a valid changeset when given valid arguments"do
-      valid_params= %{
-        "id" => Ecto.UUID.generate(),
-        "email" => "test@email.com",
-        "hash_password" => "test password",
-        "inserted_at" => DateTime.truncate(DateTime.utc_now(), :second),
-        "updated_at" => DateTime.truncate(DateTime.utc_now(), :second)
-      }
+      valid_params= valid_params(@expected_fields_with_types)
       changeset = Account.changeset(%Account{}, valid_params)
 
       assert %Changeset{valid?: true, changes: changes} = changeset
@@ -51,15 +44,30 @@ end
       end
 
     end
+    test "error: returns error changeset when an email is reused" do
+      Ecto.Adapters.SQL.Sandbox.checkout(MtgPula.Repo)
+      {:ok, existing_account} =
+        %Account{}
+        |> Account.changeset(valid_params(@expected_fields_with_types))
+        |>MtgPula.Repo.insert()
+        IO.inspect(existing_account.email)
+      changeset_with_repeated_email =
+        %Account{}
+        |> Account.changeset(valid_params(@expected_fields_with_types) |> Map.put("email", existing_account.email))
+
+
+        IO.inspect(changeset_with_repeated_email)
+      assert {:error, %Changeset{valid?: false, errors: errors}} =
+        MtgPula.Repo.insert(changeset_with_repeated_email)
+      assert errors[:email], "The field :email is missing in errors."
+
+      {_,meta } = errors[:email]
+      assert meta[:constraint ]== :unique, "The validation type, #{meta[:validation]}, is inncorect"
+
+    end
 
     test "error: returns an error changeset when given un-castable values" do
-      invalid_params= %{
-        "id" =>  DateTime.truncate(DateTime.utc_now(), :second),
-        "email" =>  DateTime.truncate(DateTime.utc_now(), :second),
-        "hash_password" =>  DateTime.truncate(DateTime.utc_now(), :second),
-        "inserted_at" => "updated to a string",
-        "updated_at" => "updated to a striong"
-      }
+      invalid_params= invalid_params(@expected_fields_with_types)
       assert %Changeset{valid?: false, errors: errors} = Account.changeset(%Account{}, invalid_params)
 
       for {field, _} <- @expected_fields_with_types do

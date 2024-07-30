@@ -1,7 +1,6 @@
 defmodule MtgPula.Schema.UserTest do
-  use ExUnit.Case
   alias MtgPula.Users.User
-  alias Ecto.Changeset
+  use MtgPula.Support.SchemaCase
   @expected_fields_with_types [
     {:account_id, :binary_id},
      {:biography, :string},
@@ -31,15 +30,7 @@ end
 
 describe "changeset/2" do
   test "returns a valid changeset when given valid arguments"do
-    valid_params= %{
-      "id" => Ecto.UUID.generate(),
-      "biography" => "any biography",
-      "gender" => "male",
-      "full_name" => "Filip Bastijanić",
-      "account_id" => Ecto.UUID.generate(),
-      "inserted_at" => DateTime.truncate(DateTime.utc_now(), :second),
-      "updated_at" => DateTime.truncate(DateTime.utc_now(), :second)
-    }
+    valid_params= valid_params(@expected_fields_with_types)
     changeset = User.changeset(%User{}, valid_params)
 
     assert %Changeset{valid?: true, changes: changes} = changeset
@@ -56,15 +47,7 @@ describe "changeset/2" do
   end
 
   test "error: returns an error changeset when given un-castable values" do
-    invalid_params= %{
-      "id" => DateTime.truncate(DateTime.utc_now(), :second),
-      "biography" => DateTime.truncate(DateTime.utc_now(), :second),
-      "gender" => DateTime.truncate(DateTime.utc_now(), :second),
-      "full_name" => DateTime.truncate(DateTime.utc_now(), :second),
-      "account_id" => DateTime.truncate(DateTime.utc_now(), :second),
-      "inserted_at" => Ecto.UUID.generate(),
-      "updated_at" => Ecto.UUID.generate(),
-    }
+    invalid_params= invalid_params(@expected_fields_with_types)
     assert %Changeset{valid?: false, errors: errors} = User.changeset(%User{}, invalid_params)
 
     for {field, _} <- @expected_fields_with_types do

@@ -1,7 +1,9 @@
 defmodule MtgPula.Schema.PlayerTest do
-  use ExUnit.Case
+
   alias MtgPula.Tournaments.Player
-  alias Ecto.Changeset
+
+  use MtgPula.Support.SchemaCase
+
   @expected_fields_with_types [
     {:id, :binary_id},
    {:deck, :string},
@@ -34,17 +36,7 @@ end
 describe "changeset/2" do
 
   test "returns a valid changeset when given valid arguments"do
-    valid_params = %{
-      "id" => Ecto.UUID.generate(),
-      "deck" => "Blue-White Control",
-      "opponents" => [Ecto.UUID.generate(), Ecto.UUID.generate()],
-      "points" => 12,
-      "had_bye" => false,
-      "tournament_id" => Ecto.UUID.generate(),
-      "user_id" => Ecto.UUID.generate(),
-      "inserted_at" => DateTime.truncate(DateTime.utc_now(), :second),
-      "updated_at" => DateTime.truncate(DateTime.utc_now(), :second)
-    }
+    valid_params = valid_params(@expected_fields_with_types)
     changeset = Player.changeset(%Player{}, valid_params)
 
     assert %Changeset{valid?: true, changes: changes} = changeset
@@ -56,22 +48,15 @@ describe "changeset/2" do
 
         assert actual == expected, "Values did not match for field: #{field}\n expected: #{inspect(expected)} \n actual: #{inspect(actual)} "
 
+
     end
 
   end
 
+
+
   test "error: returns an error changeset when given un-castable values" do
-    invalid_params = %{
-      "id" => DateTime.truncate(DateTime.utc_now(), :second),  # Should be a valid UUID
-      "deck" => 123,  # Should be a string
-      "opponents" => "not-an-array-of-uuids",  # Should be an array of UUIDs
-      "points" => "twelve",  # Should be an integer
-      "had_bye" => "yes",  # Should be a boolean
-      "tournament_id" => DateTime.truncate(DateTime.utc_now(), :second),  # Should be a valid UUID
-      "user_id" => 456,  # Should be a valid UUID
-      "inserted_at" => 2411142,  # Should be a UTC datetime
-      "updated_at" => 789  # Should be a UTC datetime
-    }
+    invalid_params = invalid_params(@expected_fields_with_types)
     assert %Changeset{valid?: false, errors: errors} = Player.changeset(%Player{}, invalid_params)
 
     for {field, _} <- @expected_fields_with_types do

@@ -6,8 +6,8 @@ defmodule MtgPula.Tournaments.Tournament do
   @foreign_key_type :binary_id
   schema "tournaments" do
     field :name, :string
-    field :finished, :boolean, default: false
-    field :current_round, :integer, default: 1
+    field :finished, :boolean
+    field :current_round, :integer
     field :number_of_rounds, :integer
     has_many :match, MtgPula.Tournaments.Match
     has_many :player, MtgPula.Tournaments.Player

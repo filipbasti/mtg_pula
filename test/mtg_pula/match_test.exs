@@ -1,7 +1,7 @@
 defmodule MtgPula.Schema.MatchTest do
-  use ExUnit.Case
+ use MtgPula.Support.SchemaCase
   alias MtgPula.Tournaments.Match
-  alias Ecto.Changeset
+
 
   @expected_fields_with_types [
     {:id, :binary_id},
@@ -35,20 +35,7 @@ defmodule MtgPula.Schema.MatchTest do
 
   describe "changeset/2" do
     test "returns a valid changeset when given valid arguments" do
-      valid_params = %{
-        "id" => Ecto.UUID.generate(),
-        "player1_id" => Ecto.UUID.generate(),
-        "player2_id" => Ecto.UUID.generate(),
-        "winner_id" => Ecto.UUID.generate(),
-        "tournament_id" => Ecto.UUID.generate(),
-        "round" => 1,
-        "player_1_wins" => 3,
-        "player_2_wins" => 2,
-        "is_draw" => false,
-        "on_play" => true,
-        "inserted_at" => DateTime.truncate(DateTime.utc_now(), :second),
-        "updated_at" => DateTime.truncate(DateTime.utc_now(), :second)
-      }
+      valid_params = valid_params(@expected_fields_with_types)
       changeset = Match.changeset(%Match{}, valid_params)
 
       assert %Changeset{valid?: true, changes: changes} = changeset
@@ -62,20 +49,7 @@ defmodule MtgPula.Schema.MatchTest do
     end
 
     test "error: returns an error changeset when given un-castable values" do
-      invalid_params = %{
-        "id" => DateTime.truncate(DateTime.utc_now(), :second),
-        "player1_id" => DateTime.truncate(DateTime.utc_now(), :second),
-        "player2_id" => DateTime.truncate(DateTime.utc_now(), :second),
-        "winner_id" => DateTime.truncate(DateTime.utc_now(), :second),
-        "tournament_id" => DateTime.truncate(DateTime.utc_now(), :second),
-        "round" => "first",
-        "player_1_wins" => "three",
-        "player_2_wins" => "two",
-        "is_draw" => "maybe",
-        "on_play" => "yes",
-        "inserted_at" => "not a datetime",
-        "updated_at" => "not a datetime"
-      }
+      invalid_params = invalid_params(@expected_fields_with_types)
       assert %Changeset{valid?: false, errors: errors} = Match.changeset(%Match{}, invalid_params)
 
       for {field, _} <- @expected_fields_with_types do

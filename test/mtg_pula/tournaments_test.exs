@@ -1,7 +1,7 @@
 defmodule MtgPula.Schema.TournamentTest do
-  use ExUnit.Case
+  use MtgPula.Support.SchemaCase
   alias MtgPula.Tournaments.Tournament
-  alias Ecto.Changeset
+
   @expected_fields_with_types [
     {:id, :binary_id},
     {:user_id, :binary_id},
@@ -14,7 +14,7 @@ defmodule MtgPula.Schema.TournamentTest do
   ]
 
   @optional [
-  :id, :inserted_at, :updated_at, :current_round, :finished
+  :id, :inserted_at, :updated_at, :current_round
   ]
 
   describe "fields and types" do
@@ -32,16 +32,7 @@ end
 
 describe "changeset/2" do
   test "returns a valid changeset when given valid arguments"do
-    valid_params= %{
-      "id" => Ecto.UUID.generate(),
-      "user_id" =>Ecto.UUID.generate(),
-      "name" => "any name",
-      "finished" => true,
-      "current_round" => 2,
-      "number_of_rounds" => 4,
-      "inserted_at" => DateTime.truncate(DateTime.utc_now(), :second),
-      "updated_at" => DateTime.truncate(DateTime.utc_now(), :second)
-    }
+    valid_params= valid_params(@expected_fields_with_types)
     changeset = Tournament.changeset(%Tournament{}, valid_params)
 
     assert %Changeset{valid?: true, changes: changes} = changeset
@@ -58,16 +49,7 @@ describe "changeset/2" do
   end
 
   test "error: returns an error changeset when given un-castable values" do
-    invalid_params= %{
-      "id" => DateTime.truncate(DateTime.utc_now(), :second),
-      "user_id" =>DateTime.truncate(DateTime.utc_now(), :second),
-      "name" => DateTime.truncate(DateTime.utc_now(), :second),
-      "finished" => DateTime.truncate(DateTime.utc_now(), :second),
-      "current_round" => DateTime.truncate(DateTime.utc_now(), :second),
-      "number_of_rounds" => DateTime.truncate(DateTime.utc_now(), :second),
-      "inserted_at" => "sad sam insertao",
-      "updated_at" => "sad sam updateao"
-    }
+    invalid_params= invalid_params(@expected_fields_with_types)
     assert %Changeset{valid?: false, errors: errors} = Tournament.changeset(%Tournament{}, invalid_params)
 
     for {field, _} <- @expected_fields_with_types do

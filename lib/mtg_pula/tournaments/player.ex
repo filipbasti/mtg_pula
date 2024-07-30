@@ -7,7 +7,7 @@ defmodule MtgPula.Tournaments.Player do
   schema "players" do
     field :deck, :string
     field :opponents, {:array, Ecto.UUID}
-    field :points, :integer, default: 0
+    field :points, :integer
     field :had_bye, :boolean
     belongs_to :tournament, MtgPula.Tournaments.Tournament
     belongs_to :user, MtgPula.Users.User
@@ -29,6 +29,7 @@ defmodule MtgPula.Tournaments.Player do
     player
     |> cast(attrs, all_fields())
     |> validate_required(all_fields() -- @optional_fields)
-    |> unique_constraint(:user_id, name: :players_tournament_id_user_id_index)
+    |> foreign_key_constraint(:user_id)
+    |> unique_constraint(:user_id, name: :players_user_id_fkey)
   end
 end
