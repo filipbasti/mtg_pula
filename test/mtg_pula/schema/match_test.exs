@@ -13,7 +13,7 @@ defmodule MtgPula.Schema.MatchTest do
     {:player_1_wins, :integer},
     {:player_2_wins, :integer},
     {:is_draw, :boolean},
-    {:on_play, :boolean},
+    {:on_play_id, :binary_id},
     {:inserted_at, :utc_datetime},
     {:updated_at, :utc_datetime}
   ]

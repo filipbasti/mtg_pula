@@ -18,9 +18,7 @@ defmodule MtgPula.Support.SchemaCase do
       boolean: fn -> Enum.random([true, false]) end,
 
     }
-    array_type_value = fn
-      {:array, Ecto.UUID} -> Enum.map(1..Enum.random(1..5), fn _ -> Faker.UUID.v4() end)
-    end
+
     for {field, type}<- fields_with_types, into: %{} do
 
       case field do

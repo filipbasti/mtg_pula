@@ -9,8 +9,7 @@ defmodule MtgPula.Tournaments.Match do
     field :player_1_wins, :integer
     field :player_2_wins, :integer
     field :is_draw, :boolean
-    field :on_play, :boolean
-
+    belongs_to :on_play, MtgPula.Tournaments.Player, foreign_key: :on_play_id, type: :binary_id
     belongs_to :player1, MtgPula.Tournaments.Player, foreign_key: :player1_id, type: :binary_id
     belongs_to :player2, MtgPula.Tournaments.Player, foreign_key: :player2_id, type: :binary_id
     belongs_to :winner, MtgPula.Tournaments.Player, foreign_key: :winner_id, type: :binary_id

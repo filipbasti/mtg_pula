@@ -50,13 +50,13 @@ end
         %Account{}
         |> Account.changeset(valid_params(@expected_fields_with_types))
         |>MtgPula.Repo.insert()
-        IO.inspect(existing_account.email)
+
       changeset_with_repeated_email =
         %Account{}
         |> Account.changeset(valid_params(@expected_fields_with_types) |> Map.put("email", existing_account.email))
 
 
-        IO.inspect(changeset_with_repeated_email)
+
       assert {:error, %Changeset{valid?: false, errors: errors}} =
         MtgPula.Repo.insert(changeset_with_repeated_email)
       assert errors[:email], "The field :email is missing in errors."
