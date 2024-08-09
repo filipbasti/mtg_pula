@@ -59,7 +59,7 @@ defmodule MtgPula.Support.Factory do
         round: Faker.random_between(1, 5),
      player_1_wins: nil,
        player_2_wins: nil,
-     is_draw: Enum.random([true,false]),
+     is_draw: false,
 
         player1: player1,
         player2: player2,
@@ -97,7 +97,16 @@ defmodule MtgPula.Support.Factory do
 
   defp set_on_play(%Match{player1: p1_id, player2: p2_id} = match) do
     play_id = Enum.random([p1_id, p2_id])
-    IO.inspect(play_id)
+
     %{match | on_play: play_id}
+  end
+
+  defp set_is_draw(%Match{player_1_wins: p1_wins, player_2_wins: p2_wins} = match) do
+    if p1_wins == p2_wins do
+      %{match | is_draw: true}
+
+    else
+      match
+    end
   end
 end

@@ -242,11 +242,36 @@ defmodule MtgPula.Tournaments do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_match(attrs \\ %{}) do
-    %Match{}
-    |> Match.changeset(attrs)
-    |> Repo.insert()
+
+def update_played(attrs) do
+  player1_id = attrs["player1_id"]
+  player2_id = attrs["player2_id"]
+  if player1_id || player2_id != nil do
+  with player1 <- get_player!(player1_id),
+       player2 when not is_nil(player2) <- get_player!(player2_id) do
+
+    updated_player1 = %{opponents: [player2.id | player1.opponents]}
+    updated_player2 = %{opponents: [player1.id | player2.opponents]}
+
+    update_player(player1, updated_player1)
+    update_player(player2, updated_player2)
+
+    :ok
+  else
+    _ -> {:error, "One or both players not found"}
   end
+end
+end
+def create_match(attrs \\ %{}) do
+    _ = update_played(attrs)
+
+      %Match{}
+      |> Match.changeset(attrs)
+      |> Repo.insert()
+
+
+
+end
 
   @doc """
   Updates a match.
@@ -304,5 +329,6 @@ defmodule MtgPula.Tournaments do
     |> Repo.all()
     |>Repo.preload([player: [:user]])
   end
+
 
 end

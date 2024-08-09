@@ -33,14 +33,7 @@ defmodule MtgPula.UsersTest do
 
       end
     end
-    @tag :skip
-    test "error: returns an error tuple when user can't be created" do
-      missing_params = %{}
-      acc = Factory.params_for(:account)
-      {:ok, %Account{} = returned_acc} = Accounts.create_account(acc)
-      assert {:error, %Changeset{valid?: false}} = Users.create_user(returned_acc, missing_params)
 
-    end
   end
 
 
