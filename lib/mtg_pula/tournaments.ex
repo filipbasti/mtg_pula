@@ -329,6 +329,34 @@ end
     |> Repo.all()
     |>Repo.preload([player: [:user]])
   end
+  def standings_on_tournament(tournament_id) do
+    query = from p in Player,
+      where: p.tournament_id == ^tournament_id,
+      order_by: [desc: :points]
+    standings = Repo.all(query)
 
+  end
+  def calculate_omw(standings, tournament) do
 
+    Enum.each(standings, fn x ->
+      calculate_procentage_omw(x, tournament)
+    end)
+  end
+
+  defp calculate_procentage_omw(player, tournament)do
+    running_count = 0
+    Enum.each(player.opponents, fn y ->
+      opponent = Repo.get!(Player, player)
+      query = from w in matches,
+      where: w.winner == opponent and winner.tournament_id = opponent.tournament_id,
+      select: count()
+      match_wins = Repo.one(query)
+      procentage = match_wins/tournament.current_round
+      if procentage < 0.33 do
+        procentage = 0.33
+      end
+      procentage
+
+     end)
+   end
 end

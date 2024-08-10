@@ -1,6 +1,7 @@
 defmodule MtgPula.TournamentsTest do
   use MtgPula.Support.DataCase
-  alias MtgPula.{Tournaments, Tournaments.Tournament}
+  alias MtgPula.{Tournaments, Tournaments.Tournament, Tournaments.Player}
+  import Ecto.Query
 
   setup do
     Ecto.Adapters.SQL.Sandbox.checkout(MtgPula.Repo)
@@ -32,6 +33,23 @@ defmodule MtgPula.TournamentsTest do
 
       assert {:error, %Changeset{valid?: false}} = Tournaments.create_tournament(missing_params)
 
+    end
+
+    test "Function returns standings sorted by points, omw, gw and ogp in that order descending" do
+      tourney = Factory.insert(:tournament)
+
+      Factory.insert_list(8, :player, tournament: tourney)
+      assert actual_list = Tournaments.standings_on_tournament(tourney.id)
+
+
+
+    query = from p in Player,
+    where: p.tournament_id == ^tourney.id,
+    order_by: [desc: :points]
+      expected_list = Repo.all(query)
+
+
+      assert actual_list == expected_list, "The list is not sorted so these are not final standings "
     end
   end
 

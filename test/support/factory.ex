@@ -36,7 +36,11 @@ defmodule MtgPula.Support.Factory do
     number_of_rounds: Enum.random(1..10),
     user: build(:user)
   }
+  |>set_current_round()
 
+  end
+  defp set_current_round(tournament) do
+    %{tournament | current_round: tournament.number_of rounds-3}
   end
   def player_factory do
     %Player{
@@ -49,6 +53,7 @@ defmodule MtgPula.Support.Factory do
 
     }
   end
+
 
   def match_factory do
 
@@ -109,4 +114,6 @@ defmodule MtgPula.Support.Factory do
       match
     end
   end
+
+
 end
