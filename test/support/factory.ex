@@ -40,12 +40,12 @@ defmodule MtgPula.Support.Factory do
 
   end
   defp set_current_round(tournament) do
-    %{tournament | current_round: tournament.number_of rounds-3}
+    %{tournament | current_round: 2}
   end
   def player_factory do
     %Player{
     deck: Faker.Lorem.word(),
-    opponents: Enum.map(1..Enum.random(1..5), fn _ -> Faker.UUID.v4() end),
+    opponents: Enum.map(1..3, fn _ -> Faker.UUID.v4() end),
     points: Faker.random_between(1, 10),
     had_bye: Enum.random([true, false]),
     tournament: build(:tournament),
@@ -59,6 +59,7 @@ defmodule MtgPula.Support.Factory do
 
     player1 = insert(:player)
     player2 = insert(:player)
+
     %Match{
 
         round: Faker.random_between(1, 5),
@@ -75,12 +76,13 @@ defmodule MtgPula.Support.Factory do
     |> set_wins()
     |> set_winner()
     |>set_on_play()
+    |> set_is_draw()
 
   end
 
   defp set_wins(match) do
-    player_1_wins = Faker.random_between(0, 2)
-    player_2_wins = Faker.random_between(0, 2)
+    player_1_wins = Faker.random_between(1, 2)
+    player_2_wins = Faker.random_between(1, 2)
 
     if player_1_wins + player_2_wins <= 3 do
       %{match | player_1_wins: player_1_wins, player_2_wins: player_2_wins}

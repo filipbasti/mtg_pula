@@ -334,29 +334,101 @@ end
       where: p.tournament_id == ^tournament_id,
       order_by: [desc: :points]
     standings = Repo.all(query)
+    standings
 
   end
-  def calculate_omw(standings, tournament) do
+  def calculate_tiebreakers(standings, tournament) do
+    new_standings = []
 
-    Enum.each(standings, fn x ->
-      calculate_procentage_omw(x, tournament)
+    new_standings = Enum.reduce(standings, [], fn x, acc ->
+      gw = calculate_gw(x, tournament)
+      omw= calculate_procentage_omw(x, tournament)
+
+
+      ogp = calculate_ogp(x, tournament)
+      new_player = x
+      |>Map.put_new(:omw, omw)
+      |>Map.put_new(:gw, gw)
+      |>Map.put_new(:ogp, ogp)
+
+
+      acc ++ [new_player]
     end)
+
+    new_standings
   end
 
-  defp calculate_procentage_omw(player, tournament)do
-    running_count = 0
-    Enum.each(player.opponents, fn y ->
-      opponent = Repo.get!(Player, player)
-      query = from w in matches,
-      where: w.winner == opponent and winner.tournament_id = opponent.tournament_id,
-      select: count()
-      match_wins = Repo.one(query)
-      procentage = match_wins/tournament.current_round
-      if procentage < 0.33 do
-        procentage = 0.33
-      end
-      procentage
+  def calculate_procentage_omw(player, tournament) do
+    adds_up = Enum.reduce(player.opponents, [], fn y, acc ->
+      {_tail, casted} = Ecto.UUID.cast(y)
 
-     end)
-   end
+      opponent = Repo.one(from o in Player, where: o.id == ^casted)
+
+      query = from w in Match, where: w.winner_id == ^casted, select: count()
+      match_wins = Repo.one(query) || 0  # Default to 0 if nil
+
+      # Calculate procentage
+      procentage =
+        if tournament.current_round != 0 do
+          match_wins / tournament.current_round
+        else
+          0
+        end
+
+      # Ensure minimum procentage of 0.33
+      procentage = if procentage < 0.33, do: 0.33, else: procentage
+
+      # Accumulate the result
+      acc ++ [procentage]
+    end)
+
+
+    procentage = Enum.sum(adds_up)/ Enum.count(adds_up)*100
+    procentage
+  end
+  def calculate_gw(player, tournament) do
+    # Ensure player_id is used as a string
+
+    player1_wins_query =
+      from m in Match,
+        where: m.player1_id == ^player.id,
+        select: sum(m.player_1_wins)
+
+    player2_wins_query =
+          from m in Match,
+            where: m.player2_id == ^player.id,
+            select: sum(m.player_2_wins)
+    player1_wins = Repo.one(player1_wins_query) || 0
+    player2_wins = Repo.one(player2_wins_query) || 0
+    total_wins = player1_wins + player2_wins
+
+    total_games_query =
+      from m in Match,
+        where: m.player1_id == ^player.id or m.player2_id == ^player.id,
+        select: sum(m.player_1_wins+m.player_2_wins)
+
+    total_games = Repo.one(total_games_query)
+
+    # Calculate win percentage
+    win_percentage = if total_games > 0 do
+      (total_wins / total_games) * 100
+    else
+      0
+    end
+    IO.inspect(win_percentage)
+    win_percentage
+
+  end
+
+  def calculate_ogp(player, tournament) do
+    adds_up = Enum.reduce(player.opponents, [], fn y, acc ->
+      {_tail, casted} = Ecto.UUID.cast(y)
+      opponent = Repo.one(from o in Player, where: o.id == ^casted)
+    gw = calculate_gw(opponent, tournament)
+    acc ++ [gw]
+
+    end)
+    procentage = Enum.sum(adds_up)/ Enum.count(adds_up)
+    procentage
+  end
 end

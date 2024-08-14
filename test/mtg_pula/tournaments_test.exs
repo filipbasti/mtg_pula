@@ -38,9 +38,27 @@ defmodule MtgPula.TournamentsTest do
     test "Function returns standings sorted by points, omw, gw and ogp in that order descending" do
       tourney = Factory.insert(:tournament)
 
-      Factory.insert_list(8, :player, tournament: tourney)
-      assert actual_list = Tournaments.standings_on_tournament(tourney.id)
+     player_list = Factory.insert_list(8, :player, [tournament: tourney, opponents: []])
 
+     Enum.shuffle(player_list)
+     |> Enum.chunk_every(2)
+     |> Enum.each(fn [player1, player2] ->
+      Factory.insert(:match, [player1: player1, player2: player2, winner: player1])
+      Repo.update(Player.changeset(player1, %{opponents: [player2.id|player1.opponents]}))
+      Repo.update(Player.changeset(player2, %{opponents: [player1.id|player2.opponents]}))
+
+     end)
+     Enum.shuffle(player_list)
+     |> Enum.chunk_every(2)
+     |> Enum.each(fn [player1, player2] ->
+      Factory.insert(:match, [player1: player1, player2: player2, winner: player1])
+      Repo.update(Player.changeset(player1, %{opponents: [player2.id|player1.opponents]}))
+      Repo.update(Player.changeset(player2, %{opponents: [player1.id|player2.opponents]}))
+
+     end)
+
+      assert actual_list = Tournaments.standings_on_tournament(tourney.id)
+      IO.inspect(Tournaments.calculate_tiebreakers(actual_list, tourney))
 
 
     query = from p in Player,
@@ -51,6 +69,8 @@ defmodule MtgPula.TournamentsTest do
 
       assert actual_list == expected_list, "The list is not sorted so these are not final standings "
     end
+
+
   end
 
 
