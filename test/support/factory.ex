@@ -40,7 +40,7 @@ defmodule MtgPula.Support.Factory do
 
   end
   defp set_current_round(tournament) do
-    %{tournament | current_round: 2}
+    %{tournament | current_round: 1}
   end
   def player_factory do
     %Player{
@@ -65,41 +65,44 @@ defmodule MtgPula.Support.Factory do
         round: Faker.random_between(1, 5),
      player_1_wins: nil,
        player_2_wins: nil,
-     is_draw: false,
+     is_draw: nil,
 
         player1: player1,
         player2: player2,
         on_play_id: nil,
         winner_id: nil,
+
         tournament: player1.tournament
     }
+
     |> set_wins()
     |> set_winner()
     |>set_on_play()
-    |> set_is_draw()
+
+
+
 
   end
 
-  defp set_wins(match) do
-    player_1_wins = Faker.random_between(1, 2)
-    player_2_wins = Faker.random_between(1, 2)
+  defp set_wins(%Match{} = match) do
+    total_wins = Faker.random_between(1, 3)
+    player_1_wins = Faker.random_between(0, total_wins-1)
+    player_2_wins = total_wins - player_1_wins
 
-    if player_1_wins + player_2_wins <= 3 do
-      %{match | player_1_wins: player_1_wins, player_2_wins: player_2_wins}
-    else
-      set_wins(match)
+    %{match | player_1_wins: player_1_wins, player_2_wins: player_2_wins}
+  end
+  defp set_winner(%Match{player_1_wins: p1_wins, player_2_wins: p2_wins, player1: p1, player2: p2} = match) do
+    cond do
+      p1_wins > p2_wins ->
+
+        %{match | winner: p1}
+      p2_wins > p1_wins ->
+
+        %{match | winner: p2}
+      p1_wins == p2_wins ->
+
+        %{match | winner: nil, is_draw: true}
     end
-  end
-
-  defp set_winner(%Match{player_1_wins: p1_wins, player_2_wins: p2_wins} = match) do
-    winner_id =
-      cond do
-        p1_wins > p2_wins -> match.player1
-        p2_wins > p1_wins -> match.player2
-        true -> nil  # It's a draw
-      end
-
-    %{match | winner: winner_id}
   end
 
   defp set_on_play(%Match{player1: p1_id, player2: p2_id} = match) do
@@ -108,14 +111,7 @@ defmodule MtgPula.Support.Factory do
     %{match | on_play: play_id}
   end
 
-  defp set_is_draw(%Match{player_1_wins: p1_wins, player_2_wins: p2_wins} = match) do
-    if p1_wins == p2_wins do
-      %{match | is_draw: true}
 
-    else
-      match
-    end
-  end
 
 
 end

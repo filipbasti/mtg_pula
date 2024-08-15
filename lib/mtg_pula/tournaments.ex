@@ -331,14 +331,16 @@ end
   end
   def standings_on_tournament(tournament_id) do
     query = from p in Player,
-      where: p.tournament_id == ^tournament_id,
-      order_by: [desc: :points]
+      where: p.tournament_id == ^tournament_id
+
     standings = Repo.all(query)
+    tournament = Repo.get!(Tournament, tournament_id)
     standings
+    |> calculate_tiebreakers(tournament)
 
   end
   def calculate_tiebreakers(standings, tournament) do
-    new_standings = []
+
 
     new_standings = Enum.reduce(standings, [], fn x, acc ->
       gw = calculate_gw(x, tournament)
@@ -346,16 +348,40 @@ end
 
 
       ogp = calculate_ogp(x, tournament)
+      points = calculate_points(x)
       new_player = x
       |>Map.put_new(:omw, omw)
       |>Map.put_new(:gw, gw)
       |>Map.put_new(:ogp, ogp)
+      |>Map.put(:points, points)
+
 
 
       acc ++ [new_player]
     end)
 
     new_standings
+  end
+
+  def calculate_points(player)do
+    query_wins =
+      from m in Match,
+        where: m.winner_id == ^player.id,
+        select: count()
+    player_wins= Repo.one(query_wins)
+
+
+    q=  from m in Match,
+    where: (m.player1_id == ^player.id or m.player2_id == ^player.id) and m.is_draw== true,
+    select: count()
+    player_draws = Repo.one(q)
+    #IO.inspect(" draws:#{player_draws}  wins:#{player_wins}" )
+    points = player_wins*3 + player_draws
+    changeset = Player.changeset(player, %{points: points})
+   Repo.update(changeset)
+
+    points
+
   end
 
   def calculate_procentage_omw(player, tournament) do
@@ -386,6 +412,7 @@ end
     procentage = Enum.sum(adds_up)/ Enum.count(adds_up)*100
     procentage
   end
+
   def calculate_gw(player, tournament) do
     # Ensure player_id is used as a string
 
@@ -415,7 +442,7 @@ end
     else
       0
     end
-    IO.inspect(win_percentage)
+
     win_percentage
 
   end

@@ -43,31 +43,38 @@ defmodule MtgPula.TournamentsTest do
      Enum.shuffle(player_list)
      |> Enum.chunk_every(2)
      |> Enum.each(fn [player1, player2] ->
-      Factory.insert(:match, [player1: player1, player2: player2, winner: player1])
-      Repo.update(Player.changeset(player1, %{opponents: [player2.id|player1.opponents]}))
-      Repo.update(Player.changeset(player2, %{opponents: [player1.id|player2.opponents]}))
+    Factory.insert(:match, player1: player1, player2: player2, winner: player1, is_draw: false, player_1_wins: 2, player_2_wins: 1 )
+
+
+
+      Repo.update(Player.changeset(player1, %{opponents: player1.opponents ++ [player2.id]}))
+      Repo.update(Player.changeset(player2, %{opponents: player2.opponents ++ [player1.id]}))
 
      end)
-     Enum.shuffle(player_list)
-     |> Enum.chunk_every(2)
-     |> Enum.each(fn [player1, player2] ->
-      Factory.insert(:match, [player1: player1, player2: player2, winner: player1])
-      Repo.update(Player.changeset(player1, %{opponents: [player2.id|player1.opponents]}))
-      Repo.update(Player.changeset(player2, %{opponents: [player1.id|player2.opponents]}))
 
-     end)
+
+
 
       assert actual_list = Tournaments.standings_on_tournament(tourney.id)
-      IO.inspect(Tournaments.calculate_tiebreakers(actual_list, tourney))
 
+      actual_list =
+        Enum.sort_by(actual_list, &{&1.points, &1.omw, &1.gw, &1.ogp}, :desc)
+        Enum.each(actual_list, fn x ->
+          IO.inspect("#{x.user_id} -- #{x.deck} -- #{x.points} -- #{x.omw}")end)
 
-    query = from p in Player,
-    where: p.tournament_id == ^tourney.id,
-    order_by: [desc: :points]
-      expected_list = Repo.all(query)
+        query = from p in Player,
+        where: p.tournament_id == ^tourney.id
 
+       standings = Repo.all(query)
+      Repo.get!(Tournament, tourney.id)
+      expected_list = standings
+      |> Tournaments.calculate_tiebreakers(tourney)
 
-      assert actual_list == expected_list, "The list is not sorted so these are not final standings "
+      expected_list =
+        Enum.sort_by(expected_list, &{&1.points, &1.omw, &1.gw, &1.ogp}, :desc)
+        Enum.each(expected_list, fn x ->
+        IO.inspect("#{x.user_id} -- #{x.deck} -- #{x.points} -- #{x.omw}")end)
+      assert actual_list == expected_list, "The list is not sorted so these are not final standings # "
     end
 
 
