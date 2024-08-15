@@ -70,8 +70,7 @@ defmodule MtgPula.TournamentsTest do
       expected_list = standings
       |> Tournaments.calculate_tiebreakers(tourney)
 
-      expected_list =
-        Enum.sort_by(expected_list, &{&1.points, &1.omw, &1.gw, &1.ogp}, :desc)
+      expected_list = Enum.sort_by(expected_list, &{&1.points, &1.omw, &1.gw, &1.ogp}, :desc)
         Enum.each(expected_list, fn x ->
         IO.inspect("#{x.user_id} -- #{x.deck} -- #{x.points} -- #{x.omw}")end)
       assert actual_list == expected_list, "The list is not sorted so these are not final standings # "
