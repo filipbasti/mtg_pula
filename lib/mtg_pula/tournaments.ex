@@ -263,7 +263,7 @@ def update_played(attrs) do
 end
 end
 def create_match(attrs \\ %{}) do
-    _ = update_played(attrs)
+   update_played(attrs)
 
       %Match{}
       |> Match.changeset(attrs)
@@ -320,7 +320,7 @@ end
     Match.changeset(match, attrs)
   end
   @doc"""
-  Pairing Logic
+  Lists tournaments with their players
   """
 
   def list_tournaments_with_players_and_users do
@@ -329,6 +329,13 @@ end
     |> Repo.all()
     |>Repo.preload([player: [:user]])
   end
+
+
+  @doc """
+  Returns standings with tiebreakers and points
+
+
+  """
   def standings_on_tournament(tournament_id) do
     query = from p in Player,
       where: p.tournament_id == ^tournament_id
@@ -339,6 +346,13 @@ end
     |> calculate_tiebreakers(tournament)
 
   end
+
+
+  @doc """
+  Calculates tiebreakers for a certain standings and tournament
+
+
+  """
   def calculate_tiebreakers(standings, tournament) do
 
 
@@ -363,6 +377,11 @@ end
     new_standings
   end
 
+  @doc """
+  Calculates points for a player
+
+
+  """
   def calculate_points(player)do
     query_wins =
       from m in Match,
@@ -384,6 +403,11 @@ end
 
   end
 
+  @doc """
+  Calculates average opponents match win procentage from players list of opponents
+
+
+  """
   def calculate_procentage_omw(player, tournament) do
     adds_up = Enum.reduce(player.opponents, [], fn y, acc ->
       {_tail, casted} = Ecto.UUID.cast(y)
@@ -412,7 +436,11 @@ end
     procentage = Enum.sum(adds_up)/ Enum.count(adds_up)*100
     procentage
   end
+@doc """
+  Calculates average opponents game win procentage from each game win that appears on certain tournament
 
+
+  """
   def calculate_gw(player, tournament) do
     # Ensure player_id is used as a string
 
@@ -446,7 +474,11 @@ end
     win_percentage
 
   end
+@doc """
+  Calculates average opponents game win procentage from players list of opponents
 
+
+  """
   def calculate_ogp(player, tournament) do
     adds_up = Enum.reduce(player.opponents, [], fn y, acc ->
       {_tail, casted} = Ecto.UUID.cast(y)
@@ -457,5 +489,52 @@ end
     end)
     procentage = Enum.sum(adds_up)/ Enum.count(adds_up)
     procentage
+  end
+  @doc """
+  Calculates average opponents game win procentage from players list of opponents
+
+
+  """
+
+  def pair_next_round(tournament_id) do
+    tournament = get_tournament!(tournament_id)
+    standings = standings_on_tournament(tournament_id)
+    standings = Enum.sort_by(standings, &{&1.points, &1.omw, &1.gw, &1.ogp}, :desc)
+    tournament = case update_tournament(tournament, %{current_round: tournament.current_round + 1})do
+      {:ok, tournament} -> tournament
+      {:error, _}-> nil
+     end
+     pairings = make_pairings(standings, [])
+     IO.inspect(pairings)
+
+
+  end
+
+
+  defp make_pairings([], pairings), do: pairings
+  defp make_pairings([player | rest], pairings) do
+    case find_pair(player, rest) do
+      {pair, remaining} ->
+        make_pairings(remaining, [{player, pair} | pairings])
+
+        nil ->
+          # Check if the player has already had a bye
+          if player.had_bye do
+            make_pairings(rest ++ [player], pairings) # Push player to the end of the list
+          else
+
+           {:ok, updated_player}  = update_player(player, %{had_bye: true})
+            make_pairings(rest, pairings ++ [{updated_player, :bye}])
+          end
+    end
+  end
+  defp find_pair(player, rest) do
+    Enum.reduce_while(rest, nil, fn potential_opponent, _acc ->
+      if Enum.member?(player.opponents, potential_opponent.id) do
+        {:cont, nil} # Skip if they have already played against each other
+      else
+        {:halt, {potential_opponent, List.delete(rest, potential_opponent)}}
+      end
+    end)
   end
 end

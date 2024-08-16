@@ -34,11 +34,17 @@ defmodule MtgPula.TournamentsTest do
       assert {:error, %Changeset{valid?: false}} = Tournaments.create_tournament(missing_params)
 
     end
+    test "assigns bye if there is uneven players"do
+      tourney = Factory.insert(:tournament)
 
+      player_list = Factory.insert_list(9, :player, [tournament: tourney, opponents: [], points: 0])
+      list =  Tournaments.pair_next_round(tourney.id)
+
+    end
     test "Function returns standings sorted by points, omw, gw and ogp in that order descending" do
       tourney = Factory.insert(:tournament)
 
-     player_list = Factory.insert_list(8, :player, [tournament: tourney, opponents: []])
+     player_list = Factory.insert_list(8, :player, [tournament: tourney, opponents: [], points: 0])
 
      Enum.shuffle(player_list)
      |> Enum.chunk_every(2)
