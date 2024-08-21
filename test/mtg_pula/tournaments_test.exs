@@ -51,7 +51,7 @@ defmodule MtgPula.TournamentsTest do
       Repo.update(Player.changeset(player2, %{opponents: player2.opponents ++ [player1.id]}))
 
      end)
-
+     list2 = Tournaments.pair_next_round(tourney.id)
      Io.inspect(list2)
 
 
