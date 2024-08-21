@@ -342,8 +342,10 @@ end
 
     standings = Repo.all(query)
     tournament = Repo.get!(Tournament, tournament_id)
+
     standings
     |> calculate_tiebreakers(tournament)
+    |> Enum.sort_by( &{&1.points, &1.omw, &1.gw, &1.ogp}, :desc)
 
   end
 
@@ -357,21 +359,20 @@ end
 
 
     new_standings = Enum.reduce(standings, [], fn x, acc ->
-      gw = calculate_gw(x, tournament)
+
+
+      gw = calculate_gw(x)
       omw= calculate_procentage_omw(x, tournament)
-
-
-      ogp = calculate_ogp(x, tournament)
+      ogp = calculate_ogp(x)
       points = calculate_points(x)
+
       new_player = x
       |>Map.put_new(:omw, omw)
       |>Map.put_new(:gw, gw)
       |>Map.put_new(:ogp, ogp)
       |>Map.put(:points, points)
-
-
-
       acc ++ [new_player]
+
     end)
 
     new_standings
@@ -412,7 +413,7 @@ end
     adds_up = Enum.reduce(player.opponents, [], fn y, acc ->
       {_tail, casted} = Ecto.UUID.cast(y)
 
-      opponent = Repo.one(from o in Player, where: o.id == ^casted)
+
 
       query = from w in Match, where: w.winner_id == ^casted, select: count()
       match_wins = Repo.one(query) || 0  # Default to 0 if nil
@@ -433,7 +434,7 @@ end
     end)
 
 
-    procentage = Enum.sum(adds_up)/ Enum.count(adds_up)*100
+    procentage = Float.round(Enum.sum(adds_up)/ Enum.count(adds_up)*100, 2)
     procentage
   end
 @doc """
@@ -441,7 +442,7 @@ end
 
 
   """
-  def calculate_gw(player, tournament) do
+  def calculate_gw(player) do
     # Ensure player_id is used as a string
 
     player1_wins_query =
@@ -466,7 +467,7 @@ end
 
     # Calculate win percentage
     win_percentage = if total_games > 0 do
-      (total_wins / total_games) * 100
+      Float.round((total_wins / total_games) * 100, 2)
     else
       0
     end
@@ -479,15 +480,15 @@ end
 
 
   """
-  def calculate_ogp(player, tournament) do
+  def calculate_ogp(player) do
     adds_up = Enum.reduce(player.opponents, [], fn y, acc ->
       {_tail, casted} = Ecto.UUID.cast(y)
       opponent = Repo.one(from o in Player, where: o.id == ^casted)
-    gw = calculate_gw(opponent, tournament)
+    gw = calculate_gw(opponent)
     acc ++ [gw]
 
     end)
-    procentage = Enum.sum(adds_up)/ Enum.count(adds_up)
+    procentage = Float.round(Enum.sum(adds_up)/ Enum.count(adds_up), 2)
     procentage
   end
   @doc """
@@ -498,14 +499,20 @@ end
 
   def pair_next_round(tournament_id) do
     tournament = get_tournament!(tournament_id)
+    standings = if tournament.current_round > 1 do
     standings = standings_on_tournament(tournament_id)
-    standings = Enum.sort_by(standings, &{&1.points, &1.omw, &1.gw, &1.ogp}, :desc)
-    tournament = case update_tournament(tournament, %{current_round: tournament.current_round + 1})do
+    Enum.sort_by(standings, &{&1.points, &1.omw, &1.gw, &1.ogp}, :desc)
+    else   query = from p in Player,
+    where: p.tournament_id == ^tournament_id
+
+   Repo.all(query)end
+
+    _tournament = case update_tournament(tournament, %{current_round: tournament.current_round + 1})do
       {:ok, tournament} -> tournament
       {:error, _}-> nil
      end
-     pairings = make_pairings(standings, [])
-     IO.inspect(pairings)
+     make_pairings(standings, [])
+
 
 
   end
@@ -513,25 +520,30 @@ end
 
   defp make_pairings([], pairings), do: pairings
   defp make_pairings([player | rest], pairings) do
+
+
     case find_pair(player, rest) do
       {pair, remaining} ->
+
         make_pairings(remaining, [{player, pair} | pairings])
 
-        nil ->
-          # Check if the player has already had a bye
-          if player.had_bye do
-            make_pairings(rest ++ [player], pairings) # Push player to the end of the list
-          else
+      nil ->
+        if player.had_bye do
 
-           {:ok, updated_player}  = update_player(player, %{had_bye: true})
-            make_pairings(rest, pairings ++ [{updated_player, :bye}])
-          end
+          make_pairings(rest ++ [player], pairings)
+        else
+
+          {:ok, updated_player} = update_player(player, %{had_bye: true})
+          make_pairings(rest, pairings ++ [{updated_player, :bye}])
+        end
     end
   end
+
   defp find_pair(player, rest) do
+    IO.puts("Finding pair for player: #{inspect(player)}")
     Enum.reduce_while(rest, nil, fn potential_opponent, _acc ->
       if Enum.member?(player.opponents, potential_opponent.id) do
-        {:cont, nil} # Skip if they have already played against each other
+        {:cont, nil}
       else
         {:halt, {potential_opponent, List.delete(rest, potential_opponent)}}
       end

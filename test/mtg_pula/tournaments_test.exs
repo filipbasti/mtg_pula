@@ -34,13 +34,36 @@ defmodule MtgPula.TournamentsTest do
       assert {:error, %Changeset{valid?: false}} = Tournaments.create_tournament(missing_params)
 
     end
+
     test "assigns bye if there is uneven players"do
       tourney = Factory.insert(:tournament)
 
-      player_list = Factory.insert_list(9, :player, [tournament: tourney, opponents: [], points: 0])
-      list =  Tournaments.pair_next_round(tourney.id)
+     Factory.insert_list(9, :player, [tournament: tourney, opponents: [], points: 0, had_bye: false])
+    list = Tournaments.pair_next_round(tourney.id)
+    assert {_player, :bye} =List.last(list)
+
+    list = List.delete_at(list, -1)
+      list
+     |> Enum.each(fn {player1, player2} ->
+   Factory.insert(:match, player1: player1, player2: player2, winner: player1, is_draw: false, player_1_wins: 2, player_2_wins: 1 )
+
+      Repo.update(Player.changeset(player1, %{opponents: player1.opponents ++ [player2.id]}))
+      Repo.update(Player.changeset(player2, %{opponents: player2.opponents ++ [player1.id]}))
+
+     end)
+
+     Io.inspect(list2)
+
+
+
+
 
     end
+
+    def remove_timestamps(player) do
+      Map.drop(player, [:inserted_at, :updated_at])
+    end
+
     test "Function returns standings sorted by points, omw, gw and ogp in that order descending" do
       tourney = Factory.insert(:tournament)
 
@@ -63,10 +86,7 @@ defmodule MtgPula.TournamentsTest do
 
       assert actual_list = Tournaments.standings_on_tournament(tourney.id)
 
-      actual_list =
-        Enum.sort_by(actual_list, &{&1.points, &1.omw, &1.gw, &1.ogp}, :desc)
-        Enum.each(actual_list, fn x ->
-          IO.inspect("#{x.user_id} -- #{x.deck} -- #{x.points} -- #{x.omw}")end)
+
 
         query = from p in Player,
         where: p.tournament_id == ^tourney.id
@@ -77,9 +97,11 @@ defmodule MtgPula.TournamentsTest do
       |> Tournaments.calculate_tiebreakers(tourney)
 
       expected_list = Enum.sort_by(expected_list, &{&1.points, &1.omw, &1.gw, &1.ogp}, :desc)
-        Enum.each(expected_list, fn x ->
-        IO.inspect("#{x.user_id} -- #{x.deck} -- #{x.points} -- #{x.omw}")end)
-      assert actual_list == expected_list, "The list is not sorted so these are not final standings # "
+
+
+
+
+        assert Enum.map(actual_list, &remove_timestamps/1) == Enum.map(expected_list, &remove_timestamps/1)
     end
 
 
