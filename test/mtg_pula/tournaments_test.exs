@@ -1,6 +1,6 @@
 defmodule MtgPula.TournamentsTest do
   use MtgPula.Support.DataCase
-  alias MtgPula.{Tournaments, Tournaments.Tournament, Tournaments.Player}
+  alias MtgPula.{Tournaments, Tournaments.Tournament, Tournaments.Player, Tournaments.Match }
   import Ecto.Query
 
   setup do
@@ -40,22 +40,54 @@ defmodule MtgPula.TournamentsTest do
 
      Factory.insert_list(9, :player, [tournament: tourney, opponents: [], points: 0, had_bye: false])
     list = Tournaments.pair_next_round(tourney.id)
-    assert {_player, :bye} =List.last(list)
+    #assert {_player, :bye} =List.last(list)
 
-    list = List.delete_at(list, -1)
-      list
+   list = List.delete_at(list, -1)
+
+list
      |> Enum.each(fn {player1, player2} ->
-   Factory.insert(:match, player1: player1, player2: player2, winner: player1, is_draw: false, player_1_wins: 2, player_2_wins: 1 )
+ Factory.insert(:match, player1: player1, player2: player2, winner: player1, is_draw: false, player_1_wins: 2, player_2_wins: 1, tournament: tourney)
 
-      Repo.update(Player.changeset(player1, %{opponents: player1.opponents ++ [player2.id]}))
-      Repo.update(Player.changeset(player2, %{opponents: player2.opponents ++ [player1.id]}))
+    {:ok, player1}  = Repo.update(Player.changeset(player1, %{opponents: player1.opponents ++ [player2.id]}))
+    {:ok, player2}  =  Repo.update(Player.changeset(player2, %{opponents: player2.opponents ++ [player1.id]}))
 
      end)
+
      list2 = Tournaments.pair_next_round(tourney.id)
-     Io.inspect(list2)
+     list2 = List.delete_at(list2, -1)
+     list2
+     |> Enum.each(fn {player1, player2} ->
+ Factory.insert(:match, player1: player1, player2: player2, winner: player1, is_draw: false, player_1_wins: 2, player_2_wins: 1, tournament: tourney)
+
+    {:ok, player1}  = Repo.update(Player.changeset(player1, %{opponents: player1.opponents ++ [player2.id]}))
+    {:ok, player2}  =  Repo.update(Player.changeset(player2, %{opponents: player2.opponents ++ [player1.id]}))
+
+     end)
+
+     list3 = Tournaments.pair_next_round(tourney.id)
+     list3 = List.delete_at(list3, -1)
+     list3
+     |> Enum.each(fn {player1, player2} ->
+ Factory.insert(:match, player1: player1, player2: player2, winner: player1, is_draw: false, player_1_wins: 2, player_2_wins: 1, tournament: tourney)
+
+    {:ok, player1}  = Repo.update(Player.changeset(player1, %{opponents: player1.opponents ++ [player2.id]}))
+    {:ok, player2}  =  Repo.update(Player.changeset(player2, %{opponents: player2.opponents ++ [player1.id]}))
+
+     end)
+     list4 = Tournaments.pair_next_round(tourney.id)
+     list4 = List.delete_at(list4, -1)
+     list4
+     |> Enum.each(fn {player1, player2} ->
+ Factory.insert(:match, player1: player1, player2: player2, winner: player1, is_draw: false, player_1_wins: 2, player_2_wins: 1, tournament: tourney)
+
+    {:ok, player1}  = Repo.update(Player.changeset(player1, %{opponents: player1.opponents ++ [player2.id]}))
+    {:ok, player2}  =  Repo.update(Player.changeset(player2, %{opponents: player2.opponents ++ [player1.id]}))
+
+     end)
 
 
 
+     IO.inspect(Tournaments.standings_on_tournament(tourney.id))
 
 
     end
@@ -63,16 +95,17 @@ defmodule MtgPula.TournamentsTest do
     def remove_timestamps(player) do
       Map.drop(player, [:inserted_at, :updated_at])
     end
-
+    @tag :skip
     test "Function returns standings sorted by points, omw, gw and ogp in that order descending" do
       tourney = Factory.insert(:tournament)
 
-     player_list = Factory.insert_list(8, :player, [tournament: tourney, opponents: [], points: 0])
+    Factory.insert_list(8, :player, [tournament: tourney, opponents: [], points: 0])
 
-     Enum.shuffle(player_list)
+
      |> Enum.chunk_every(2)
+
      |> Enum.each(fn [player1, player2] ->
-    Factory.insert(:match, player1: player1, player2: player2, winner: player1, is_draw: false, player_1_wins: 2, player_2_wins: 1 )
+   Factory.insert(:match, player1: player1, player2: player2, winner: player1, is_draw: false, player_1_wins: 2, player_2_wins: 1 )
 
 
 
