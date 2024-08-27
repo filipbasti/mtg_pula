@@ -339,7 +339,7 @@ end
   def standings_on_tournament(tournament_id) do
 
     query = from p in Player,
-      where: p.tournament_id == ^tournament_id
+      where: p.tournament_id == ^tournament_id and p.dropped == false
 
     standings = Repo.all(query)
     tournament = Repo.get!(Tournament, tournament_id)
@@ -353,6 +353,10 @@ end
 
   end
 
+  def drop_player(player_id)do
+    player = get_player!(player_id)
+    update_player(player, %{dropped: true})
+  end
 
   @doc """
   Calculates tiebreakers for a certain standings and tournament
@@ -373,7 +377,6 @@ new_standings = Enum.reduce(standings, [], fn x, acc ->
     |> Map.put_new(:ogp, 0.33)
     |> Map.put(:points, calculate_points(x))
 
-    IO.inspect(new_player)
 
     acc ++ [new_player]
   else
@@ -438,10 +441,14 @@ end)
 
       query = from w in Match, where: w.winner_id == ^casted, select: count()
       match_wins = Repo.one(query)
+      q_matches=  from m in Match,
+    where: (m.player1_id == ^casted or m.player2_id == ^casted),
+    select: count()
+   n_matches = Repo.one(q_matches)
 
       # Calculate procentage
 
-      procentage = Float.round(match_wins / tournament.current_round, 2)||0.00
+      procentage = Float.round(match_wins / n_matches, 2)||0.00
      # IO.inspect(procentage)
 
       # Ensure minimum procentage of 0.33
@@ -512,14 +519,15 @@ end)
     procentage
   end
   @doc """
-  Calculates average opponents game win procentage from players list of opponents
+  Takes in tournament_id. Calculates current standings based on player performance.
+  Updates the current_round, to match the round we are currently in. Returns pairings for the current round.
 
 
   """
 
   def pair_next_round(tournament_id) do
     tournament = get_tournament!(tournament_id)
-    standings = if tournament.current_round > 1 do
+    standings = if tournament.current_round > 1  and tournament.current_round do
 
     standings = standings_on_tournament(tournament_id)
 
@@ -533,18 +541,61 @@ end)
       {:error, _}-> nil
      end
      make_pairings(standings, [])
+  end
 
+    @doc """
+  Takes in tournament_id. Pairs next round, through pair_next_round()
+  (see pair_next_round/1) and creates matches in the database
+
+
+  """
+
+def prepare_matches(tournament_id) do
+  tournament = get_tournament!(tournament_id)
+
+paired = pair_next_round(tournament_id)
+
+corrected = case List.last(paired) do
+  {_, :bye} -> List.delete_at(paired,-1)
+  _->paired
+ end
+
+corrected
+  |> Enum.each( fn {player1, player2} ->
+    params =%{
+      tournament_id: tournament.id,
+      player1_id: player1.id,
+      player2_id: player2.id,
+      on_play_id: player1.id,
+      round: tournament.current_round
+    }
+    create_match(params)
+
+   end)
+
+   paired
 
 
   end
 
+
+
+    @doc """
+  Recursively uses find_pair, to pair players by their performance.
+  If there is a uneven number of players it gives the player that
+  already hasnt had a bye, a bye,
+  if all players had a bye it takes the first player that cant be paired.
+  It returns an array of tuples of match pairs.
+
+
+  """
 
   defp make_pairings([], pairings), do: pairings
 
 defp make_pairings([player | rest], pairings) do
   case find_pair(player, rest) do
     {pair, remaining} ->
-      IO.inspect("tu sam")
+
       make_pairings(remaining, [{player, pair} | pairings])
 
     nil ->
@@ -558,20 +609,27 @@ defp make_pairings([player | rest], pairings) do
             nil -> {player, rest} # Fallback to the current player if all have had a bye
             found_player -> {found_player, List.delete(sorted_rest, found_player)}
           end
-          IO.inspect(bye_player, label: "Bye Assigned To")
+
 
         {:ok, updated_player} = update_player(bye_player, %{had_bye: true})
 
         make_pairings(remaining, pairings ++ [{updated_player, :bye}])
       else
 
-        IO.inspect(player, label: "Bye Assigned To player")
+
         {:ok, updated_player} = update_player(player, %{had_bye: true})
 
         make_pairings(rest, pairings ++ [{updated_player, :bye}])
       end
   end
 end
+
+
+    @doc """
+      Goes through all the players that
+      are left to match them to a player that hasnt been paired with already.
+
+  """
 
 defp find_pair(player, rest) do
   Enum.reduce_while(rest, nil, fn potential_opponent, _acc ->
@@ -582,4 +640,5 @@ defp find_pair(player, rest) do
     end
   end)
 end
+
 end

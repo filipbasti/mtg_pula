@@ -10,6 +10,7 @@ defmodule MtgPula.Schema.PlayerTest do
    {:opponents, {:array, Ecto.UUID}},
    {:points, :integer},
     {:had_bye, :boolean},
+    {:dropped, :boolean},
    {:tournament_id, :binary_id},
    {:user_id, :binary_id},
    {:inserted_at, :utc_datetime},
@@ -17,7 +18,7 @@ defmodule MtgPula.Schema.PlayerTest do
   ]
 
   @optional [
-  :id, :had_bye, :points, :inserted_at, :updated_at,
+  :id, :had_bye, :points, :inserted_at, :updated_at, :dropped
   ]
 
   describe "fields and types" do

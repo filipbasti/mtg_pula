@@ -7,6 +7,7 @@ defmodule MtgPula.Repo.Migrations.CreatePlayers do
       add :deck, :string
       add :opponents, {:array, :uuid}
       add :points, :integer
+      add :dropped, :boolean, default: false, null: false
       add :had_bye, :boolean, default: false, null: false
       add :user_id, references(:users, on_delete: :nothing, type: :binary_id)
       add :tournament_id, references(:tournaments, on_delete: :delete_all, type: :binary_id)

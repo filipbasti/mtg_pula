@@ -49,7 +49,8 @@ defmodule MtgPula.Support.Factory do
     points: Faker.random_between(1, 10),
     had_bye: Enum.random([true, false]),
     tournament: build(:tournament),
-    user: build(:user)
+    user: build(:user),
+    dropped: false
 
     }
   end

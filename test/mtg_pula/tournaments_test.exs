@@ -7,7 +7,7 @@ defmodule MtgPula.TournamentsTest do
     Ecto.Adapters.SQL.Sandbox.checkout(MtgPula.Repo)
   end
   describe "create_tournament/1"do
-    test "suvvess: it inserts an tournament in the db and returns the tournament"do
+    test "success: it inserts an tournament in the db and returns the tournament"do
       params = Factory.string_params_with_assocs(:tournament)
 
       assert {:ok, %Tournament{} = returned_tournament} = Tournaments.create_tournament(params)
@@ -35,67 +35,111 @@ defmodule MtgPula.TournamentsTest do
 
     end
 
-    test "assigns bye if there is uneven players"do
+
+    test "test dropping a player"do
       tourney = Factory.insert(:tournament)
 
-     Factory.insert_list(9, :player, [tournament: tourney, opponents: [], points: 0, had_bye: false])
+    players = Factory.insert_list(9, :player, [tournament: tourney, opponents: [], points: 0, had_bye: false])
+    first_player = List.first(players)
+
     list = Tournaments.pair_next_round(tourney.id)
-    #assert {_player, :bye} =List.last(list)
+
 
    list = List.delete_at(list, -1)
 
-list
+    list
      |> Enum.each(fn {player1, player2} ->
- Factory.insert(:match, player1: player1, player2: player2, winner: player1, is_draw: false, player_1_wins: 2, player_2_wins: 1, tournament: tourney)
+      Factory.insert(:match, player1: player1, player2: player2, winner: player1, is_draw: false, player_1_wins: 2, player_2_wins: 1, tournament: tourney)
 
-    {:ok, player1}  = Repo.update(Player.changeset(player1, %{opponents: player1.opponents ++ [player2.id]}))
-    {:ok, player2}  =  Repo.update(Player.changeset(player2, %{opponents: player2.opponents ++ [player1.id]}))
+
+      Repo.update(Player.changeset(player1, %{opponents: player1.opponents ++ [player2.id]}))
+      Repo.update(Player.changeset(player2, %{opponents: player2.opponents ++ [player1.id]}))
 
      end)
 
+    assert dropped_player = Tournaments.drop_player(first_player.id)
      list2 = Tournaments.pair_next_round(tourney.id)
+
+
      list2 = List.delete_at(list2, -1)
      list2
      |> Enum.each(fn {player1, player2} ->
- Factory.insert(:match, player1: player1, player2: player2, winner: player1, is_draw: false, player_1_wins: 2, player_2_wins: 1, tournament: tourney)
+        Factory.insert(:match, player1: player1, player2: player2, winner: player1, is_draw: false, player_1_wins: 2, player_2_wins: 1, tournament: tourney)
 
-    {:ok, player1}  = Repo.update(Player.changeset(player1, %{opponents: player1.opponents ++ [player2.id]}))
-    {:ok, player2}  =  Repo.update(Player.changeset(player2, %{opponents: player2.opponents ++ [player1.id]}))
-
-     end)
-
-     list3 = Tournaments.pair_next_round(tourney.id)
-     list3 = List.delete_at(list3, -1)
-     list3
-     |> Enum.each(fn {player1, player2} ->
- Factory.insert(:match, player1: player1, player2: player2, winner: player1, is_draw: false, player_1_wins: 2, player_2_wins: 1, tournament: tourney)
-
-    {:ok, player1}  = Repo.update(Player.changeset(player1, %{opponents: player1.opponents ++ [player2.id]}))
-    {:ok, player2}  =  Repo.update(Player.changeset(player2, %{opponents: player2.opponents ++ [player1.id]}))
+        Repo.update(Player.changeset(player1, %{opponents: player1.opponents ++ [player2.id]}))
+        Repo.update(Player.changeset(player2, %{opponents: player2.opponents ++ [player1.id]}))
 
      end)
-     list4 = Tournaments.pair_next_round(tourney.id)
-     list4 = List.delete_at(list4, -1)
-     list4
-     |> Enum.each(fn {player1, player2} ->
- Factory.insert(:match, player1: player1, player2: player2, winner: player1, is_draw: false, player_1_wins: 2, player_2_wins: 1, tournament: tourney)
-
-    {:ok, player1}  = Repo.update(Player.changeset(player1, %{opponents: player1.opponents ++ [player2.id]}))
-    {:ok, player2}  =  Repo.update(Player.changeset(player2, %{opponents: player2.opponents ++ [player1.id]}))
-
-     end)
-
-
 
      IO.inspect(Tournaments.standings_on_tournament(tourney.id))
 
 
     end
 
+    test "assigns bye if there is uneven players"do
+      tourney = Factory.insert(:tournament)
+
+     Factory.insert_list(9, :player, [tournament: tourney, opponents: [], points: 0, had_bye: false])
+    list = Tournaments.pair_next_round(tourney.id)
+    assert {_player, :bye} =List.last(list)
+
+   list = List.delete_at(list, -1)
+
+    list
+     |> Enum.each(fn {player1, player2} ->
+      Factory.insert(:match, player1: player1, player2: player2, winner: player1, is_draw: false, player_1_wins: 2, player_2_wins: 1, tournament: tourney)
+
+
+      Repo.update(Player.changeset(player1, %{opponents: player1.opponents ++ [player2.id]}))
+      Repo.update(Player.changeset(player2, %{opponents: player2.opponents ++ [player1.id]}))
+
+     end)
+
+     list2 = Tournaments.pair_next_round(tourney.id)
+
+     assert {_player, :bye} =List.last(list2)
+     list2 = List.delete_at(list2, -1)
+     list2
+     |> Enum.each(fn {player1, player2} ->
+        Factory.insert(:match, player1: player1, player2: player2, winner: player1, is_draw: false, player_1_wins: 2, player_2_wins: 1, tournament: tourney)
+
+        Repo.update(Player.changeset(player1, %{opponents: player1.opponents ++ [player2.id]}))
+        Repo.update(Player.changeset(player2, %{opponents: player2.opponents ++ [player1.id]}))
+
+     end)
+
+     #IO.inspect(Tournaments.standings_on_tournament(tourney.id))
+
+
+    end
+    test "Testing preparing matches so that all players are paired" do
+      tourney = Factory.insert(:tournament)
+      player_count = 9
+      expected_players = Factory.insert_list(player_count, :player, [tournament: tourney, opponents: [], points: 0, had_bye: false])
+      assert matches = Tournaments.prepare_matches(tourney.id)
+
+      paired_players = Enum.reduce(matches, [], fn y , acc ->
+        {player1, player2} = y
+        if player2 == :bye do
+          acc ++ [player1.id]
+        else
+          acc ++ [player1.id] ++ [player2.id]
+        end
+
+      end)
+
+      expected_players = Enum.reduce(expected_players, [], fn y , acc ->
+
+        acc ++ [y.id]
+
+      end)
+      assert Enum.sort(paired_players) == Enum.sort(expected_players)
+
+    end
     def remove_timestamps(player) do
       Map.drop(player, [:inserted_at, :updated_at])
     end
-    @tag :skip
+
     test "Function returns standings sorted by points, omw, gw and ogp in that order descending" do
       tourney = Factory.insert(:tournament)
 
