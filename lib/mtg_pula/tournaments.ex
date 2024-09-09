@@ -243,7 +243,7 @@ defmodule MtgPula.Tournaments do
 
   """
 
-def update_played(attrs) do
+defp update_played(attrs) do
   player1_id = attrs["player1_id"]
   player2_id = attrs["player2_id"]
   if player1_id || player2_id != nil do
@@ -367,7 +367,7 @@ end
 
 
 new_standings = Enum.reduce(standings, [], fn x, acc ->
-  # Skip this iteration if x.opponent array is empty
+  # Skip this iteration if x.opponent array is empty and if player had bye
 
   if Enum.empty?(x.opponents)and x.had_bye do
 
@@ -536,11 +536,11 @@ end)
 
    Repo.all(query)end
 
-    _tournament = case update_tournament(tournament, %{current_round: tournament.current_round + 1})do
+    tournament = case update_tournament(tournament, %{current_round: tournament.current_round + 1})do
       {:ok, tournament} -> tournament
       {:error, _}-> nil
      end
-     make_pairings(standings, [])
+    { tournament, make_pairings(standings, [])}
   end
 
     @doc """
@@ -553,7 +553,7 @@ end)
 def prepare_matches(tournament_id) do
   tournament = get_tournament!(tournament_id)
 
-paired = pair_next_round(tournament_id)
+{tournament, paired} = pair_next_round(tournament_id)
 
 corrected = case List.last(paired) do
   {_, :bye} -> List.delete_at(paired,-1)
@@ -573,7 +573,7 @@ corrected
 
    end)
 
-   paired
+   {tournament, paired}
 
 
   end
@@ -640,5 +640,23 @@ defp find_pair(player, rest) do
     end
   end)
 end
+@doc """
+
+Finds and returns the current round  matches
+"""
+ def current_matches(tournament_id)do
+
+  tournament = get_tournament!(tournament_id)
+
+  q=  from m in Match,
+  where: m.tournament_id == ^tournament.id and m.round == ^tournament.current_round
+
+  matches = Repo.all(q)
+
+
+  matches
+ end
+
+
 
 end

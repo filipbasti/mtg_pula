@@ -9,7 +9,7 @@ config :mtg_pula, MtgPula.Repo,
 username: "backend_stuff",
 password: "javolimkrafnu123",
 hostname: "192.168.1.136",
-database: "mtg_pula_test#{System.get_env("MIX_TEST_PARTITION")}",
+database: "mtg_pula_test#{System.get_env("MIX_TEST_PARTITION") || ""}",
 pool: Ecto.Adapters.SQL.Sandbox,
 pool_size: System.schedulers_online() * 2
 

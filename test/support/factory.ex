@@ -32,7 +32,7 @@ defmodule MtgPula.Support.Factory do
     %Tournament{
     name: Faker.Lorem.word(),
     finished: Enum.random([true, false]),
-    current_round: Enum.random(1..10),
+    current_round: 0,
     number_of_rounds: Enum.random(1..10),
     user: build(:user)
   }
@@ -40,7 +40,7 @@ defmodule MtgPula.Support.Factory do
 
   end
   defp set_current_round(tournament) do
-    %{tournament | current_round: 1}
+    %{tournament | current_round: 0}
   end
   def player_factory do
     %Player{
