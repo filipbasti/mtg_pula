@@ -5,7 +5,7 @@ defmodule MtgPulaWeb.Auth.Guardian do
     sub = to_string(id)
     {:ok, sub}
   end
-  def subject_for_token(%{id: id}, _claims) do
+  def subject_for_token(%{}, _claims) do
     {:error, :no_id_provided}
   end
 

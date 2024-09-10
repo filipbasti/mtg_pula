@@ -3,7 +3,7 @@ defmodule MtgPulaWeb.TournamentController do
 
   alias MtgPula.Tournaments
   alias MtgPula.Tournaments.Tournament
-
+  alias MtgPulaWeb.Tournament.ErrorResponse
   action_fallback MtgPulaWeb.FallbackController
 
   def index(conn, _params) do
@@ -40,5 +40,15 @@ defmodule MtgPulaWeb.TournamentController do
     with {:ok, %Tournament{}} <- Tournaments.delete_tournament(tournament) do
       send_resp(conn, :no_content, "")
     end
+  end
+
+  def show_standings(conn, %{"id" => id}) do
+ case Tournaments.standings_on_tournament(id)do
+    {:ok, standings} -> render(conn, :show_standings, standings: standings)
+    {:error, :not_found} -> raise ErrorResponse.NotFound, message: "Standings for this tournament not found"
+
+ end
+
+
   end
 end

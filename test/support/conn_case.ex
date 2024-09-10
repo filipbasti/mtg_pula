@@ -32,7 +32,7 @@ defmodule MtgPulaWeb.ConnCase do
   end
 
   setup tags do
-    MtgPula.DataCase.setup_sandbox(tags)
+    MtgPula.Support.DataCase.setup_sandbox(tags)
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
 end

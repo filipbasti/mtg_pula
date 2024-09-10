@@ -25,6 +25,7 @@ defmodule MtgPulaWeb.Router do
 
     post "/accounts/create", AccountController, :create
     post "/accounts/sign_in", AccountController, :sign_in
+    get "/tournaments/standings/by_id/:id", TournamentController, :show_standings
   end
   scope "/api", MtgPulaWeb do
     pipe_through [:api, :auth]
@@ -34,5 +35,6 @@ defmodule MtgPulaWeb.Router do
     post "/accounts/refresh_session", AccountController, :refresh_session
     put "/users/update", UserController, :update
     post "/tournaments/create", TournamentController, :create
+    post "/tournaments/add_player", PlayerController, :create
   end
 end

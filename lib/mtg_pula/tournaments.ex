@@ -243,7 +243,7 @@ defmodule MtgPula.Tournaments do
 
   """
 
-defp update_played(attrs) do
+def update_played(attrs) do
   player1_id = attrs["player1_id"]
   player2_id = attrs["player2_id"]
   if player1_id || player2_id != nil do
@@ -337,20 +337,20 @@ end
 
   """
   def standings_on_tournament(tournament_id) do
-
+    try do
     query = from p in Player,
       where: p.tournament_id == ^tournament_id and p.dropped == false
 
     standings = Repo.all(query)
     tournament = Repo.get!(Tournament, tournament_id)
-
-
-
-
-    standings
+    standings = standings
     |> calculate_tiebreakers(tournament)
     |> Enum.sort_by( &{&1.points, &1.omw, &1.gw, &1.ogp}, :desc)
+      {:ok, standings}
 
+    rescue _e ->
+      {:error, :not_found}
+    end
   end
 
   def drop_player(player_id)do
@@ -369,17 +369,18 @@ end
 new_standings = Enum.reduce(standings, [], fn x, acc ->
   # Skip this iteration if x.opponent array is empty and if player had bye
 
-  if Enum.empty?(x.opponents)and x.had_bye do
+  if Enum.empty?(x.opponents) or x.had_bye do
 
     new_player =  x
     |> Map.put_new(:omw, 0.33)
     |> Map.put_new(:gw, 0)
     |> Map.put_new(:ogp, 0.33)
     |> Map.put(:points, calculate_points(x))
-
+    |> Repo.preload([:user])
 
     acc ++ [new_player]
   else
+
     gw = calculate_gw(x)
     omw = calculate_procentage_omw(x, tournament)
     ogp = calculate_ogp(x)
@@ -390,7 +391,7 @@ new_standings = Enum.reduce(standings, [], fn x, acc ->
     |> Map.put_new(:gw, gw)
     |> Map.put_new(:ogp, ogp)
     |> Map.put(:points, points)
-
+    |> Repo.preload([:user])
     acc ++ [new_player]
   end
 end)
@@ -432,7 +433,7 @@ end)
 
 
   """
-  def calculate_procentage_omw(player, tournament) do
+  def calculate_procentage_omw(player, _tournament) do
     adds_up = Enum.reduce(player.opponents, [], fn y, acc ->
 
       {_tail, casted} = Ecto.UUID.cast(y)
@@ -529,7 +530,8 @@ end)
     tournament = get_tournament!(tournament_id)
     standings = if tournament.current_round > 1  and tournament.current_round do
 
-    standings = standings_on_tournament(tournament_id)
+    {:ok, standings} = standings_on_tournament(tournament_id)
+    standings
 
     else   query = from p in Player,
     where: p.tournament_id == ^tournament_id
@@ -551,7 +553,7 @@ end)
   """
 
 def prepare_matches(tournament_id) do
-  tournament = get_tournament!(tournament_id)
+
 
 {tournament, paired} = pair_next_round(tournament_id)
 
@@ -590,9 +592,9 @@ corrected
 
   """
 
-  defp make_pairings([], pairings), do: pairings
+  def make_pairings([], pairings), do: pairings
 
-defp make_pairings([player | rest], pairings) do
+def make_pairings([player | rest], pairings) do
   case find_pair(player, rest) do
     {pair, remaining} ->
 
@@ -631,7 +633,7 @@ end
 
   """
 
-defp find_pair(player, rest) do
+def find_pair(player, rest) do
   Enum.reduce_while(rest, nil, fn potential_opponent, _acc ->
     if Enum.member?(player.opponents, potential_opponent.id) do
       {:cont, nil}
@@ -645,7 +647,7 @@ end
 Finds and returns the current round  matches
 """
  def current_matches(tournament_id)do
-
+try do
   tournament = get_tournament!(tournament_id)
 
   q=  from m in Match,
@@ -654,9 +656,10 @@ Finds and returns the current round  matches
   matches = Repo.all(q)
 
 
-  matches
+ {:ok, matches}
+rescue _e -> {:error, :not_found}
+
  end
-
-
+ end
 
 end

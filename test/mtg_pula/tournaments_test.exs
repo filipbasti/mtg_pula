@@ -101,7 +101,7 @@ defmodule MtgPula.TournamentsTest do
 
   current_matches_expected = Repo.all(q)
 
-   actual_current_matches = Tournaments.current_matches(tourney.id)
+  {:ok, actual_current_matches}  = Tournaments.current_matches(tourney.id)
 
   assert current_matches_expected == actual_current_matches
 
@@ -113,7 +113,7 @@ defmodule MtgPula.TournamentsTest do
 
   current_matches_expected = Repo.all(q)
 
-   actual_current_matches = Tournaments.current_matches(tourney.id)
+   {:ok, actual_current_matches} = Tournaments.current_matches(tourney.id)
 
   assert current_matches_expected == actual_current_matches
 
@@ -142,7 +142,7 @@ end
 
 
 
-    assert actual_list = Tournaments.standings_on_tournament(tourney.id)
+    assert {:ok, actual_list} = Tournaments.standings_on_tournament(tourney.id)
 
 
 

@@ -24,4 +24,24 @@ defmodule MtgPulaWeb.TournamentJSON do
       finished: tournament.finished
     }
   end
+
+
+  def show_standings(%{standings: standings})do
+  reduced = Enum.reduce(standings, [], fn x, acc ->
+
+    acc ++ [%{
+      id: x.id,
+      user_id: x.user_id,
+      full_name: x.user.full_name,
+      deck: x.deck,
+      points: x.points,
+      omw: x.omw,
+      gw: x.gw,
+      ogp: x.ogp
+      }]
+
+
+  end)
+  %{data: reduced}
+  end
 end
