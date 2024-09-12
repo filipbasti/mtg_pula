@@ -366,37 +366,38 @@ end
   def calculate_tiebreakers(standings, tournament) do
 
 
-new_standings = Enum.reduce(standings, [], fn x, acc ->
-  # Skip this iteration if x.opponent array is empty and if player had bye
+    new_standings = Enum.reduce(standings, [], fn x, acc ->
+      # Skip this iteration if x.opponent array is empty and if player had bye
 
-  if Enum.empty?(x.opponents) or x.had_bye do
+      if Enum.empty?(x.opponents) or x.had_bye do
 
-    new_player =  x
-    |> Map.put_new(:omw, 0.33)
-    |> Map.put_new(:gw, 0)
-    |> Map.put_new(:ogp, 0.33)
-    |> Map.put(:points, calculate_points(x))
-    |> Repo.preload([:user])
+        new_player =  x
+        |> Map.put_new(:omw, 0.33)
+        |> Map.put_new(:gw, 0)
+        |> Map.put_new(:ogp, 0.33)
+        |> Map.put(:points, calculate_points(x))
+        |> Repo.preload([:user])
 
-    acc ++ [new_player]
-  else
+        acc ++ [new_player]
+      else
 
-    gw = calculate_gw(x)
-    omw = calculate_procentage_omw(x, tournament)
-    ogp = calculate_ogp(x)
-    points = calculate_points(x)
+        gw = calculate_gw(x)
+        omw = calculate_procentage_omw(x, tournament)
+        ogp = calculate_ogp(x)
+        points = calculate_points(x)
 
-    new_player = x
-    |> Map.put_new(:omw, omw)
-    |> Map.put_new(:gw, gw)
-    |> Map.put_new(:ogp, ogp)
-    |> Map.put(:points, points)
-    |> Repo.preload([:user])
-    acc ++ [new_player]
-  end
-end)
-    new_standings
-  end
+        new_player = x
+        |> Map.put_new(:omw, omw)
+        |> Map.put_new(:gw, gw)
+        |> Map.put_new(:ogp, ogp)
+        |> Map.put(:points, points)
+        |> Repo.preload([:user])
+        acc ++ [new_player]
+      end
+    end)
+        new_standings
+      end
+
 
   @doc """
   Calculates points for a player
@@ -554,7 +555,7 @@ end)
 
 def prepare_matches(tournament_id) do
 
-
+try do
 {tournament, paired} = pair_next_round(tournament_id)
 
 corrected = case List.last(paired) do
@@ -576,7 +577,8 @@ corrected
    end)
 
    {tournament, paired}
-
+  rescue _e-> {:error, :not_found}
+end
 
   end
 

@@ -12,7 +12,9 @@ defmodule MtgPulaWeb.TournamentController do
   end
 
   def create(conn, %{"tournament" => tournament_params}) do
-    updated_params = Map.put(tournament_params, "user_id", conn.assigns.account.user.id)
+    updated_params = tournament_params
+    |> Map.put("user_id", conn.assigns.account.user.id)
+    |> Map.put("current_round", 0)
 
     with {:ok, %Tournament{} = tournament} <- Tournaments.create_tournament(updated_params) do
       conn
@@ -43,12 +45,20 @@ defmodule MtgPulaWeb.TournamentController do
   end
 
   def show_standings(conn, %{"id" => id}) do
+    IO.inspect(id)
  case Tournaments.standings_on_tournament(id)do
     {:ok, standings} -> render(conn, :show_standings, standings: standings)
     {:error, :not_found} -> raise ErrorResponse.NotFound, message: "Standings for this tournament not found"
 
  end
 
+
+  end
+  def prepare_next_round(conn, %{"id" => id})do
+    case Tournaments.prepare_matches(id)do
+      {_tournament, pairings} -> render(conn, :show_pairings, pairings: pairings )
+       {:error, :not_found} -> raise ErrorResponse.NotFound, message: "Standings for this tournament not found"
+    end
 
   end
 end
