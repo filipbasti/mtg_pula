@@ -244,11 +244,11 @@ defmodule MtgPula.Tournaments do
   """
 
 def update_played(attrs) do
-  player1_id = attrs["player1_id"]
-  player2_id = attrs["player2_id"]
-  if player1_id || player2_id != nil do
-  with player1 <- get_player!(player1_id),
-       player2 when not is_nil(player2) <- get_player!(player2_id) do
+
+
+  if attrs.player1_id || attrs.player2_id != nil do
+  with player1 <- get_player!(attrs.player1_id),
+       player2 when not is_nil(player2) <- get_player!(attrs.player2_id) do
 
     updated_player1 = %{opponents: [player2.id | player1.opponents]}
     updated_player2 = %{opponents: [player1.id | player2.opponents]}
@@ -263,7 +263,9 @@ def update_played(attrs) do
 end
 end
 def create_match(attrs \\ %{}) do
+  if attrs != %{}do
    update_played(attrs)
+  end
 
       %Match{}
       |> Match.changeset(attrs)
@@ -342,6 +344,8 @@ end
       where: p.tournament_id == ^tournament_id and p.dropped == false
 
     standings = Repo.all(query)
+
+
     tournament = Repo.get!(Tournament, tournament_id)
     standings = standings
     |> calculate_tiebreakers(tournament)
@@ -554,33 +558,43 @@ end
   """
 
 def prepare_matches(tournament_id) do
+  tournament = get_tournament!(tournament_id)
 
-try do
-{tournament, paired} = pair_next_round(tournament_id)
+  if tournament.finished do
+    IO.puts("Raising finished_tourney error")  # Debugging to check if this is reached
+    {:error, :finished_tourney}
+  else
+    try do
+      {tournament, paired} = pair_next_round(tournament_id)
 
-corrected = case List.last(paired) do
-  {_, :bye} -> List.delete_at(paired,-1)
-  _->paired
- end
+      # Logic to check if tournament has finished after this round
+      if tournament.current_round >= tournament.number_of_rounds do
+        update_tournament(tournament, %{finished: true})
+      end
 
-corrected
-  |> Enum.each( fn {player1, player2} ->
-    params =%{
-      tournament_id: tournament.id,
-      player1_id: player1.id,
-      player2_id: player2.id,
-      on_play_id: player1.id,
-      round: tournament.current_round
-    }
-    create_match(params)
+      corrected = case List.last(paired) do
+        {_, :bye} -> List.delete_at(paired, -1)
+        _ -> paired
+      end
 
-   end)
+      corrected
+      |> Enum.each(fn {player1, player2} ->
+        params = %{
+          player1_id: player1.id,
+          player2_id: player2.id,
+          tournament_id: tournament.id,
+          on_play_id: player1.id,
+          round: tournament.current_round
+        }
+        create_match(params)
+      end)
 
-   {tournament, paired}
-  rescue _e-> {:error, :not_found}
-end
-
+      {tournament, paired}
+    rescue
+      _e -> {:error, :not_found}
+    end
   end
+end
 
 
 

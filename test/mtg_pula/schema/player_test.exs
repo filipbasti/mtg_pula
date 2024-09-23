@@ -18,7 +18,7 @@ defmodule MtgPula.Schema.PlayerTest do
   ]
 
   @optional [
-  :id, :had_bye, :points, :inserted_at, :updated_at, :dropped
+  :id, :had_bye, :points, :inserted_at, :updated_at, :dropped, :opponents
   ]
 
   describe "fields and types" do

@@ -62,7 +62,8 @@ defmodule MtgPulaWeb.TournamentJSON do
       points: x.points,
       omw: x.omw,
       gw: x.gw,
-      ogp: x.ogp
+      ogp: x.ogp,
+      opponents: x.opponents
       }]
 
 

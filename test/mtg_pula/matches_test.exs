@@ -7,7 +7,7 @@ defmodule MtgPula.MatchesTest do
   end
   describe "create_match/1"do
     test "success: it inserts an match in the db and returns the match"do
-      params = Factory.string_params_with_assocs(:match)
+      params = Factory.params_with_assocs(:match)
 
       assert {:ok, %Match{} = returned_match} = Tournaments.create_match(params)
 
@@ -18,7 +18,7 @@ defmodule MtgPula.MatchesTest do
 
 
       for {param_field, expected} <- params do
-        schema_field = String.to_existing_atom(param_field)
+        schema_field = param_field
         actual = Map.get(match_from_db, schema_field)
 
         assert actual == expected, "Value did not match for field: #{param_field} \n expected: #{expected}, \n actual: #{actual}"
@@ -34,7 +34,7 @@ defmodule MtgPula.MatchesTest do
 
     end
     test "player1 is in player2 opponents and vice versa"do
-      params = Factory.string_params_with_assocs(:match)
+      params = Factory.params_with_assocs(:match)
 
       assert {:ok, %Match{} = returned_match} = Tournaments.create_match(params)
       player1= Tournaments.get_player!(returned_match.player1_id)

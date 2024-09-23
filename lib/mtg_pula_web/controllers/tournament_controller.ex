@@ -56,8 +56,10 @@ defmodule MtgPulaWeb.TournamentController do
   end
   def prepare_next_round(conn, %{"id" => id})do
     case Tournaments.prepare_matches(id)do
-      {_tournament, pairings} -> render(conn, :show_pairings, pairings: pairings )
+
        {:error, :not_found} -> raise ErrorResponse.NotFound, message: "Standings for this tournament not found"
+       {:error, :finished_tourney} -> raise ErrorResponse.Finished, message: "This tournament is already finished"
+        {_tournament, pairings} -> render(conn, :show_pairings, pairings: pairings )
     end
 
   end

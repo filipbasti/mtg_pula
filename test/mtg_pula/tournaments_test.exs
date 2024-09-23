@@ -169,6 +169,7 @@ end
   tourney = Factory.insert(:tournament)
   player_count = 9
   expected_players = Factory.insert_list(player_count, :player, [tournament: tourney, opponents: [], points: 0, had_bye: false])
+
   assert {_tourney, matches} = Tournaments.prepare_matches(tourney.id)
 
   paired_players = Enum.reduce(matches, [], fn y , acc ->
