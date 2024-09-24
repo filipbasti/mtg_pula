@@ -51,6 +51,32 @@ defmodule MtgPulaWeb.TournamentJSON do
 
   end
 
+  def show_matches(%{pairings: pairings })do
+    reduced = Enum.reduce(pairings, [], fn x, acc ->
+      if x.player2 ==:bye do
+        acc ++ [%{
+          player1_id: x.player1.id,
+          player1_fullname: x.player1.user.full_name,
+          player2_id: :bye,
+
+          }]
+        else
+          acc ++ [%{
+            player1_id: x.player1.id,
+            player1_fullname: x.player1.user.full_name,
+            player2_id: x.player2.id,
+            player2_fullname: x.player2.user.full_name
+
+            }]
+       end
+
+
+
+    end)
+    %{data: reduced}
+
+  end
+
   def show_standings(%{standings: standings})do
   reduced = Enum.reduce(standings, [], fn x, acc ->
 
@@ -70,4 +96,7 @@ defmodule MtgPulaWeb.TournamentJSON do
   end)
   %{data: reduced}
   end
+
+
+
 end

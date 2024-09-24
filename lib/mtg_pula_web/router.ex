@@ -38,6 +38,6 @@ defmodule MtgPulaWeb.Router do
     post "/tournaments/create", TournamentController, :create
     post "/tournaments/add_player", PlayerController, :create
     get "/tournaments/prepare_round/:id", TournamentController, :prepare_next_round
-
+    get "/tournaments/current_matches/:tournament_id", TournamentController, :current_matches
   end
 end

@@ -561,7 +561,7 @@ def prepare_matches(tournament_id) do
   tournament = get_tournament!(tournament_id)
 
   if tournament.finished do
-    IO.puts("Raising finished_tourney error")  # Debugging to check if this is reached
+
     {:error, :finished_tourney}
   else
     try do
@@ -582,7 +582,7 @@ def prepare_matches(tournament_id) do
         params = %{
           player1_id: player1.id,
           player2_id: player2.id,
-          tournament_id: tournament.id,
+          tournament_id: tournament_id,
           on_play_id: player1.id,
           round: tournament.current_round
         }
@@ -665,13 +665,14 @@ Finds and returns the current round  matches
  def current_matches(tournament_id)do
 try do
   tournament = get_tournament!(tournament_id)
-
+  IO.inspect(tournament)
   q=  from m in Match,
-  where: m.tournament_id == ^tournament.id and m.round == ^tournament.current_round
+  where: m.round == ^tournament.current_round and m.tournament_id == ^tournament_id,
+  preload: [player1: :user, player2: :user]
 
   matches = Repo.all(q)
 
-
+  IO.inspect(matches)
  {:ok, matches}
 rescue _e -> {:error, :not_found}
 

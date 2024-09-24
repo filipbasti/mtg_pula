@@ -63,4 +63,12 @@ defmodule MtgPulaWeb.TournamentController do
     end
 
   end
+
+  def current_matches(conn, %{"tournament_id" => tournament_id})do
+    case Tournaments.current_matches(tournament_id)do
+       {:error, :not_found} -> raise ErrorResponse.NotFound, message: "Pairings for this tournament not found"
+        {_tournament, pairings} -> render(conn, :show_matches, pairings: pairings )
+    end
+
+  end
 end
