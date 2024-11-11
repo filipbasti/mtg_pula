@@ -31,16 +31,16 @@ defmodule MtgPulaWeb.TournamentJSON do
         acc ++ [%{
 
           player1_id: player1.id,
-          player1_fullname: player1.user.full_name|| "",
-          player2_id: :bye,
+
+          bye: true
 
           }]
         else
           acc ++ [%{
             player1_id: player1.id ,
-            player1_fullname: player1.user.full_name || "",
+
             player2_id: player2.id,
-            player2_fullname: player2.user.full_name || ""
+
 
             }]
        end
@@ -54,12 +54,12 @@ defmodule MtgPulaWeb.TournamentJSON do
 
   def show_matches(%{pairings: pairings })do
     reduced = Enum.reduce(pairings, [], fn x, acc ->
-      if x.player2 ==:bye do
+      if x.player2_id == nil do
         acc ++ [%{
           match_id: x.id,
           player1_id: x.player1.id,
           player1_fullname: x.player1.user.full_name,
-          player2_id: :bye,
+          bye: true
 
           }]
         else

@@ -263,7 +263,7 @@ def update_played(attrs) do
 end
 end
 def create_match(attrs \\ %{}) do
-  if attrs != %{}do
+  if attrs != %{} and attrs.player2_id !=nil do
    update_played(attrs)
   end
 
@@ -556,17 +556,7 @@ end
 
 
   """
-  def handle_bye(tournament, paired)do
-    {player1, _player2} = List.last(paired)
-     params = %{
-       player1_id: player1.id,
-       tournament_id: tournament.id,
-       round: tournament.current_round
-     }
-     create_match(params)
 
-     List.delete_at(paired, -1)
-   end
 def prepare_matches(tournament_id) do
   tournament = get_tournament!(tournament_id)
 
@@ -581,28 +571,39 @@ def prepare_matches(tournament_id) do
       if tournament.current_round >= tournament.number_of_rounds do
         update_tournament(tournament, %{finished: true})
       end
+      paired
+      |> Enum.each(
+        fn {player1, player2} ->
 
-
-      corrected = case List.last(paired) do
-        {_, :bye} -> List.delete_at(paired, -1)
-        _ -> paired
-      end
-
-      corrected
-      |> Enum.each(fn {player1, player2} ->
-        params = %{
+         params = if player2 != :bye do
+       %{
           player1_id: player1.id,
           player2_id: player2.id,
           tournament_id: tournament_id,
           on_play_id: player1.id,
           round: tournament.current_round
         }
-        create_match(params)
+
+      else  %{
+        player1_id: player1.id,
+        player2_id: nil,
+        tournament_id: tournament_id,
+        on_play_id: player1.id,
+        round: tournament.current_round
+      }
+      end
+
+      create_match(params)
       end)
 
       {tournament, paired}
     rescue
-      _e -> {:error, :not_found}
+      e ->
+
+        IO.inspect(e)
+        {:error, :not_found}
+
+
     end
   end
 end
@@ -683,7 +684,7 @@ try do
 
   matches = Repo.all(q)
 
-  IO.inspect(matches)
+
  {:ok, matches}
 rescue _e -> {:error, :not_found}
 
