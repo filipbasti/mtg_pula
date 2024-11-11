@@ -19,7 +19,7 @@ defmodule MtgPula.Schema.MatchTest do
   ]
 
   @optional [
-    :id, :inserted_at, :updated_at, :winner_id, :is_draw, :player_1_wins, :player_2_wins, :on_play
+    :id, :inserted_at, :updated_at, :winner_id, :is_draw, :player_1_wins, :player_2_wins, :on_play, :player2_id
   ]
 
   describe "fields and types" do

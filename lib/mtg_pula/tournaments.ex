@@ -556,7 +556,17 @@ end
 
 
   """
+  def handle_bye(tournament, paired)do
+    {player1, _player2} = List.last(paired)
+     params = %{
+       player1_id: player1.id,
+       tournament_id: tournament.id,
+       round: tournament.current_round
+     }
+     create_match(params)
 
+     List.delete_at(paired, -1)
+   end
 def prepare_matches(tournament_id) do
   tournament = get_tournament!(tournament_id)
 
@@ -571,6 +581,7 @@ def prepare_matches(tournament_id) do
       if tournament.current_round >= tournament.number_of_rounds do
         update_tournament(tournament, %{finished: true})
       end
+
 
       corrected = case List.last(paired) do
         {_, :bye} -> List.delete_at(paired, -1)
@@ -665,7 +676,7 @@ Finds and returns the current round  matches
  def current_matches(tournament_id)do
 try do
   tournament = get_tournament!(tournament_id)
-  IO.inspect(tournament)
+
   q=  from m in Match,
   where: m.round == ^tournament.current_round and m.tournament_id == ^tournament_id,
   preload: [player1: :user, player2: :user]

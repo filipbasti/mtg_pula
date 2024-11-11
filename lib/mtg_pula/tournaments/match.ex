@@ -1,7 +1,7 @@
 defmodule MtgPula.Tournaments.Match do
   use Ecto.Schema
   import Ecto.Changeset
-  @optional_fields [:id, :inserted_at, :updated_at, :is_draw, :player_1_wins, :player_2_wins, :on_play, :winner_id]
+  @optional_fields [:id, :inserted_at, :updated_at, :is_draw, :player_1_wins, :player_2_wins, :on_play, :winner_id, :player2_id]
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "matches" do

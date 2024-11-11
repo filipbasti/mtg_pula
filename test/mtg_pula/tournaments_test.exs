@@ -97,9 +97,11 @@ defmodule MtgPula.TournamentsTest do
   assert {tourney, _matches} = Tournaments.prepare_matches(tourney.id)
 
   q=  from m in Match,
-  where: m.tournament_id == ^tourney.id and ^tourney.current_round ==m.round
+  where: m.tournament_id == ^tourney.id and ^tourney.current_round ==m.round,
+  preload: [player1: :user, player2: :user]
 
-  current_matches_expected = Repo.all(q)
+
+ current_matches_expected= Repo.all(q)
 
   {:ok, actual_current_matches}  = Tournaments.current_matches(tourney.id)
 
@@ -109,13 +111,14 @@ defmodule MtgPula.TournamentsTest do
 
 # check next round
   q=  from m in Match,
-  where: m.tournament_id == ^tourney.id and ^tourney.current_round ==m.round
+  where: m.tournament_id == ^tourney.id and ^tourney.current_round ==m.round,
+  preload: [player1: :user, player2: :user]
 
   current_matches_expected = Repo.all(q)
 
    {:ok, actual_current_matches} = Tournaments.current_matches(tourney.id)
 
-  assert current_matches_expected == actual_current_matches
+  assert current_matches_expected == actual_current_matches, "second match fail"
 
   end
 end
