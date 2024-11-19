@@ -37,7 +37,8 @@ defmodule MtgPulaWeb.Router do
     put "/users/update", UserController, :update
     post "/tournaments/create", TournamentController, :create
     post "/tournaments/add_player", PlayerController, :create
-    get "/tournaments/prepare_round/:id", TournamentController, :prepare_next_round
+    get "/tournaments/prepare_round/:tournament_id", TournamentController, :prepare_next_round
     get "/tournaments/current_matches/:tournament_id", TournamentController, :current_matches
+    patch "/tournaments/matches/:id", MatchController, :update_score_and_play
   end
 end

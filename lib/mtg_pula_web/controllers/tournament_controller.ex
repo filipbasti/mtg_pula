@@ -6,6 +6,9 @@ defmodule MtgPulaWeb.TournamentController do
   alias MtgPulaWeb.Tournament.ErrorResponse
   action_fallback MtgPulaWeb.FallbackController
 
+  import MtgPulaWeb.Auth.AuthorizedPlug
+
+  plug :is_authorized when action in [:update, :delete, :prepare_next_round]
   def index(conn, _params) do
     tournaments = Tournaments.list_tournaments()
     render(conn, :index, tournaments: tournaments)
@@ -54,8 +57,8 @@ defmodule MtgPulaWeb.TournamentController do
 
 
   end
-  def prepare_next_round(conn, %{"id" => id})do
-    case Tournaments.prepare_matches(id)do
+  def prepare_next_round(conn,  %{"tournament_id" => tournament_id})do
+    case Tournaments.prepare_matches(tournament_id)do
 
        {:error, :not_found} -> raise ErrorResponse.NotFound, message: "Standings for this tournament not found"
        {:error, :finished_tourney} -> raise ErrorResponse.Finished, message: "This tournament is already finished"

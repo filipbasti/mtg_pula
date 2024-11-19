@@ -6,6 +6,10 @@ defmodule MtgPulaWeb.PlayerController do
 
   action_fallback MtgPulaWeb.FallbackController
 
+  import MtgPulaWeb.Auth.AuthorizedPlug
+
+  plug :is_authorized when action in [:update, :delete, :create]
+
   def index(conn, _params) do
     players = Tournaments.list_players()
     render(conn, :index, players: players)

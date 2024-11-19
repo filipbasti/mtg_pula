@@ -77,7 +77,7 @@ defmodule MtgPula.Support.Factory do
     }
 
     |> set_wins()
-    |> set_winner()
+
     |>set_on_play()
 
 
@@ -92,19 +92,7 @@ defmodule MtgPula.Support.Factory do
 
     %{match | player_1_wins: player_1_wins, player_2_wins: player_2_wins}
   end
-  defp set_winner(%Match{player_1_wins: p1_wins, player_2_wins: p2_wins, player1: p1, player2: p2} = match) do
-    cond do
-      p1_wins > p2_wins ->
 
-        %{match | winner: p1}
-      p2_wins > p1_wins ->
-
-        %{match | winner: p2}
-      p1_wins == p2_wins ->
-
-        %{match | winner: nil, is_draw: true}
-    end
-  end
 
   defp set_on_play(%Match{player1: p1_id, player2: p2_id} = match) do
     play_id = Enum.random([p1_id, p2_id])
