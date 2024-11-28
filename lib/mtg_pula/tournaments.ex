@@ -598,9 +598,9 @@ def prepare_matches(tournament_id) do
 
       {tournament, paired}
     rescue
-      e ->
+      _e ->
 
-        IO.inspect(e)
+
         {:error, :not_found}
 
 
@@ -629,7 +629,7 @@ def make_pairings([player | rest], pairings) do
       make_pairings(remaining, [{player, pair} | pairings])
 
     nil ->
-      if player.had_bye do
+
         # Reorder the list by rank (assuming player.points is the ranking criteria)
         sorted_rest = Enum.sort_by(rest, &{&1.points, &1.omw, &1.gw, &1.ogp}, :asc)
 
@@ -638,19 +638,14 @@ def make_pairings([player | rest], pairings) do
           case Enum.find(sorted_rest, fn p -> not p.had_bye end) do
             nil -> {player, rest} # Fallback to the current player if all have had a bye
             found_player -> {found_player, List.delete(sorted_rest, found_player)}
+
           end
 
 
         {:ok, updated_player} = update_player(bye_player, %{had_bye: true})
 
         make_pairings(remaining, pairings ++ [{updated_player, :bye}])
-      else
 
-
-        {:ok, updated_player} = update_player(player, %{had_bye: true})
-
-        make_pairings(rest, pairings ++ [{updated_player, :bye}])
-      end
   end
 end
 

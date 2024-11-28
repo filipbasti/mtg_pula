@@ -1,7 +1,7 @@
 defmodule MtgPula.Schema.MatchTest do
  use MtgPula.Support.SchemaCase
   alias MtgPula.Tournaments.Match
-  import Ecto.Changeset
+
 
   @expected_fields_with_types [
     {:id, :binary_id},
@@ -40,11 +40,33 @@ defmodule MtgPula.Schema.MatchTest do
 
       assert %Changeset{valid?: true, changes: changes} = changeset
 
-      for {field, _} <- @expected_fields_with_types do
+      for {field, _type} <- @expected_fields_with_types do
         actual = Map.get(changes, field)
-        expected = valid_params[Atom.to_string(field)]
 
-        assert actual == expected, "Values did not match for field: #{field}\n expected: #{inspect(expected)} \n actual: #{inspect(actual)}"
+        cond do
+          field == :winner_id ->
+            expected_winner =
+              cond do
+                valid_params["player_1_wins"] > valid_params["player_2_wins"] -> valid_params["player1_id"]
+                valid_params["player_2_wins"] > valid_params["player_1_wins"] -> valid_params["player2_id"]
+                true -> nil
+              end
+
+            assert actual == expected_winner,
+                   "Values did not match for field: #{field}\n expected: #{inspect(expected_winner)} \n actual: #{inspect(actual)}"
+
+          field == :is_draw ->
+            expected_draw = valid_params["player_1_wins"] == valid_params["player_2_wins"]
+
+            assert actual == expected_draw,
+                   "Values did not match for field: #{field}\n expected: #{inspect(expected_draw)} \n actual: #{inspect(actual)}"
+
+          true ->
+            expected = valid_params[Atom.to_string(field)]
+
+            assert actual == expected,
+                   "Values did not match for field: #{field}\n expected: #{inspect(expected)} \n actual: #{inspect(actual)}"
+        end
       end
     end
 
@@ -77,75 +99,5 @@ defmodule MtgPula.Schema.MatchTest do
     end
 
   end
- describe "calculate_winner/1" do
-  @tag :skip
-    test "sets winner_id to player that has more wins, if it has less it calculates it as draw" do
 
-      valid_params = valid_params(@expected_fields_with_types)
-
-      changeset =
-        %Match{}
-        |> Match.changeset(valid_params)
-        IO.inspect(changeset)
-
-
-
-
-       winner = cond do
-         valid_params["player_1_wins"] > valid_params["player_2_wins"] -> valid_params["player1_id"]
-         valid_params["player_1_wins"] < valid_params["player_2_wins"] -> valid_params["player2_id"]
-
-       end
-       IO.inspect(changeset)
-
-      assert get_change(changeset, :winner_id) == winner
-      assert get_change(changeset, :is_draw) == false
-
-    end
-    @tag :skip
-    test "sets winner_id to player2_id when player 2 has more wins" do
-      changeset =
-        %Match{}
-        |> Match.changeset(%{
-          player1_id: "player1-id",
-          player2_id: "player2-id",
-          player_1_wins: 1,
-          player_2_wins: 2
-        })
-
-
-      assert get_change(changeset, :winner_id) == "player2-id"
-      assert get_change(changeset, :is_draw) == false
-    end
-    @tag :skip
-    test "sets is_draw to true when both players have the same number of wins" do
-      changeset =
-        %Match{}
-        |> Match.changeset(%{
-          player1_id: "player1-id",
-          player2_id: "player2-id",
-          player_1_wins: 2,
-          player_2_wins: 2
-        })
-
-
-      assert get_change(changeset, :is_draw) == true
-      assert get_change(changeset, :winner_id) == nil
-    end
-    @tag :skip
-    test "handles nil wins values correctly" do
-      changeset =
-        %Match{}
-        |> Match.changeset(%{
-          player1_id: "player1-id",
-          player2_id: "player2-id",
-          player_1_wins: nil,
-          player_2_wins: nil
-        })
-
-      assert changeset.valid?
-      assert get_change(changeset, :is_draw) == true
-      assert get_change(changeset, :winner_id) == nil
-    end
-  end
 end

@@ -24,7 +24,7 @@ defmodule MtgPula.Tournaments.Match do
   defp all_fields do
     __MODULE__.__schema__(:fields)
   end
-
+#Acts as a trigger to asign winner and is draw flag
   defp calculate_winner(changeset) do
     player_1_wins = get_field(changeset, :player_1_wins, 0)
     player_2_wins = get_field(changeset, :player_2_wins, 0)
@@ -32,17 +32,18 @@ defmodule MtgPula.Tournaments.Match do
     player2_id = get_field(changeset, :player2_id)
 
     cond do
+    #check if player 1 has more wins
       player_1_wins > player_2_wins ->
         changeset
         |> put_change(:winner_id, player1_id)
         |> put_change(:is_draw, false)
-
+    #check if player 2 has more wins
       player_2_wins > player_1_wins ->
         changeset
         |> put_change(:winner_id, player2_id)
         |> put_change(:is_draw, false)
-
-      player_1_wins == player_2_wins ->
+      #check if it is draw and game is not bye
+      player_1_wins == player_2_wins  and player2_id != nil ->
         changeset
         |> put_change(:winner_id, nil)
         |> put_change(:is_draw, true)
@@ -57,7 +58,7 @@ defmodule MtgPula.Tournaments.Match do
     match
 
     |> cast(attrs, all_fields())
-    #|> calculate_winner()
+    |> calculate_winner()
     |> validate_required(all_fields() -- @optional_fields)
 
   end
