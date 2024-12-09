@@ -2,9 +2,9 @@ import Config
 
 # Configure your database
 config :mtg_pula, MtgPula.Repo,
-  username: "backend_stuff",
+  username: "postgres",
   password: "javolimkrafnu123",
-  hostname: "192.168.1.136",
+  hostname: "192.130.1.4",
   database: "mtg_pula_dev",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,

@@ -6,9 +6,9 @@ import Config
 # to provide built-in test partitioning in CI environment.
 # Run `mix help test` for more information.
 config :mtg_pula, MtgPula.Repo,
-username: "backend_stuff",
+username: "postgres",
 password: "javolimkrafnu123",
-hostname: "192.168.1.136",
+hostname: "192.130.1.4",
 database: "mtg_pula_test#{System.get_env("MIX_TEST_PARTITION") || ""}",
 pool: Ecto.Adapters.SQL.Sandbox,
 pool_size: System.schedulers_online() * 2
