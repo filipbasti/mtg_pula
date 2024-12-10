@@ -12,6 +12,7 @@ defmodule MtgPula.Application do
       MtgPula.Repo,
       {DNSCluster, query: Application.get_env(:mtg_pula, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: MtgPula.PubSub},
+      MtgPulaWeb.Presence,
       # Start a worker by calling: MtgPula.Worker.start_link(arg)
       # {MtgPula.Worker, arg},
       # Start to serve requests, typically the last entry

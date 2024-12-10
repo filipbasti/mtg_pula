@@ -1,8 +1,9 @@
 defmodule MtgPulaWeb.RoomChannel do
   alias MtgPula.Accounts
   use Phoenix.Channel
-
+  alias MtgPulaWeb.Presence
   def join("room:lobby", _message, socket) do
+    send(self(), :after_join)
     {:ok, socket} # TODO: check if user is in the lobby and add them to the lobby list
   end
 
@@ -15,6 +16,15 @@ defmodule MtgPulaWeb.RoomChannel do
     user = Accounts.get_full_account(account_id)
 
     broadcast!(socket, "new_msg", %{body: body, sender: user.email})
+    {:noreply, socket}
+  end
+  def handle_info(:after_join, socket) do
+    {:ok, _} =
+      Presence.track(socket, socket.assigns.account_id, %{
+        online_at: inspect(System.system_time(:second))
+      })
+
+    push(socket, "presence_state", Presence.list(socket))
     {:noreply, socket}
   end
 end
