@@ -6,6 +6,7 @@ defmodule MtgPula.Schema.TournamentTest do
     {:id, :binary_id},
     {:user_id, :binary_id},
     {:name, :string},
+    {:join_code, :string},
     {:finished, :boolean},
     {:current_round, :integer},
     {:number_of_rounds, :integer},
@@ -14,7 +15,7 @@ defmodule MtgPula.Schema.TournamentTest do
   ]
 
   @optional [
-  :id, :inserted_at, :updated_at, :current_round
+  :id, :inserted_at, :updated_at, :current_round, :join_code
   ]
 
   describe "fields and types" do
@@ -78,5 +79,6 @@ describe "changeset/2" do
   end
 
 end
+
 
 end

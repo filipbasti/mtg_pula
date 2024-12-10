@@ -227,12 +227,13 @@ end
     def remove_timestamps(player) do
       Map.drop(player, [:inserted_at, :updated_at])
     end
-
-
-
-
   end
-
+  test "join_code is generated if not provided" do
+    params = Factory.string_params_with_assocs(:tournament)
+    assert {:ok, %Tournament{} = returned_tournament} = Tournaments.create_tournament(params)
+    assert returned_tournament.join_code != nil
+    assert String.length(returned_tournament.join_code) == 6
+  end
 
 
 end
