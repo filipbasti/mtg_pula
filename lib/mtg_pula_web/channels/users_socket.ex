@@ -3,7 +3,7 @@ defmodule MtgPulaWeb.UserSocket do
   alias MtgPulaWeb.Auth.Guardian
 
   channel "room:*", MtgPulaWeb.RoomChannel
-
+  channel "tournament:*", MtgPulaWeb.TournamentChannel
   def connect(%{"token" => token}, socket, _connect_info) do
     with {:ok, claims} <- Guardian.decode_and_verify(token),
          {:ok, account} <- Guardian.resource_from_claims(claims) do
