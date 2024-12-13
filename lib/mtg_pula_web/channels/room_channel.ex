@@ -2,6 +2,11 @@ defmodule MtgPulaWeb.RoomChannel do
   alias MtgPula.Accounts
   use Phoenix.Channel
   alias MtgPulaWeb.Presence
+
+  @doc """
+  Joins the lobby room.
+
+  """
   def join("room:lobby", _message, socket) do
     send(self(), :after_join) # TODO: check if user is in the lobby and add them to the lobby list
     {:ok, socket} # TODO: check if user is in the lobby and add them to the lobby list

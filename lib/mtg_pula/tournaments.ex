@@ -38,6 +38,18 @@ defmodule MtgPula.Tournaments do
   def get_tournament!(id), do: Repo.get!(Tournament, id)
 
   @doc """
+  Gets a tournament by join code.
+  ## Examples
+
+      iex> get_tournament_by_join_code("123456")
+      %Tournament{}
+
+      iex> get_tournament_by_join_code("123456")
+      nil
+  """
+  def get_tournament_by_join_code(join_code), do: Repo.get_by(Tournament, join_code: join_code)
+
+  @doc """
   Creates a tournament.
 
   ## Examples
@@ -243,6 +255,9 @@ defmodule MtgPula.Tournaments do
 
   """
 
+  @doc """
+  Updates the opponents of the players that played in a match.
+  """
 def update_played(attrs) do
 
 
@@ -323,6 +338,7 @@ end
   end
   @doc"""
   Lists tournaments with their players
+  ## Examples
   """
 
   def list_tournaments_with_players_and_users do
@@ -335,7 +351,10 @@ end
 
   @doc """
   Returns standings with tiebreakers and points
+  ## Examples
 
+      iex> standings_on_tournament(123)
+      [%Player{}, ...]
 
   """
   def standings_on_tournament(tournament_id) do
@@ -364,6 +383,10 @@ end
 
   @doc """
   Calculates tiebreakers for a certain standings and tournament
+  ## Examples
+
+      iex> calculate_tiebreakers(standings, tournament)
+      [%Player{}, ...]
 
 
   """
@@ -405,7 +428,10 @@ end
 
   @doc """
   Calculates points for a player
+  ## Examples
 
+      iex> calculate_points(player)
+      %Player{}
 
   """
   def calculate_points(player)do
@@ -435,7 +461,7 @@ end
 
   @doc """
   Calculates average opponents match win procentage from players list of opponents
-
+  ## Examples
 
   """
   def calculate_procentage_omw(player, _tournament) do
