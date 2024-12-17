@@ -46,7 +46,8 @@ defmodule MtgPula.MixProject do
       {:guardian, "~> 2.3"},
       {:guardian_db, "~> 2.0"},
       {:faker, "~> 0.18", only: :test},
-      {:ex_machina, "~> 2.8.0", only: :test}
+      {:ex_machina, "~> 2.8.0", only: :test},
+      {:cors_plug, "~> 3.0"}
 
 
     ]

@@ -255,9 +255,7 @@ defmodule MtgPula.Tournaments do
 
   """
 
-  @doc """
-  Updates the opponents of the players that played in a match.
-  """
+
 def update_played(attrs) do
 
 
@@ -399,9 +397,9 @@ end
       if Enum.empty?(x.opponents) or x.had_bye do
 
         new_player =  x
-        |> Map.put_new(:omw, 0.33)
-        |> Map.put_new(:gw, 0)
-        |> Map.put_new(:ogp, 0.33)
+        |> Map.put_new(:omw, 33.00)
+        |> Map.put_new(:gw, 0.00)
+        |> Map.put_new(:ogp, 33.00)
         |> Map.put(:points, calculate_points(x))
         |> Repo.preload([:user])
 

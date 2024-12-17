@@ -1,7 +1,7 @@
 defmodule MtgPula.Schema.MatchTest do
  use MtgPula.Support.SchemaCase
   alias MtgPula.Tournaments.Match
-
+  import Ecto.Changeset
 
   @expected_fields_with_types [
     {:id, :binary_id},
@@ -38,10 +38,10 @@ defmodule MtgPula.Schema.MatchTest do
       valid_params = valid_params(@expected_fields_with_types)
       changeset = Match.changeset(%Match{}, valid_params)
 
-      assert %Changeset{valid?: true, changes: changes} = changeset
+      assert %Changeset{valid?: true} = changeset
 
       for {field, _type} <- @expected_fields_with_types do
-        actual = Map.get(changes, field)
+        actual = get_field(changeset, field)
 
         cond do
           field == :winner_id ->

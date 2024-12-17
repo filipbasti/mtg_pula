@@ -9,7 +9,7 @@ defmodule MtgPulaWeb.UserSocket do
          {:ok, account} <- Guardian.resource_from_claims(claims) do
       {:ok, assign(socket, :account_id, account.id)}
     else
-      _ -> :error
+      _ -> {:error, %{reason: "Unauthorized"}}
     end
   end
 
