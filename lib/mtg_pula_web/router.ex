@@ -10,9 +10,17 @@ defmodule MtgPulaWeb.Router do
    defp handle_errors(conn, %{reason: %{message: message}})do
     conn|> json(%{errors: message}) |>halt()
    end
+
+   defp handle_errors(conn, %{reason: %MtgPulaWeb.Auth.ErrorResponse.Unauthorized{message: message}}) do
+      conn
+      |> put_status(:unauthorized)
+      |> json(%{errors: message})
+      |> halt()
+  end
   pipeline :api do
     plug :accepts, ["json"]
     plug :fetch_session
+
   end
   pipeline :auth do
     plug MtgPulaWeb.Auth.Pipeline

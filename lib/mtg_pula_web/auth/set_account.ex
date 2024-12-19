@@ -11,7 +11,6 @@ defmodule MtgPulaWeb.Auth.SetAccount do
       conn
     else
       account_id = get_session(conn, :account_id)
-
       if account_id == nil, do: raise ErrorResponse.Unauthorized
       account = Accounts.get_full_account(account_id)
       cond do

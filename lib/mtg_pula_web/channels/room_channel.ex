@@ -16,17 +16,19 @@ defmodule MtgPulaWeb.RoomChannel do
     {:error, %{reason: "unauthorized"}} # TODO: check if user is in the room
   end
   def handle_in("new_msg", %{"body" => body}, socket) do
-    account_id = socket.assigns.account_id
-    IO.inspect(account_id)
-    user = Accounts.get_full_account(account_id)
 
-    broadcast!(socket, "new_msg", %{body: body, sender: user.email})
+
+    broadcast!(socket, "new_msg", %{body: body, sender: socket.assigns.user.user.full_name})
     {:noreply, socket}
   end
   def handle_info(:after_join, socket) do
+    account_id = socket.assigns.account_id
+    user = Accounts.get_full_account(account_id)
+    socket = assign(socket, :user, user)
     {:ok, _} =
-      Presence.track(socket, socket.assigns.account_id, %{
-        online_at: inspect(System.system_time(:second))
+      Presence.track(socket, user.id, %{
+        online_at: inspect(System.system_time(:second)),
+        user_name: user.user.full_name
       })
 
     push(socket, "presence_state", Presence.list(socket))

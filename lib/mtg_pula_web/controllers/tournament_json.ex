@@ -21,6 +21,7 @@ defmodule MtgPulaWeb.TournamentJSON do
       name: tournament.name,
       current_round: tournament.current_round,
       number_of_rounds: tournament.number_of_rounds,
+      join_code: tournament.join_code,
       finished: tournament.finished
     }
   end
