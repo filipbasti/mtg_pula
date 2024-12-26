@@ -18,6 +18,7 @@ defmodule MtgPulaWeb.TournamentChannel do
           socket = assign(socket, :role, "organizer")
           {:ok, socket}
         else
+          socket = assign(socket, :tournament_id, tournament.id)
           {:ok, socket}
         end
     end
@@ -32,11 +33,16 @@ end
   #Handles the after join event. Tracks the user presence.
 
   def handle_info(:after_join, socket) do
-    full_account = Accounts.get_full_account(socket.assigns.account_id)
+    account_id = socket.assigns.account_id
+    user = Accounts.get_full_account(account_id)
+    socket = assign(socket, :user, user)
     {:ok, _} =
-      Presence.track(socket, full_account.user.id, %{
-        entered_at: inspect(System.system_time(:second))
+      Presence.track(socket, user.id, %{
+        online_at: inspect(System.system_time(:second)),
+        user_name: user.user.full_name
       })
+
+    push(socket, "presence_state", Presence.list(socket))
     {:noreply, socket}
   end
 
@@ -45,16 +51,18 @@ end
   def handle_in("add_player", params, socket) do
     tournament_id = socket.assigns.tournament_id
     params = Map.put(params, "tournament_id", tournament_id)
+
    case  Tournaments.create_player(params) do
 
     {:ok, player} ->
+      IO.inspect("uspjeh")
       broadcast!(socket, "player_added", %{player: player})
-      {:noreply, socket}
-    {:error, _changeset} ->
-      {:reply, {:error, %{reason: "Failed to add player"}}, socket}
+      {:reply, socket}
+    {:error, changeset} ->
+      IO.inspect("failed")
+      {:reply, {:error, %{reason: "player already exist or there is an internal error"}}, socket}
    end
 
-    {:noreply, socket}
   end
 
 
