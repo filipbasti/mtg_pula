@@ -15,10 +15,10 @@ defmodule MtgPulaWeb.RoomChannel do
   def join("room:" <> _private_room_id, _params, _socket) do
     {:error, %{reason: "unauthorized"}} # TODO: check if user is in the room
   end
-  def handle_in("new_msg", %{"body" => body}, socket) do
+  def handle_in("new_msg", payload, socket) do
 
 
-    broadcast!(socket, "new_msg", %{body: body, sender: socket.assigns.user.user.full_name})
+    broadcast!(socket, "new_msg", payload)
     {:noreply, socket}
   end
   def handle_info(:after_join, socket) do
