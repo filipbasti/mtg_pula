@@ -1,9 +1,11 @@
 defmodule MtgPulaWeb.TournamentChannel do
   use Phoenix.Channel
+  alias Plug.Parsers.JSON
   alias MtgPula.Tournaments
   alias MtgPulaWeb.Presence
   alias MtgPula.Accounts
-
+  alias MtgPula.Users
+  alias MtgPulaWeb.TournamentController
   #Joins the tournament channel by join code.
 
   def join("tournament:" <> join_code, _params, socket) do
@@ -37,7 +39,7 @@ end
     user = Accounts.get_full_account(account_id)
     socket = assign(socket, :user, user)
     {:ok, _} =
-      Presence.track(socket, user.id, %{
+      Presence.track(socket, user.user.id, %{
         online_at: inspect(System.system_time(:second)),
         user_name: user.user.full_name
       })
@@ -55,16 +57,27 @@ end
    case  Tournaments.create_player(params) do
 
     {:ok, player} ->
-      IO.inspect("uspjeh")
-      broadcast!(socket, "player_added", %{player: player})
-      {:reply, socket}
+     user = Users.get_user!(player.user_id)
+    {:reply, {:ok, %{user_id: user.id, full_name: user.full_name}}, socket}
     {:error, changeset} ->
-      IO.inspect("failed")
+
       {:reply, {:error, %{reason: "player already exist or there is an internal error"}}, socket}
    end
 
   end
+  def handle_in("get_players", params, socket) do
+    tournament_id = socket.assigns.tournament_id
 
+   case  Tournaments.standings_on_tournament(tournament_id) do
+
+    {:ok, players} ->
+      {:reply, {:ok, players}, socket}
+    {:error, :not_found} ->
+
+      {:reply, {:error, %{reason: "player already exist or there is an internal error"}}, socket}
+   end
+
+  end
 
   #Removes a player from the tournament.
 
