@@ -194,7 +194,8 @@ defmodule MtgPula.Tournaments do
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_player(%Player{} = player) do
+  def delete_player(player_id) do
+    player = get_player!(player_id)
     Repo.delete(player)
   end
 
@@ -359,10 +360,7 @@ end
     try do
     query = from p in Player,
       where: p.tournament_id == ^tournament_id and p.dropped == false
-
     standings = Repo.all(query)
-
-
     tournament = Repo.get!(Tournament, tournament_id)
     standings = standings
     |> calculate_tiebreakers(tournament)

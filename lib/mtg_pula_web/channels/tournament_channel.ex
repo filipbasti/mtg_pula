@@ -1,11 +1,11 @@
 defmodule MtgPulaWeb.TournamentChannel do
   use Phoenix.Channel
-  alias Plug.Parsers.JSON
+
   alias MtgPula.Tournaments
   alias MtgPulaWeb.Presence
   alias MtgPula.Accounts
   alias MtgPula.Users
-  alias MtgPulaWeb.TournamentController
+ import Ecto.Changeset
   #Joins the tournament channel by join code.
 
   def join("tournament:" <> join_code, _params, socket) do
@@ -49,6 +49,18 @@ end
   end
 
   #Adds a player to the tournament.
+  def translate_errors(changeset) do
+    Ecto.Changeset.traverse_errors(changeset, fn {msg, opts} ->
+      Enum.reduce(opts, msg, fn {key, value}, acc ->
+        String.replace(acc, "%{#{key}}", to_string(value))
+      end)
+    end)
+    |> Enum.map(fn {field, messages} ->
+      "#{field}: #{Enum.join(messages, ", ")}"
+    end)
+    |> Enum.join("; ")
+  end
+
 
   def handle_in("add_player", params, socket) do
     tournament_id = socket.assigns.tournament_id
@@ -58,10 +70,9 @@ end
 
     {:ok, player} ->
      user = Users.get_user!(player.user_id)
-    {:reply, {:ok, %{user_id: user.id, full_name: user.full_name}}, socket}
+    {:reply, {:ok, player}, socket}
     {:error, changeset} ->
-
-      {:reply, {:error, %{reason: "player already exist or there is an internal error"}}, socket}
+      {:reply, {:error, %{reason: "player already exist or there is an internal error", changeset_errors: translate_errors(changeset) }}, socket}
    end
 
   end
@@ -85,7 +96,7 @@ end
     case Tournaments.delete_player(params["player_id"]) do
       {:ok, player} ->
         broadcast!(socket, "player_removed", %{player: player})
-        {:noreply, socket}
+        {:reply, {:ok, player.id} , socket}
       {:error, _changeset} ->
         {:reply, {:error, %{reason: "Failed to remove player"}}, socket}
     end
