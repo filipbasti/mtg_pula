@@ -1,11 +1,23 @@
 defmodule MtgPulaWeb.TournamentChannel do
   use Phoenix.Channel
-
   alias MtgPula.Tournaments
   alias MtgPulaWeb.Presence
   alias MtgPula.Accounts
   alias MtgPula.Users
- import Ecto.Changeset
+  #translates the errors in the changeset.
+  def translate_errors(changeset) do
+    Ecto.Changeset.traverse_errors(changeset, fn {msg, opts} ->
+      Enum.reduce(opts, msg, fn {key, value}, acc ->
+        String.replace(acc, "%{#{key}}", to_string(value))
+      end)
+    end)
+    |> Enum.map(fn {field, messages} ->
+      "#{field}: #{Enum.join(messages, ", ")}"
+    end)
+    |> Enum.join("; ")
+  end
+
+
   #Joins the tournament channel by join code.
 
   def join("tournament:" <> join_code, _params, socket) do
@@ -48,20 +60,20 @@ end
     {:noreply, socket}
   end
 
+
+
+    def handle_in("get_user_by_email", %{"email" => email}, socket) do
+    case Accounts.get_account_by_email(email) do
+      nil ->
+        {:reply, {:error, %{reason: "User not found"}}, socket}
+      account ->
+        {:reply, {:ok, %{user_id: account.user.id}}, socket}
+    end
+    end
+
+
+
   #Adds a player to the tournament.
-  def translate_errors(changeset) do
-    Ecto.Changeset.traverse_errors(changeset, fn {msg, opts} ->
-      Enum.reduce(opts, msg, fn {key, value}, acc ->
-        String.replace(acc, "%{#{key}}", to_string(value))
-      end)
-    end)
-    |> Enum.map(fn {field, messages} ->
-      "#{field}: #{Enum.join(messages, ", ")}"
-    end)
-    |> Enum.join("; ")
-  end
-
-
   def handle_in("add_player", params, socket) do
     tournament_id = socket.assigns.tournament_id
     params = Map.put(params, "tournament_id", tournament_id)
@@ -69,14 +81,16 @@ end
    case  Tournaments.create_player(params) do
 
     {:ok, player} ->
-     user = Users.get_user!(player.user_id)
+
     {:reply, {:ok, player}, socket}
     {:error, changeset} ->
       {:reply, {:error, %{reason: "player already exist or there is an internal error", changeset_errors: translate_errors(changeset) }}, socket}
    end
 
   end
-  def handle_in("get_players", params, socket) do
+
+  #Gets the players in the tournament.
+  def handle_in("get_players", _params, socket) do
     tournament_id = socket.assigns.tournament_id
 
    case  Tournaments.standings_on_tournament(tournament_id) do

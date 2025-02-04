@@ -58,6 +58,7 @@ defmodule MtgPula.Accounts do
   def get_account_by_email(email)do
     Account
     |> where(email: ^email)
+    |> preload([:user])
     |> Repo.one()
   end
   @doc """
