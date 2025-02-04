@@ -4,6 +4,7 @@ defmodule MtgPulaWeb.TournamentChannel do
   alias MtgPulaWeb.Presence
   alias MtgPula.Accounts
   alias MtgPula.Users
+  alias MtgPulaWeb.TournamentChannelJSON
   #translates the errors in the changeset.
   def translate_errors(changeset) do
     Ecto.Changeset.traverse_errors(changeset, fn {msg, opts} ->
@@ -22,17 +23,21 @@ defmodule MtgPulaWeb.TournamentChannel do
 
   def join("tournament:" <> join_code, _params, socket) do
     account_id = socket.assigns.account_id
+    user = Accounts.get_full_account(account_id)
+    IO.inspect("Joining tournament channel")
     send(self(), :after_join)
     case Tournaments.get_tournament_by_join_code(join_code)  do
       nil ->
         {:error, %{reason: "Tournament not found"}}
       tournament ->
-        if tournament.user_id == account_id do
+        if tournament.user_id == user.user.id do
+          IO.inspect("Organizer joined")
           socket = assign(socket, :tournament_id, tournament.id)
           socket = assign(socket, :role, "organizer")
           {:ok, socket}
         else
           socket = assign(socket, :tournament_id, tournament.id)
+          IO.inspect("Organizer didnt getz assigned")
           {:ok, socket}
         end
     end
@@ -145,7 +150,9 @@ end
   def handle_in("prepare_matches", _params, socket) do
     if socket.assigns.role == "organizer" do
       case Tournaments.prepare_matches(socket.assigns.tournament_id) do
-        {:ok, _matches} ->
+        {_tournament, matches} ->
+          matches_json = TournamentChannelJSON.render("matches.json", matches)
+          broadcast!(socket, "matches_prepared", %{matches: matches_json})
           {:noreply, socket}
       {:error, reason} ->
         {:reply, {:error, %{reason: reason}}, socket}
