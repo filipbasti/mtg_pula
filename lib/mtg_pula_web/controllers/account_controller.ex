@@ -68,7 +68,10 @@ defmodule MtgPulaWeb.AccountController do
     account = Accounts.get_full_account(id)
     render(conn, :show_full_account, account: account)
   end
-
+  def current_account(conn, %{}) do
+    account = conn.assigns[:account]
+    render(conn, :show_full_account, account: account)
+  end
   def update(conn, %{"account" => account_params}) do
     account = Accounts.get_account!(account_params["id"])
 

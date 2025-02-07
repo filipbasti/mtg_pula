@@ -167,7 +167,9 @@ end
   def handle_in("current_matches", _params, socket) do
     case Tournaments.current_matches(socket.assigns.tournament_id) do
       {:ok, matches} ->
-        {:reply, {:ok, %{matches: matches}}, socket}
+        matches_json = TournamentChannelJSON.render("matches.json", matches)
+        {:reply, {:ok, %{matches: matches_json}}, socket}
+
       {:error, reason} ->
         {:reply, {:error, %{reason: reason}}, socket}
     end

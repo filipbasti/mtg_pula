@@ -39,6 +39,7 @@ defmodule MtgPulaWeb.Router do
   scope "/api", MtgPulaWeb do
     pipe_through [:api, :auth]
     get "/accounts/by_id/:id", AccountController, :show
+    get "/accounts/current", AccountController, :current_account
     patch "/accounts/update", AccountController, :update
     post "/accounts/sign_out", AccountController, :sign_out
     post "/accounts/refresh_session", AccountController, :refresh_session
