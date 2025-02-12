@@ -32,4 +32,6 @@ defmodule MtgPulaWeb.RoomChannelTest do
     push(socket, "new_msg", %{"body" => "all"})
     assert_broadcast "new_msg", %{"body" => "all"}
   end
+
+
 end

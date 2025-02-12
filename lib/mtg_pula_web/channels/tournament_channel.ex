@@ -161,7 +161,16 @@ end
     {:reply, {:error, %{reason: "You are not authorized to prepare matches"}}, socket}
   end
   end
-
+  def handle_in("update_match", params, socket) do
+     match = Tournaments.get_match!(params["id"])
+      case Tournaments.update_match(match, %{player_1_wins: params["player_1_wins"], player_2_wins: params["player_2_wins"], on_play_id:  params["on_play_id"] }) do
+        {:ok, match} ->
+          broadcast!(socket, "match_updated", %{message: "updated match"})
+          {:noreply, socket}
+      {:error, reason} ->
+        {:reply, {:error, %{reason: reason}}, socket}
+  end
+  end
   #Gets the current matches for the tournament.
 
   def handle_in("current_matches", _params, socket) do
