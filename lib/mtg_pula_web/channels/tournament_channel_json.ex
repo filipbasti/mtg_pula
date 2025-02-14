@@ -9,7 +9,27 @@ defmodule MtgPulaWeb.TournamentChannelJSON do
 
     }
   end
+  def render("bye.json") do
+    %{
+      id: nil,
+      deck: nil,
+      opponents: nil,
+      points: nil,
+      had_bye: nil,
+      dropped: nil,
+      tournament_id: nil,
+      user_id: nil,
+      user:  %{
+        id: nil,
+        full_name: "bye",
 
+        biography: "bye",
+        account_id: nil,
+
+      },
+
+    }
+  end
   def render("player.json", %MtgPula.Tournaments.Player{} = player) do
     user_json = if Ecto.assoc_loaded?(player.user) do
       render("user.json", player.user)
@@ -32,12 +52,28 @@ defmodule MtgPulaWeb.TournamentChannelJSON do
   end
 
   def render("match.json", {player1, player2}) do
+    player2 = if player2 == :bye do
+      render("bye.json")
+    else
+
+      render("player.json", player2)
+    end
+
     %{
       player1: render("player.json", player1),
-      player2: render("player.json", player2)
+      player2: player2,
     }
   end
   def render("match.json", %MtgPula.Tournaments.Match{} = match) do
+    IO.inspect(match.player2)
+   player2 = if match.player2 == nil do
+
+      render("bye.json")
+    else
+
+      render("player.json", match.player2)
+    end
+
     %{
       id: match.id,
       round: match.round,
@@ -46,7 +82,7 @@ defmodule MtgPulaWeb.TournamentChannelJSON do
       is_draw: match.is_draw,
       on_play_id: match.on_play_id,
       player1: render("player.json", match.player1),
-      player2: render("player.json", match.player2),
+      player2: player2,
       winner_id: match.winner_id,
       tournament_id: match.tournament_id,
 

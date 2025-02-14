@@ -94,7 +94,7 @@ defmodule MtgPula.TournamentsTest do
   tourney = Factory.insert(:tournament)
   player_count = 9
   Factory.insert_list(player_count, :player, [tournament: tourney, opponents: [], points: 0, had_bye: false])
-  assert {tourney, _matches} = Tournaments.prepare_matches(tourney.id)
+  assert {:ok, tourney, _matches} = Tournaments.prepare_matches(tourney.id)
 
   q=  from m in Match,
   where: m.tournament_id == ^tourney.id and ^tourney.current_round ==m.round,
@@ -107,7 +107,7 @@ defmodule MtgPula.TournamentsTest do
 
   assert current_matches_expected == actual_current_matches
 
-  assert {tourney, _matches} = Tournaments.prepare_matches(tourney.id)
+  assert {:ok, tourney, _matches} = Tournaments.prepare_matches(tourney.id)
 
 # check next round
   q=  from m in Match,
@@ -173,7 +173,7 @@ end
   player_count = 9
   expected_players = Factory.insert_list(player_count, :player, [tournament: tourney, opponents: [], points: 0, had_bye: false])
 
-  assert {_tourney, matches} = Tournaments.prepare_matches(tourney.id)
+  assert {:ok, _tourney, matches} = Tournaments.prepare_matches(tourney.id)
 
   paired_players = Enum.reduce(matches, [], fn y , acc ->
     {player1, player2} = y

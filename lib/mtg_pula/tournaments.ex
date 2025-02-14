@@ -618,7 +618,7 @@ def prepare_matches(tournament_id) do
       create_match(params)
       end)
 
-      {tournament, paired}
+      {:ok, tournament, paired}
     rescue
       _e ->
 

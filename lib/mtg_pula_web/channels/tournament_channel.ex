@@ -150,12 +150,13 @@ end
   def handle_in("prepare_matches", _params, socket) do
     if socket.assigns.role == "organizer" do
       case Tournaments.prepare_matches(socket.assigns.tournament_id) do
-        {_tournament, matches} ->
+        {:ok, _tournament, matches} ->
           matches_json = TournamentChannelJSON.render("matches.json", matches)
           broadcast!(socket, "matches_prepared", %{matches: matches_json})
           {:noreply, socket}
-      {:error, reason} ->
-        {:reply, {:error, %{reason: reason}}, socket}
+      {:error, :finished_tourney} ->
+        IO.inspect("afaga")
+        {:reply, {:error, %{reason: "finished", redirect: true}}, socket}
     end
   else
     {:reply, {:error, %{reason: "You are not authorized to prepare matches"}}, socket}
