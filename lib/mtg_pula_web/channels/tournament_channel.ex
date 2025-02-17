@@ -1,10 +1,12 @@
 defmodule MtgPulaWeb.TournamentChannel do
   use Phoenix.Channel
+  alias MtgPula.Repo
   alias MtgPula.Tournaments
   alias MtgPulaWeb.Presence
   alias MtgPula.Accounts
-  alias MtgPula.Users
+
   alias MtgPulaWeb.TournamentChannelJSON
+
   #translates the errors in the changeset.
   def translate_errors(changeset) do
     Ecto.Changeset.traverse_errors(changeset, fn {msg, opts} ->
@@ -86,8 +88,10 @@ end
    case  Tournaments.create_player(params) do
 
     {:ok, player} ->
-
-    {:reply, {:ok, player}, socket}
+      player = Repo.preload(player, :user)
+      player_json = TournamentChannelJSON.render("player.json", player)
+      broadcast!(socket, "player_added", %{player: player_json})
+      {:reply, {:ok, %{player: player_json}}, socket}
     {:error, changeset} ->
       {:reply, {:error, %{reason: "player already exist or there is an internal error", changeset_errors: translate_errors(changeset) }}, socket}
    end
@@ -101,7 +105,9 @@ end
    case  Tournaments.standings_on_tournament(tournament_id) do
 
     {:ok, players} ->
-      {:reply, {:ok, players}, socket}
+      IO.inspect(players)
+      players_json = TournamentChannelJSON.render("players_start.json", players)
+        {:reply, {:ok, %{players: players_json}}, socket}
     {:error, :not_found} ->
 
       {:reply, {:error, %{reason: "player already exist or there is an internal error"}}, socket}
@@ -114,8 +120,9 @@ end
   def handle_in("remove_player", params, socket) do
     case Tournaments.delete_player(params["player_id"]) do
       {:ok, player} ->
-        broadcast!(socket, "player_removed", %{player: player})
-        {:reply, {:ok, player.id} , socket}
+        player_json = TournamentChannelJSON.render("player.json", player)
+        broadcast!(socket, "player_removed", %{player: player_json})
+        {:reply, {:ok, %{player: player_json}}, socket}
       {:error, _changeset} ->
         {:reply, {:error, %{reason: "Failed to remove player"}}, socket}
     end
@@ -153,7 +160,7 @@ end
         {:ok, _tournament, matches} ->
           matches_json = TournamentChannelJSON.render("matches.json", matches)
           broadcast!(socket, "matches_prepared", %{matches: matches_json})
-          {:noreply, socket}
+          {:reply, {:ok, %{matches: matches_json}}, socket}
       {:error, :finished_tourney} ->
         IO.inspect("afaga")
         {:reply, {:error, %{reason: "finished", redirect: true}}, socket}
@@ -165,7 +172,7 @@ end
   def handle_in("update_match", params, socket) do
      match = Tournaments.get_match!(params["id"])
       case Tournaments.update_match(match, %{player_1_wins: params["player_1_wins"], player_2_wins: params["player_2_wins"], on_play_id:  params["on_play_id"] }) do
-        {:ok, match} ->
+        {:ok, _match} ->
           broadcast!(socket, "match_updated", %{message: "updated match"})
           {:noreply, socket}
       {:error, reason} ->
@@ -182,6 +189,21 @@ end
 
       {:error, reason} ->
         {:reply, {:error, %{reason: reason}}, socket}
+    end
+  end
+
+  def handle_in("get_standings", params, socket) do
+    tournament_id = socket.assigns.tournament_id
+
+    case  Tournaments.standings_on_tournament(tournament_id) do
+
+     {:ok, players} ->
+       IO.inspect(players)
+       players_json = TournamentChannelJSON.render("standings.json", players)
+         {:reply, {:ok, %{players: players_json}}, socket}
+     {:error, :not_found} ->
+
+       {:reply, {:error, %{reason: "player already exist or there is an internal error"}}, socket}
     end
   end
 end

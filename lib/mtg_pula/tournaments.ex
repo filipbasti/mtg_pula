@@ -583,7 +583,6 @@ def prepare_matches(tournament_id) do
   tournament = get_tournament!(tournament_id)
 
   if tournament.finished do
-
     {:error, :finished_tourney}
   else
     try do
@@ -593,39 +592,45 @@ def prepare_matches(tournament_id) do
       if tournament.current_round >= tournament.number_of_rounds do
         update_tournament(tournament, %{finished: true})
       end
+
+      IO.inspect(paired, label: "Paired players")
+
       paired
-      |> Enum.each(
-        fn {player1, player2} ->
+      |> Enum.each(fn {player1, player2} ->
+        IO.inspect(player1, label: "Player 1")
+        IO.inspect(player2, label: "Player 2")
+        params = if player2 != :bye do
+          %{
+            player1_id: player1.id,
+            player2_id: player2.id,
+            tournament_id: tournament_id,
+            on_play_id: player1.id,
+            round: tournament.current_round
+          }
+        else
+          %{
+            player1_id: player1.id,
+            player2_id: nil,
+            tournament_id: tournament_id,
+            on_play_id: player1.id,
+            round: tournament.current_round
+          }
+        end
 
-         params = if player2 != :bye do
-       %{
-          player1_id: player1.id,
-          player2_id: player2.id,
-          tournament_id: tournament_id,
-          on_play_id: player1.id,
-          round: tournament.current_round
-        }
+        IO.inspect(params, label: "Match params")
 
-      else  %{
-        player1_id: player1.id,
-        player2_id: nil,
-        tournament_id: tournament_id,
-        on_play_id: player1.id,
-        round: tournament.current_round
-      }
-      end
-
-      create_match(params)
+        case create_match(params) do
+          {:ok, match} ->
+            IO.inspect(match, label: "Created match")
+          {:error, changeset} ->
+            IO.inspect(changeset, label: "Failed to create match")
+        end
       end)
 
       {:ok, tournament, paired}
     rescue
       _e ->
-
-
         {:error, :not_found}
-
-
     end
   end
 end
