@@ -23,23 +23,30 @@ defmodule MtgPulaWeb.TournamentChannel do
 
   #Joins the tournament channel by join code.
 
-  def join("tournament:" <> join_code, _params, socket) do
+  def join("tournament:" <> join_code, params, socket) do
     account_id = socket.assigns.account_id
     user = Accounts.get_full_account(account_id)
     IO.inspect("Joining tournament channel")
     send(self(), :after_join)
-    case Tournaments.get_tournament_by_join_code(join_code)  do
+    case Tournaments.get_tournament_by_join_code(join_code) do
       nil ->
         {:error, %{reason: "Tournament not found"}}
       tournament ->
+        deck = Map.get(params, "deck", nil)  # Get the deck from params or default to nil
         if tournament.user_id == user.user.id do
           IO.inspect("Organizer joined")
+
+
           socket = assign(socket, :tournament_id, tournament.id)
           socket = assign(socket, :role, "organizer")
+          socket = assign(socket, :deck, deck)  # Assign the deck to the socket
           {:ok, socket}
         else
+
+          IO.inspect("${deck}")
           socket = assign(socket, :tournament_id, tournament.id)
-          IO.inspect("Organizer didnt getz assigned")
+          socket = assign(socket, :deck, deck)  # Assign the deck to the socket
+          IO.inspect("Organizer didn't get assigned")
           {:ok, socket}
         end
     end
@@ -60,7 +67,8 @@ end
     {:ok, _} =
       Presence.track(socket, user.user.id, %{
         online_at: inspect(System.system_time(:second)),
-        user_name: user.user.full_name
+        user_name: user.user.full_name,
+        deck: socket.assigns.deck
       })
 
     push(socket, "presence_state", Presence.list(socket))
@@ -172,8 +180,8 @@ end
   def handle_in("update_match", params, socket) do
      match = Tournaments.get_match!(params["id"])
       case Tournaments.update_match(match, %{player_1_wins: params["player_1_wins"], player_2_wins: params["player_2_wins"], on_play_id:  params["on_play_id"] }) do
-        {:ok, _match} ->
-          broadcast!(socket, "match_updated", %{message: "updated match"})
+        {:ok, match} ->
+          broadcast!(socket, "match_updated", %{message: "updated match", id: match.id})
           {:noreply, socket}
       {:error, reason} ->
         {:reply, {:error, %{reason: reason}}, socket}
