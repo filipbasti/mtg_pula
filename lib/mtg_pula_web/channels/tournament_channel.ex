@@ -110,7 +110,7 @@ end
   def handle_in("get_players", _params, socket) do
     tournament_id = socket.assigns.tournament_id
 
-   case  Tournaments.standings_on_tournament(tournament_id) do
+   case  Tournaments.list_all_tournament_players(tournament_id) do
 
     {:ok, players} ->
       IO.inspect(players)

@@ -346,8 +346,27 @@ end
     |> Repo.all()
     |>Repo.preload([player: [:user]])
   end
+ @doc """
+  Lists all players added to a certain tournament
 
+  ## Examples
 
+      iex> list_all_tournament_players(123)
+      [%Player{}, ...]
+
+  """
+  def list_all_tournament_players(tournament_id) do
+    try do
+    query = from p in Player,
+      where: p.tournament_id == ^tournament_id and p.dropped == false
+   standings = Repo.all(query)
+      |>Repo.preload( :user)
+    {:ok, standings}
+
+    rescue _e ->
+      {:error, :not_found}
+    end
+  end
   @doc """
   Returns standings with tiebreakers and points
   ## Examples
