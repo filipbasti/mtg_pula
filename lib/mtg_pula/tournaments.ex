@@ -392,7 +392,7 @@ end
     new_standings = Enum.reduce(standings, [], fn x, acc ->
       # Skip this iteration if x.opponent array is empty and if player had bye
 
-      if Enum.empty?(x.opponents) or x.had_bye do
+      if Enum.empty?(x.opponents) and x.had_bye do
 
         new_player =  x
         |> Map.put_new(:omw, 33.00)
@@ -507,8 +507,8 @@ end
           from m in Match,
             where: m.player2_id == ^player.id,
             select: sum(m.player_2_wins)
-    player1_wins = Repo.one(player1_wins_query) || 0
-    player2_wins = Repo.one(player2_wins_query) || 0
+    player1_wins = Repo.one(player1_wins_query)||0
+    player2_wins = Repo.one(player2_wins_query)||0
 
 
     total_wins = player1_wins + player2_wins
