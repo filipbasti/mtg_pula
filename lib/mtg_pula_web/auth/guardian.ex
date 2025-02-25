@@ -35,6 +35,8 @@ defmodule MtgPulaWeb.Auth.Guardian do
           {:ok, _old, {new_token, _claims}} <- refresh(token)do
 
       {:ok, account, new_token}
+          else
+             _ -> {:error, :not_found}
     end
   end
   defp validate_password(password, hash_password) do
@@ -47,9 +49,9 @@ defmodule MtgPulaWeb.Auth.Guardian do
 
   defp token_options(type)do
     case type do
-      :access -> [tokem_type: "access", ttl: {2, :hour}]
-      :reset -> [tokem_type: "reset", ttl: {15, :minute}]
-      :admin -> [tokem_type: "admin", ttl: {90, :day}]
+      :access -> [token_type: "access", ttl: {7, :day}]
+      :reset -> [token_type: "reset", ttl: {15, :minute}]
+      :admin -> [token_type: "admin", ttl: {90, :day}]
     end
   end
   def after_encode_and_sign(resource, claims, token, _options) do

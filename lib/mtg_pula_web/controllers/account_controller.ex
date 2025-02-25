@@ -54,15 +54,17 @@ defmodule MtgPulaWeb.AccountController do
   end
 
 
-  def refresh_session(conn, %{})do
+  def refresh_session(conn, %{}) do
     token = Guardian.Plug.current_token(conn)
-    {:ok, account, new_token} = Guardian.authenticate(token)
-    conn
-    |> Plug.Conn.put_session(:account_id, account.id)
-    |> put_status(:ok)
-    |> render(:show2, account: account, token: new_token)
-
-
+    case Guardian.authenticate(token) do
+      {:ok, account, new_token} ->
+        conn
+        |> Plug.Conn.put_session(:account_id, account.id)
+        |> put_status(:ok)
+        |> render(:show2, account: account, token: new_token)
+      {:error, :not_found} ->
+        raise ErrorResponse.NotFound, message: "Token not found"
+    end
   end
   def show(conn, %{"id" => id}) do
     account = Accounts.get_full_account(id)

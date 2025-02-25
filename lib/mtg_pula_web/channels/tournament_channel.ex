@@ -35,17 +35,15 @@ defmodule MtgPulaWeb.TournamentChannel do
         deck = Map.get(params, "deck", nil)  # Get the deck from params or default to nil
         if tournament.user_id == user.user.id do
           IO.inspect("Organizer joined")
-
-
           socket = assign(socket, :tournament_id, tournament.id)
           socket = assign(socket, :role, "organizer")
           socket = assign(socket, :deck, deck)  # Assign the deck to the socket
           {:ok, socket}
         else
 
-          IO.inspect("${deck}")
           socket = assign(socket, :tournament_id, tournament.id)
           socket = assign(socket, :deck, deck)  # Assign the deck to the socket
+          socket = assign(socket, :role, "player")
           IO.inspect("Organizer didn't get assigned")
           {:ok, socket}
         end
@@ -54,7 +52,7 @@ defmodule MtgPulaWeb.TournamentChannel do
 #Handles unmatched topics.
 
 def join(_topic, _params, _socket) do
-  IO.puts("Unmatched topic")
+
   {:error, %{reason: "unmatched topic"}}
 end
 
@@ -89,21 +87,24 @@ end
 
 
   #Adds a player to the tournament.
+
   def handle_in("add_player", params, socket) do
-    tournament_id = socket.assigns.tournament_id
-    params = Map.put(params, "tournament_id", tournament_id)
+    if socket.assigns.role == "organizer" do
+      tournament_id = socket.assigns.tournament_id
+      params = Map.put(params, "tournament_id", tournament_id)
 
-   case  Tournaments.create_player(params) do
-
-    {:ok, player} ->
-      player = Repo.preload(player, :user)
-      player_json = TournamentChannelJSON.render("player.json", player)
-      broadcast!(socket, "player_added", %{player: player_json})
-      {:reply, {:ok, %{player: player_json}}, socket}
-    {:error, changeset} ->
-      {:reply, {:error, %{reason: "player already exist or there is an internal error", changeset_errors: translate_errors(changeset) }}, socket}
-   end
-
+      case Tournaments.create_player(params) do
+        {:ok, player} ->
+          player = Repo.preload(player, :user)
+          player_json = TournamentChannelJSON.render("player.json", player)
+          broadcast!(socket, "player_added", %{player: player_json})
+          {:reply, {:ok, %{player: player_json}}, socket}
+        {:error, changeset} ->
+          {:reply, {:error, %{reason: "player already exist or there is an internal error", changeset_errors: translate_errors(changeset)}}, socket}
+      end
+    else
+      {:reply, {:error, %{reason: "You are not authorized to add players"}}, socket}
+    end
   end
 
   #Gets the players in the tournament.
@@ -113,7 +114,7 @@ end
    case  Tournaments.list_all_tournament_players(tournament_id) do
 
     {:ok, players} ->
-      IO.inspect(players)
+
       players_json = TournamentChannelJSON.render("players_start.json", players)
         {:reply, {:ok, %{players: players_json}}, socket}
     {:error, :not_found} ->
@@ -124,15 +125,18 @@ end
   end
 
   #Removes a player from the tournament.
-
   def handle_in("remove_player", params, socket) do
-    case Tournaments.delete_player(params["player_id"]) do
-      {:ok, player} ->
-        player_json = TournamentChannelJSON.render("player.json", player)
-        broadcast!(socket, "player_removed", %{player: player_json})
-        {:reply, {:ok, %{player: player_json}}, socket}
-      {:error, _changeset} ->
-        {:reply, {:error, %{reason: "Failed to remove player"}}, socket}
+    if socket.assigns.role == "organizer" do
+      case Tournaments.delete_player(params["player_id"]) do
+        {:ok, player} ->
+          player_json = TournamentChannelJSON.render("player.json", player)
+          broadcast!(socket, "player_removed", %{player: player_json})
+          {:reply, {:ok, %{player: player_json}}, socket}
+        {:error, _changeset} ->
+          {:reply, {:error, %{reason: "Failed to remove player"}}, socket}
+      end
+    else
+      {:reply, {:error, %{reason: "You are not authorized to remove players"}}, socket}
     end
   end
 
@@ -140,12 +144,16 @@ end
   #Updates a player in the tournament.
 
   def handle_in("update_player", params, socket) do
-    case Tournaments.update_player(params["player_id"], params) do
-      {:ok, player} ->
-        broadcast!(socket, "player_updated", %{player: player})
-        {:noreply, socket}
-      {:error, _changeset} ->
-        {:reply, {:error, %{reason: "Failed to update player"}}, socket}
+    if socket.assigns.role == "organizer" do
+      case Tournaments.update_player(params["player_id"], params) do
+        {:ok, player} ->
+          broadcast!(socket, "player_updated", %{player: player})
+          {:noreply, socket}
+        {:error, _changeset} ->
+          {:reply, {:error, %{reason: "Failed to update player"}}, socket}
+      end
+    else
+      {:reply, {:error, %{reason: "You are not authorized to update players"}}, socket}
     end
   end
 
@@ -162,30 +170,40 @@ end
 
  #Prepares the matches for the tournament.
 
-  def handle_in("prepare_matches", _params, socket) do
-    if socket.assigns.role == "organizer" do
-      case Tournaments.prepare_matches(socket.assigns.tournament_id) do
-        {:ok, _tournament, matches} ->
-          matches_json = TournamentChannelJSON.render("matches.json", matches)
-          broadcast!(socket, "matches_prepared", %{matches: matches_json})
-          {:reply, {:ok, %{matches: matches_json}}, socket}
+ def handle_in("prepare_matches", _params, socket) do
+  if socket.assigns.role == "organizer" do
+    case Tournaments.prepare_matches(socket.assigns.tournament_id) do
+      {:ok, _tournament, matches} ->
+        matches_json = TournamentChannelJSON.render("matches.json", matches)
+        broadcast!(socket, "matches_prepared", %{matches: matches_json})
+        {:reply, {:ok, %{matches: matches_json}}, socket}
       {:error, :finished_tourney} ->
-        IO.inspect("afaga")
+
         {:reply, {:error, %{reason: "finished", redirect: true}}, socket}
     end
   else
     {:reply, {:error, %{reason: "You are not authorized to prepare matches"}}, socket}
   end
-  end
+end
   def handle_in("update_match", params, socket) do
-     match = Tournaments.get_match!(params["id"])
+     match =
+      Tournaments.get_match!(params["id"])
+      |> Repo.preload(:player1)
+      |> Repo.preload(:player2)
+
+
+     if socket.assigns.role == "organizer" or match.player1.user_id== socket.assigns.user.user.id or match.player2.user_id == socket.assigns.user.user.id  do
       case Tournaments.update_match(match, %{player_1_wins: params["player_1_wins"], player_2_wins: params["player_2_wins"], on_play_id:  params["on_play_id"] }) do
         {:ok, match} ->
           broadcast!(socket, "match_updated", %{message: "updated match", id: match.id})
           {:noreply, socket}
       {:error, reason} ->
         {:reply, {:error, %{reason: reason}}, socket}
+
   end
+    else
+      {:reply, {:error, %{reason: "You are not authorized to update"}}, socket}
+end
   end
   #Gets the current matches for the tournament.
 
@@ -206,7 +224,7 @@ end
     case  Tournaments.standings_on_tournament(tournament_id) do
 
      {:ok, players} ->
-       IO.inspect(players)
+
        players_json = TournamentChannelJSON.render("standings.json", players)
          {:reply, {:ok, %{players: players_json}}, socket}
      {:error, :not_found} ->
