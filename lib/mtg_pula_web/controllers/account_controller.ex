@@ -56,8 +56,9 @@ defmodule MtgPulaWeb.AccountController do
 
   def refresh_session(conn, %{}) do
     token = Guardian.Plug.current_token(conn)
+
     case Guardian.authenticate(token) do
-      {:ok, account, new_token} ->
+      {:ok, new_token, account} ->
         conn
         |> Plug.Conn.put_session(:account_id, account.id)
         |> put_status(:ok)

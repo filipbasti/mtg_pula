@@ -29,14 +29,18 @@ defmodule MtgPulaWeb.Auth.Guardian do
         end
     end
   end
-  def authenticate(token)do
-    with  {:ok,claims} <- decode_and_verify(token),
-          {:ok, account} <- resource_from_claims(claims),
-          {:ok, _old, {new_token, _claims}} <- refresh(token)do
+  def authenticate(token) do
+    with {:ok, claims} <- decode_and_verify(token),
+         {:ok, account} <- resource_from_claims(claims)do
+          token_type  = claims["typ"]
+          revoke(token)
+         {:ok, new_token, account} = create_token(account, String.to_atom(token_type))
 
-      {:ok, account, new_token}
-          else
-             _ -> {:error, :not_found}
+         {:ok, account, new_token}
+
+
+    else
+      _ -> {:error, :not_found}
     end
   end
   defp validate_password(password, hash_password) do
@@ -49,7 +53,7 @@ defmodule MtgPulaWeb.Auth.Guardian do
 
   defp token_options(type)do
     case type do
-      :access -> [token_type: "access", ttl: {7, :day}]
+      :access -> [token_type: "access", ttl: {2, :hour}]
       :reset -> [token_type: "reset", ttl: {15, :minute}]
       :admin -> [token_type: "admin", ttl: {90, :day}]
     end
