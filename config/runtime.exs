@@ -38,7 +38,7 @@ if config_env() == :prod do
     ssl: true,
     ssl_opts: [
       verify: :verify_peer,
-      cacertfile: "/path/to/ca_certificate.pem"
+      versions: [:"tlsv1.3"]
       # If using a self-signed certificate, include the following:
       # certfile: "/path/to/client_certificate.pem",
       # keyfile: "/path/to/client_key.pem"
