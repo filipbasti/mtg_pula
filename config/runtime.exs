@@ -56,7 +56,7 @@ if config_env() == :prod do
 
   config :mtg_pula, MtgPulaWeb.Endpoint,
 
-    url: [host: host, port: port, scheme: "https"],
+    url: [host: host, port: 443, scheme: "https"],
     server: true,
     http: [
       # Enable IPv6 and bind on all interfaces.
