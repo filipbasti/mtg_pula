@@ -14,6 +14,7 @@ host = System.get_env("RENDER_EXTERNAL_HOSTNAME") || "localhost"
 # Configures the endpoint
 config :mtg_pula, MtgPulaWeb.Endpoint,
   url: [host: host],
+  check_origin: false,
   adapter: Bandit.PhoenixAdapter,
   render_errors: [
     formats: [json: MtgPulaWeb.ErrorJSON],
