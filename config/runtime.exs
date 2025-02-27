@@ -55,7 +55,9 @@ if config_env() == :prod do
   config :mtg_pula, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
 
   config :mtg_pula, MtgPulaWeb.Endpoint,
+
     url: [host: host, port: port, scheme: "https"],
+    server: true,
     http: [
       # Enable IPv6 and bind on all interfaces.
       # Set it to  {0, 0, 0, 0, 0, 0, 0, 1} for local network only access.
