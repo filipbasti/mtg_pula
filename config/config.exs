@@ -33,11 +33,15 @@ config :phoenix, :json_library, Jason
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
+
+if config_env() in [:dev, :test] do
+  import_config ".env.exs"
+end
 import_config "#{config_env()}.exs"
 
 config :mtg_pula, MtgPulaWeb.Auth.Guardian,
 issuer: "mtg_pula",
-secret_key: "Uu+3qFNl+RlLD8cpgQgnT6uZhuOuOtbbq1GSZKGMsDRjcYKkGl72TDCFYoS3lvq5"
+secret_key: System.get_env("GUARDIAN_SECRET_KEY")
 
 config :guardian, Guardian.DB,
     repo: MtgPula.Repo,

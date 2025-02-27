@@ -3,7 +3,7 @@ defmodule MtgPulaWeb.TournamentChannelTest do
 
   alias MtgPula.Accounts
   alias MtgPula.Accounts.Account
-  alias MtgPula.Tournaments
+
   alias MtgPula.Support.Factory
 
   setup do

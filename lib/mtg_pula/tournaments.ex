@@ -612,12 +612,11 @@ def prepare_matches(tournament_id) do
         update_tournament(tournament, %{finished: true})
       end
 
-      IO.inspect(paired, label: "Paired players")
+
 
       paired
       |> Enum.each(fn {player1, player2} ->
-        IO.inspect(player1, label: "Player 1")
-        IO.inspect(player2, label: "Player 2")
+
         params = if player2 != :bye do
           %{
             player1_id: player1.id,
@@ -636,14 +635,10 @@ def prepare_matches(tournament_id) do
           }
         end
 
-        IO.inspect(params, label: "Match params")
 
-        case create_match(params) do
-          {:ok, match} ->
-            IO.inspect(match, label: "Created match")
-          {:error, changeset} ->
-            IO.inspect(changeset, label: "Failed to create match")
-        end
+
+         create_match(params)
+
       end)
 
       {:ok, tournament, paired}

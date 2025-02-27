@@ -24,4 +24,8 @@ erl_crash.dump
 
 # Ignore package tarball (built via "mix hex.build").
 mtg_pula-*.tar
+#ignore .env file
+.env
+
+/config/.env.exs
 

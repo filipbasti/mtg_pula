@@ -218,7 +218,7 @@ end
     end
   end
 
-  def handle_in("get_standings", params, socket) do
+  def handle_in("get_standings", _params, socket) do
     tournament_id = socket.assigns.tournament_id
 
     case  Tournaments.standings_on_tournament(tournament_id) do

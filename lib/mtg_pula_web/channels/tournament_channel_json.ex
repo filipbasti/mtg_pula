@@ -74,7 +74,6 @@ defmodule MtgPulaWeb.TournamentChannelJSON do
       omw: player.omw,
       gw: player.gw,
       ogp: player.ogp,
-      points: player.points,
 
     }
   end
@@ -117,18 +116,7 @@ defmodule MtgPulaWeb.TournamentChannelJSON do
     }
   end
 
-  def render("match.json", {player1, player2}) do
-    player2 = if player2 == :bye do
-      render("bye.json")
-    else
-      render("player.json", player2)
-    end
 
-    %{
-      player1: render("player.json", player1),
-      player2: player2,
-    }
-  end
   def render("matches.json", matches) do
     Enum.map(matches, &render("match.json", &1))
   end

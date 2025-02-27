@@ -12,6 +12,10 @@ defmodule MtgPula.Tournaments.Player do
     field :points, :integer
     field :had_bye, :boolean
     field :dropped, :boolean
+    field :omw, :float, virtual: true
+    field :gw, :float, virtual: true
+    field :ogp, :float, virtual: true
+
     belongs_to :tournament, MtgPula.Tournaments.Tournament
     belongs_to :user, MtgPula.Users.User
     has_many :matches_as_player1, MtgPula.Tournaments.Match, foreign_key: :player1_id

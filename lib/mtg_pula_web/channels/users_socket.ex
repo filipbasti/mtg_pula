@@ -16,5 +16,5 @@ defmodule MtgPulaWeb.UserSocket do
     :error
   end
 
- def id(socket), do: "user_socket:"
+ def id(_socket), do: "user_socket:"
 end
