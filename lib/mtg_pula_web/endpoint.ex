@@ -17,7 +17,7 @@ defmodule MtgPulaWeb.Endpoint do
 
 
 
- plug Corsica, origins: "*", allow_credentials: true, max_age: 86400, allow_headers: "content-type,authorization,accept,origin", allow_methods: "GET,POST,PUT,DELETE,OPTIONS,PATCH"
+ plug Corsica, origins: ["https://mtg-pula.onrender.com"], allow_credentials: true, max_age: 86400
   # Serve at "/" the static files from "priv/static" directory.
   #
   # You should set gzip to true if you are running phx.digest
