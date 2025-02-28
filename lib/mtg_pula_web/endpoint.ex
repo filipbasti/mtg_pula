@@ -47,7 +47,7 @@ defmodule MtgPulaWeb.Endpoint do
   plug Plug.Head
   plug Plug.Session, @session_options
   plug CORSPlug,
-    origin: ["http://localhost:5173", "https://interface-mtgpula.onrender.com"],
+    origin: ["*"],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     headers: ["Authorization", "Content-Type", "Accept", "Origin", "User-Agent", "Cookie"],
     credentials: true
