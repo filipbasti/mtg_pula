@@ -47,7 +47,7 @@ defmodule MtgPulaWeb.Endpoint do
   plug Plug.Head
   plug Plug.Session, @session_options
 
-  plug CORSPlug, origin: ["https://interface-mtgpula.onrender.com"]
+  plug CORSPlug, origin: ["*"]
 
 
   plug MtgPulaWeb.Router
