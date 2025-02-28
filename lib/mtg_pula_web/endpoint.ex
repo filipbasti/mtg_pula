@@ -17,10 +17,8 @@ defmodule MtgPulaWeb.Endpoint do
 
 
     plug CORSPlug,
-    origin: ["*"],
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    headers: ["Authorization", "Content-Type", "Accept", "Origin", "User-Agent", "Cookie"]
-
+    origin: "*",
+    credentials: true
 
   # Serve at "/" the static files from "priv/static" directory.
   #

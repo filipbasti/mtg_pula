@@ -55,8 +55,6 @@ if config_env() == :prod do
   config :mtg_pula, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
 
   config :mtg_pula, MtgPulaWeb.Endpoint,
-  check_origin: ["http://localhost:5173", "http://127.0.0.1:5173", "https://interface-mtgpula.onrender.com"],
-
     url: [host: host, port: 443, scheme: "https"],
     server: true,
     http: [
