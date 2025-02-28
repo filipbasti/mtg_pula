@@ -19,8 +19,6 @@ defmodule MtgPulaWeb.Router do
   end
   pipeline :api do
     plug :accepts, ["json"]
-    plug CORSPlug,
-    origin: ["https://interface-mtgpula.onrender.com"]
     plug :fetch_session
 
   end
