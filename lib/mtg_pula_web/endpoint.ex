@@ -16,9 +16,7 @@ defmodule MtgPulaWeb.Endpoint do
     longpoll: false
 
 
-    plug CORSPlug,
-    origin: "*",
-    credentials: true
+
 
   # Serve at "/" the static files from "priv/static" directory.
   #
@@ -48,6 +46,6 @@ defmodule MtgPulaWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
-
+  plug CORSPlug
   plug MtgPulaWeb.Router
 end
