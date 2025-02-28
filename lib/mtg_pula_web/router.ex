@@ -19,6 +19,7 @@ defmodule MtgPulaWeb.Router do
   end
   pipeline :api do
     plug :accepts, ["json"]
+    plug CORSPlug
     plug :fetch_session
 
   end
