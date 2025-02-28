@@ -19,7 +19,8 @@ defmodule MtgPulaWeb.Router do
   end
   pipeline :api do
     plug :accepts, ["json"]
-    plug CORSPlug
+    plug CORSPlug,
+    origin: ["https://interface-mtgpula.onrender.com"]
     plug :fetch_session
 
   end
@@ -33,7 +34,6 @@ defmodule MtgPulaWeb.Router do
     get "/", DeafaultController, :index
     post "/accounts/create", AccountController, :create
     post "/accounts/sign_in", AccountController, :sign_in
-    options "/accounts/sign_in", AccountController, :options
     get "/tournaments/standings/by_id/:id", TournamentController, :show_standings
     get "/tournaments", TournamentController, :index
   end
