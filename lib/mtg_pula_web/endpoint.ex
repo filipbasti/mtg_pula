@@ -17,7 +17,7 @@ defmodule MtgPulaWeb.Endpoint do
 
 
 
-
+ plug Corsica, origins: "*", allow_credentials: true
   # Serve at "/" the static files from "priv/static" directory.
   #
   # You should set gzip to true if you are running phx.digest
@@ -47,7 +47,7 @@ defmodule MtgPulaWeb.Endpoint do
   plug Plug.Head
   plug Plug.Session, @session_options
 
-  plug Corsica, origins: "*"
+
 
 
   plug MtgPulaWeb.Router
