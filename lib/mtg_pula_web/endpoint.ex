@@ -49,15 +49,6 @@ defmodule MtgPulaWeb.Endpoint do
 
   plug CORSPlug, origin: ["https://interface-mtgpula.onrender.com"]
 
-  plug :options
-
-  defp options(conn, _opts) do
-    conn
-    |> put_resp_header("access-control-allow-origin", "https://interface-mtgpula.onrender.com")
-    |> put_resp_header("access-control-allow-methods", "GET, POST, OPTIONS, PATCH, PUT")
-    |> put_resp_header("access-control-allow-headers", "authorization, content-type")
-    |> send_resp(204, "")
-  end
 
   plug MtgPulaWeb.Router
 end
