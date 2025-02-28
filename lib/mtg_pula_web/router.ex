@@ -30,7 +30,6 @@ defmodule MtgPulaWeb.Router do
     pipe_through :api
 
     get "/", DeafaultController, :index
-    options "/*path", CORSController, :options
     post "/accounts/create", AccountController, :create
     post "/accounts/sign_in", AccountController, :sign_in
     get "/tournaments/standings/by_id/:id", TournamentController, :show_standings
