@@ -33,6 +33,7 @@ defmodule MtgPulaWeb.Router do
     get "/", DeafaultController, :index
     post "/accounts/create", AccountController, :create
     post "/accounts/sign_in", AccountController, :sign_in
+    post "/accounts/sign_in", AccountController, :option
     get "/tournaments/standings/by_id/:id", TournamentController, :show_standings
     get "/tournaments", TournamentController, :index
   end
