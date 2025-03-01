@@ -38,10 +38,11 @@ defmodule MtgPulaWeb.AccountController do
 
     {:ok, account, token} ->
       conn
-      Logger.debug("Setting session for account ID: #{account.id}")
       |> Plug.Conn.put_session(:account_id, account.id)
       |> put_status(:ok)
       |>render(:show2, account: account, token: token)
+
+      Logger.debug("Setting session for account ID: #{account.id}")
     {:error, :unauthorized} -> raise ErrorResponse.Unauthorized, message: "Email or password incorrect."
    end
   end
