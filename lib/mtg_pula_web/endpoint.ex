@@ -8,7 +8,7 @@ defmodule MtgPulaWeb.Endpoint do
     store: :cookie,
     key: "_mtg_pula_key",
     signing_salt: "N+oRldfJ",
-    same_site: "Lax"
+    same_site: "none"
   ]
 
   socket "/socket", MtgPulaWeb.UserSocket,
