@@ -2,6 +2,7 @@ defmodule MtgPulaWeb.Auth.SetAccount do
   import Plug.Conn
   alias MtgPulaWeb.Auth.ErrorResponse
   alias MtgPula.Accounts
+  require Logger
   def init(_options)do
 
   end
