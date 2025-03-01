@@ -34,8 +34,11 @@ defmodule MtgPulaWeb.AccountController do
    end
    def authorize_account(conn, email, hash_password) do
    case Guardian.authenticate(email, hash_password) do
+
+
     {:ok, account, token} ->
       conn
+      Logger.debug("Setting session for account ID: #{account.id}")
       |> Plug.Conn.put_session(:account_id, account.id)
       |> put_status(:ok)
       |>render(:show2, account: account, token: token)
