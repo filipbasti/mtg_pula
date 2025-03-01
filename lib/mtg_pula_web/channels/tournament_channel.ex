@@ -6,6 +6,7 @@ defmodule MtgPulaWeb.TournamentChannel do
   alias MtgPula.Accounts
 
   alias MtgPulaWeb.TournamentChannelJSON
+  require Logger
 
   #translates the errors in the changeset.
   def translate_errors(changeset) do
