@@ -5,6 +5,7 @@ defmodule MtgPulaWeb.AccountController do
   alias MtgPula.Accounts.Account
   alias MtgPula.{Users, Users.User}
   alias MtgPulaWeb.{Auth.Guardian, Auth.ErrorResponse}
+  require Logger
 
   import MtgPulaWeb.Auth.AuthorizedPlug
 
@@ -72,6 +73,7 @@ defmodule MtgPulaWeb.AccountController do
     render(conn, :show_full_account, account: account)
   end
   def current_account(conn, %{}) do
+    Logger.debug("Current account: #{inspect(conn.assigns[:account])}")
     account = conn.assigns[:account]
     render(conn, :show_full_account, account: account)
   end
