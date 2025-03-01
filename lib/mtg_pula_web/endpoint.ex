@@ -52,8 +52,8 @@ defmodule MtgPulaWeb.Endpoint do
   max_age: 86400,
   allow_headers: :all,
   allow_credentials: true,
-  allow_methods: :all,
-  expose_headers: ["Authorization"]
+  allow_methods: :all
+
 
 
   plug MtgPulaWeb.Router
