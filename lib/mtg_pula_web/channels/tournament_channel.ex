@@ -171,6 +171,8 @@ end
  #Prepares the matches for the tournament.
 
  def handle_in("prepare_matches", _params, socket) do
+
+  Logger.debug("Account id from session: #{inspect(socket)}")
   if socket.assigns.role == "organizer" do
     case Tournaments.prepare_matches(socket.assigns.tournament_id) do
       {:ok, _tournament, matches} ->
