@@ -383,8 +383,8 @@ end
     tournament = Repo.get!(Tournament, tournament_id)
     standings = standings
     |> calculate_tiebreakers(tournament)
-    |> Enum.sort_by( &{&1.points, &1.omw, &1.gw, &1.ogp}, :desc)
-      {:ok, standings}
+    |> Enum.sort_by(&{&1.points, &1.omw, &1.gw, &1.ogp, &1.id}, :desc)
+    {:ok, standings}
 
     rescue _e ->
       {:error, :not_found}

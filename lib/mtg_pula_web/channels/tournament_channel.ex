@@ -6,7 +6,7 @@ defmodule MtgPulaWeb.TournamentChannel do
   alias MtgPula.Accounts
 
   alias MtgPulaWeb.TournamentChannelJSON
-  require Logger
+
 
   #translates the errors in the changeset.
   def translate_errors(changeset) do
@@ -22,12 +22,19 @@ defmodule MtgPulaWeb.TournamentChannel do
   end
 
 
+  #Checks if the user is authorized to update the match.
+  defp authorized_to_update_match?(socket, match) do
+    socket.assigns.role == "organizer" or
+      match.player1.user_id == socket.assigns.user.user.id or
+      match.player2.user_id == socket.assigns.user.user.id
+  end
+
   #Joins the tournament channel by join code.
 
   def join("tournament:" <> join_code, params, socket) do
     account_id = socket.assigns.account_id
     user = Accounts.get_full_account(account_id)
-    IO.inspect("Joining tournament channel")
+
     send(self(), :after_join)
     case Tournaments.get_tournament_by_join_code(join_code) do
       nil ->
@@ -35,7 +42,7 @@ defmodule MtgPulaWeb.TournamentChannel do
       tournament ->
         deck = Map.get(params, "deck", nil)  # Get the deck from params or default to nil
         if tournament.user_id == user.user.id do
-          IO.inspect("Organizer joined")
+
           socket = assign(socket, :tournament_id, tournament.id)
           socket = assign(socket, :role, "organizer")
           socket = assign(socket, :deck, deck)  # Assign the deck to the socket
@@ -45,7 +52,7 @@ defmodule MtgPulaWeb.TournamentChannel do
           socket = assign(socket, :tournament_id, tournament.id)
           socket = assign(socket, :deck, deck)  # Assign the deck to the socket
           socket = assign(socket, :role, "player")
-          IO.inspect("Organizer didn't get assigned")
+
           {:ok, socket}
         end
     end
@@ -120,7 +127,7 @@ end
         {:reply, {:ok, %{players: players_json}}, socket}
     {:error, :not_found} ->
 
-      {:reply, {:error, %{reason: "player already exist or there is an internal error"}}, socket}
+      {:reply, {:error, %{reason: "There is nothing found here"}}, socket}
    end
 
   end
@@ -159,21 +166,11 @@ end
   end
 
 
-  #Lists the present users in the tournament.
-
-  def handle_in("list_present_users", _params, socket) do
-    players = Presence.list(socket)
-    {:reply, {:ok, %{players: players}}, socket}
-  end
-
-
-
-
  #Prepares the matches for the tournament.
 
  def handle_in("prepare_matches", _params, socket) do
 
-  Logger.debug("Account id from session: #{inspect(socket)}")
+
   if socket.assigns.role == "organizer" do
     case Tournaments.prepare_matches(socket.assigns.tournament_id) do
       {:ok, _tournament, matches} ->
@@ -188,6 +185,7 @@ end
     {:reply, {:error, %{reason: "You are not authorized to prepare matches"}}, socket}
   end
 end
+
   def handle_in("update_match", params, socket) do
      match =
       Tournaments.get_match!(params["id"])
@@ -195,7 +193,7 @@ end
       |> Repo.preload(:player2)
 
 
-     if socket.assigns.role == "organizer" or match.player1.user_id== socket.assigns.user.user.id or match.player2.user_id == socket.assigns.user.user.id  do
+     if authorized_to_update_match?(socket, match) do
       case Tournaments.update_match(match, %{player_1_wins: params["player_1_wins"], player_2_wins: params["player_2_wins"], on_play_id:  params["on_play_id"] }) do
         {:ok, match} ->
           broadcast!(socket, "match_updated", %{message: "updated match", id: match.id})

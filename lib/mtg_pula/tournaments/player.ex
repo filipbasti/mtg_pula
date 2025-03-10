@@ -2,7 +2,7 @@ defmodule MtgPula.Tournaments.Player do
   use Ecto.Schema
   import Ecto.Changeset
 
-
+  @derive {Jason.Encoder, only: [:id, :user_id, :tournament_id, :points, :dropped, :deck, :opponents, :had_bye]}
   @optional_fields [:id, :inserted_at, :updated_at, :points, :had_bye, :dropped]
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -12,10 +12,6 @@ defmodule MtgPula.Tournaments.Player do
     field :points, :integer
     field :had_bye, :boolean
     field :dropped, :boolean
-    field :omw, :float, virtual: true
-    field :gw, :float, virtual: true
-    field :ogp, :float, virtual: true
-
     belongs_to :tournament, MtgPula.Tournaments.Tournament
     belongs_to :user, MtgPula.Users.User
     has_many :matches_as_player1, MtgPula.Tournaments.Match, foreign_key: :player1_id

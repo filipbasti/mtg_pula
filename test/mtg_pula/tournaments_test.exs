@@ -133,7 +133,8 @@ end
    |> Enum.chunk_every(2)
 
    |> Enum.each(fn [player1, player2] ->
- Factory.insert(:match, player1: player1, player2: player2, winner: player1, is_draw: false, player_1_wins: 2, player_2_wins: 1 )
+    Factory.insert(:match, player1: player1, player2: player2, winner: player1,
+    is_draw: false, player_1_wins: 2, player_2_wins: 1, tournament: tourney)
 
 
 
@@ -157,7 +158,7 @@ end
     expected_list = standings
     |> Tournaments.calculate_tiebreakers(tourney)
 
-    expected_list = Enum.sort_by(expected_list, &{&1.points, &1.omw, &1.gw, &1.ogp}, :desc)
+    expected_list = Enum.sort_by(expected_list, &{&1.points, &1.omw, &1.gw, &1.ogp, &1.id}, :desc)
 
 
 

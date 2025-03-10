@@ -92,7 +92,7 @@ defmodule MtgPulaWeb.TournamentChannelJSON do
     }
   end
   def render("match.json", %MtgPula.Tournaments.Match{} = match) do
-    IO.inspect(match.player2)
+
    player2 = if match.player2 == nil do
 
       render("bye.json")

@@ -29,18 +29,35 @@ defmodule MtgPula.Support.Factory do
 
 
   def tournament_factory do
+    user = insert(:user)
     %Tournament{
     name: Faker.Lorem.word(),
     finished: false,
     current_round: 0,
     number_of_rounds: Enum.random(3..10),
-    user: build(:user)
+
+    user: user,
+    user_id: user.id
   }
   |>set_current_round()
+  |> generate_join_code()
+
+
+
 
   end
   defp set_current_round(tournament) do
     %{tournament | current_round: 0}
+  end
+
+  defp generate_join_code(tournament) do
+    changeset = Tournament.changeset(tournament, %{})
+    case Ecto.Changeset.apply_action(changeset, :insert) do
+      {:ok, tournament} ->
+        tournament
+      {:error, _changeset} ->
+        tournament
+    end
   end
   def player_factory do
     %Player{

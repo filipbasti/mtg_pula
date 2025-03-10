@@ -7,6 +7,8 @@ defmodule MtgPulaWeb.RoomChannelTest do
   alias MtgPula.Support.Factory
 
   setup do
+
+    Ecto.Adapters.SQL.Sandbox.checkout(MtgPula.Repo)
     params = Factory.string_params_for(:account)
 
     {:ok, %Account{} = account} = Accounts.create_account(params)
