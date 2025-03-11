@@ -29,4 +29,10 @@ defmodule MtgPulaWeb.FallbackController do
     |> put_view(html: MtgPulaWeb.ErrorHTML, json: MtgPulaWeb.ErrorJSON)
     |> render(:"403")
   end
+
+  def call(conn, :ok) do
+    conn
+    |> put_status(:ok)
+    |> json(%{message: "Success"})
+  end
 end

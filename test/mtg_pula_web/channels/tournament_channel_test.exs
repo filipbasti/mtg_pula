@@ -193,7 +193,7 @@ defmodule MtgPulaWeb.TournamentChannelTest do
     test "get user by email successfully", %{socket: socket} do
       user = Factory.insert(:user)
       ref = push(socket, "get_user_by_email", %{"email" => user.account.email})
-      assert_reply ref, :ok, user
+      assert_reply ref, :ok, _user
     end
 
     test "get user by email fails", %{socket: socket} do
@@ -204,10 +204,10 @@ defmodule MtgPulaWeb.TournamentChannelTest do
 
   describe "handle_in/3 for get_standings" do
     test "get standings successfully", %{socket: socket, tourney: tourney} do
-      players = Factory.insert_list(9, :player, [tournament: tourney, opponents: [], points: 0, had_bye: false, dropped: false])
+      Factory.insert_list(9, :player, [tournament: tourney, opponents: [], points: 0, had_bye: false, dropped: false])
       push(socket, "prepare_matches", %{})
       ref = push(socket, "get_standings", %{})
-      assert_reply ref, :ok, standings
+      assert_reply ref, :ok, _standings
 
     end
   end
