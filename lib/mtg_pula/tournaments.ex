@@ -414,9 +414,9 @@ end
       if Enum.empty?(x.opponents) and x.had_bye do
 
         new_player =  x
-        |> Map.put_new(:omw, 33.00)
-        |> Map.put_new(:gw, 0.00)
-        |> Map.put_new(:ogp, 33.00)
+        |> Map.put(:omw, 33.00)
+        |> Map.put(:gw, 0.00)
+        |> Map.put(:ogp, 33.00)
         |> Map.put(:points, calculate_points(x))
         |> Repo.preload([:user])
 
@@ -429,9 +429,9 @@ end
         points = calculate_points(x)
 
         new_player = x
-        |> Map.put_new(:omw, omw)
-        |> Map.put_new(:gw, gw)
-        |> Map.put_new(:ogp, ogp)
+        |> Map.put(:omw, omw)
+        |> Map.put(:gw, gw)
+        |> Map.put(:ogp, ogp)
         |> Map.put(:points, points)
         |> Repo.preload([:user])
         acc ++ [new_player]

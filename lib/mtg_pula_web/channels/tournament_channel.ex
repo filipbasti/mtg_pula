@@ -219,18 +219,27 @@ end
     end
   end
 
-  def handle_in("get_standings", _params, socket) do
-    tournament_id = socket.assigns.tournament_id
 
-    case  Tournaments.standings_on_tournament(tournament_id) do
+  def handle_in("get_standings", params, socket) do
+    tournament =
+      case params do
+        %{"join_code" => join_code} ->
+          Tournaments.get_tournament_by_join_code(join_code)
+        _ ->
+          Tournaments.get_tournament!(socket.assigns.tournament_id)
+      end
 
-     {:ok, players} ->
-
-       players_json = TournamentChannelJSON.render("standings.json", players)
-         {:reply, {:ok, %{players: players_json}}, socket}
-     {:error, :not_found} ->
-
-       {:reply, {:error, %{reason: "player already exist or there is an internal error"}}, socket}
+    case tournament do
+      nil ->
+        {:reply, {:error, %{reason: "Tournament not found"}}, socket}
+      tournament ->
+        case Tournaments.standings_on_tournament(tournament.id) do
+          {:ok, players} ->
+            players_json = TournamentChannelJSON.render("standings.json", players)
+            {:reply, {:ok, %{players: players_json}}, socket}
+          {:error, :not_found} ->
+            {:reply, {:error, %{reason: "Standings not found"}}, socket}
+        end
     end
   end
 end
