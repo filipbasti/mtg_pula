@@ -73,6 +73,15 @@ jobs:
     - name: Copy Docker image to Hetzner using curl
       run: |
         curl --insecure --user ${{ secrets.HETZNER_USERNAME }}:${{ secrets.HETZNER_PASSWORD }} -T mtg_pula.tar sftp://${{ secrets.HETZNER_HOST }}/tmp/mtg_pula.tar
+    - name: Verify Docker Image File
+      uses: appleboy/ssh-action@v0.1.3
+      with:
+        host: ${{ secrets.HETZNER_HOST }}
+        username: ${{ secrets.HETZNER_USERNAME }}
+        password: ${{ secrets.HETZNER_PASSWORD }}
+        script: |
+          file /tmp/mtg_pula.tar
+          ls -lh /tmp/mtg_pula.tar   
     - name: Deploy Docker container on Hetzner
       uses: appleboy/ssh-action@v0.1.3
       with:
