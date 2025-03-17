@@ -47,3 +47,15 @@ jobs:
       env:
         MIX_ENV: test
       run: mix test
+
+    test-ssh:
+      runs-on: ubuntu-22.04
+      steps:
+      - name: Test SSH Connection
+        uses: appleboy/ssh-action@v0.1.3
+        with:
+          host: ${{ secrets.HETZNER_HOST }}
+          username: ${{ secrets.HETZNER_USERNAME }}
+          password: ${{ secrets.HETZNER_PASSWORD }}
+          script: |
+            echo "SSH connection successful!"
