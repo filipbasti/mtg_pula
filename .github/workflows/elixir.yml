@@ -80,6 +80,7 @@ jobs:
         username: ${{ secrets.HETZNER_USERNAME }}
         password: ${{ secrets.HETZNER_PASSWORD }}
         script: |
+          cat tmp/mtg_pula.tar | docker import - mtgpula:latest
           docker load -i /tmp/mtg_pula.tar
           docker stop mtg_pula || true
           docker rm mtg_pula || true
