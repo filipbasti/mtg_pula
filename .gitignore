@@ -27,7 +27,7 @@ mtg_pula-*.tar
 #ignore .env file
 .env
 
-/config/.env.exs
+
 
 
 .dockerignore
