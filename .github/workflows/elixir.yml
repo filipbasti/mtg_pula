@@ -90,4 +90,4 @@ jobs:
           docker load -i /tmp/mtg_pula.tar
           docker stop mtg_pula || true
           docker rm mtg_pula || true
-          docker run -d --name mtg_pula --env-file /path/to/.env -p 4000:4000 mtg_pula:latest
+          
