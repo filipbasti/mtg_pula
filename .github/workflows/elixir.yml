@@ -80,6 +80,7 @@ jobs:
           cat > /tmp/mtg_pula.tar << 'EOF'
           $(cat mtg_pula.tar)
           EOF
+            ls -lh /tmp/mtg_pula.tar
     - name: Deploy Docker container on Hetzner
       uses: appleboy/ssh-action@v0.1.3
       with:
