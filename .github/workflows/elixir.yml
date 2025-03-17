@@ -51,7 +51,7 @@ jobs:
       with:
         name: mtg_pula_image
         path: mtg_pula.tar
-    deploy:
+  deploy:
         needs: build
         runs-on: ubuntu-22.04
         steps:
