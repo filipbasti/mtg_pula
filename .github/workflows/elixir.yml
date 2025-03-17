@@ -51,35 +51,43 @@ jobs:
       with:
         name: mtg_pula_image
         path: mtg_pula.tar
+
   deploy:
-        needs: build
-        runs-on: ubuntu-22.04
-        steps:
-        - name: Download Docker image artifact
-          uses: actions/download-artifact@v4
-          with:
-            name: mtg_pula_image
-            path: mtg_pula.tar
-        - name: Test SSH Connection
-          uses: appleboy/ssh-action@v0.1.3
-          with:
-            host: ${{ secrets.HETZNER_HOST }}
-            username: ${{ secrets.HETZNER_USERNAME }}
-            password: ${{ secrets.HETZNER_PASSWORD }}
-            script: |
-              echo "Successfully connected to the server!"
-              ls -l /tmp
-        - name: Copy Docker image to Hetzner
-          run: |
-            scp -o StrictHostKeyChecking=no mtg_pula.tar ${{ secrets.HETZNER_USERNAME }}@${{ secrets.HETZNER_HOST }}:/tmp/mtg_pula.tar
-        - name: Deploy Docker container on Hetzner
-          uses: appleboy/ssh-action@v0.1.3
-          with:
-            host: ${{ secrets.HETZNER_HOST }}
-            username: ${{ secrets.HETZNER_USERNAME }}
-            password: ${{ secrets.HETZNER_PASSWORD }}
-            script: |
-              docker load -i /tmp/mtg_pula.tar
-              docker stop mtg_pula || true
-              docker rm mtg_pula || true
-              docker run -d --name mtg_pula --env-file /path/to/.env -p 4000:4000 mtg_pula:latest
+    needs: build
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Download Docker image artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: mtg_pula_image
+        path: mtg_pula.tar
+    - name: Test SSH Connection
+      uses: appleboy/ssh-action@v0.1.3
+      with:
+        host: ${{ secrets.HETZNER_HOST }}
+        username: ${{ secrets.HETZNER_USERNAME }}
+        password: ${{ secrets.HETZNER_PASSWORD }}
+        script: |
+          echo "Successfully connected to the server!"
+          ls -l /tmp
+    - name: Copy Docker image to Hetzner
+      uses: appleboy/ssh-action@v0.1.3
+      with:
+        host: ${{ secrets.HETZNER_HOST }}
+        username: ${{ secrets.HETZNER_USERNAME }}
+        password: ${{ secrets.HETZNER_PASSWORD }}
+        script: |
+          cat > /tmp/mtg_pula.tar << 'EOF'
+          $(cat mtg_pula.tar)
+          EOF
+    - name: Deploy Docker container on Hetzner
+      uses: appleboy/ssh-action@v0.1.3
+      with:
+        host: ${{ secrets.HETZNER_HOST }}
+        username: ${{ secrets.HETZNER_USERNAME }}
+        password: ${{ secrets.HETZNER_PASSWORD }}
+        script: |
+          docker load -i /tmp/mtg_pula.tar
+          docker stop mtg_pula || true
+          docker rm mtg_pula || true
+          docker run -d --name mtg_pula --env-file /path/to/.env -p 4000:4000 mtg_pula:latest
