@@ -48,7 +48,7 @@ jobs:
         docker build -t mtg_pula:latest .
         docker save mtg_pula:latest -o mtg_pula.tar
     - name: Upload Docker image artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: mtg_pula_image
         path: mtg_pula.tar
