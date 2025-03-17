@@ -24,7 +24,7 @@ jobs:
           - 5432:5432
         env:
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_PASSWORD: javolimkrafnu123
           POSTGRES_DB: mtg_pula_test
     steps:
     - uses: actions/checkout@v4
