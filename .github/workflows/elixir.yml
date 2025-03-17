@@ -70,9 +70,9 @@ jobs:
         script: |
           echo "Successfully connected to the server!"
           ls -l /tmp
-    - name: Copy Docker image to Hetzner
+    - name: Copy Docker image to Hetzner using curl
       run: |
-       sshpass -p ${{ secrets.HETZNER_PASSWORD }}  scp -v -o StrictHostKeyChecking=no mtg_pula.tar ${{ secrets.HETZNER_USERNAME }}@${{ secrets.HETZNER_HOST }}:/tmp/mtg_pula.tar
+        curl --insecure --user ${{ secrets.HETZNER_USERNAME }}:${{ secrets.HETZNER_PASSWORD }} -T mtg_pula.tar sftp://${{ secrets.HETZNER_HOST }}/tmp/mtg_pula.tar
     - name: Deploy Docker container on Hetzner
       uses: appleboy/ssh-action@v0.1.3
       with:
