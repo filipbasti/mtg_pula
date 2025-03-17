@@ -10,7 +10,7 @@ import Config
 config :mtg_pula,
   ecto_repos: [MtgPula.Repo],
   generators: [timestamp_type: :utc_datetime, binary_id: true]
-host = System.get_env("RENDER_EXTERNAL_HOSTNAME") || "localhost"
+host = System.get_env("PHX_HOST") || "localhost"
 # Configures the endpoint
 config :mtg_pula, MtgPulaWeb.Endpoint,
   url: [host: host],
