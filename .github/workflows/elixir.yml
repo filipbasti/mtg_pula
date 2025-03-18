@@ -56,26 +56,20 @@ jobs:
     needs: build
     runs-on: ubuntu-22.04
     steps:
-    - name: Install file Command
+    - name: Clean Up Existing File or Directory
       run: |
-        sudo apt-get update
-        sudo apt-get install -y file
+        rm -rf mtg_pula.tar
     - name: Download Docker image artifact
       uses: actions/download-artifact@v4
       with:
         name: mtg_pula_image
-        path: mtg_pula.tar
+        path: ./mtg_pula.tar
     - name: Verify Local Docker Image File
       run: |
         ls -lh mtg_pula.tar
-    - name: Print Current Working Directory
-      run: pwd
-    - name: Verify File Type
+    - name: Debug File Type
       run: |
         file mtg_pula.tar
-    - name: Check for File Locks
-      run: |
-        lsof mtg_pula.tar || echo "No locks on file"
     - name: Set File Permissions
       run: |
         chmod 644 mtg_pula.tar
@@ -85,7 +79,7 @@ jobs:
         chmod 600 private_key.pem
     - name: Debug SCP Command
       run: |
-        scp  -v -i private_key.pem -o StrictHostKeyChecking=no $(pwd)/mtg_pula.tar ${{ secrets.HETZNER_USERNAME }}@${{ secrets.HETZNER_HOST }}:/tmp/mtg_pula.tar
+        scp -v -i private_key.pem -o StrictHostKeyChecking=no ./mtg_pula.tar ${{ secrets.HETZNER_USERNAME }}@${{ secrets.HETZNER_HOST }}:/tmp/mtg_pula.tar
     - name: Verify Docker Image File on Hetzner
       uses: appleboy/ssh-action@v0.1.3
       with:
