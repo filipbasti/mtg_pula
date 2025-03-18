@@ -73,9 +73,13 @@ jobs:
         script: |
           echo "Successfully connected to the server!"
           ls -l /tmp
+    - name: Set up SSH key
+      run: |
+            echo "${{ secrets.HETZNER_SSH_KEY }}" > private_key.pem
+            chmod 600 private_key.pem  
     - name: Copy Docker image to Hetzner using curl
       run: |
-        scp -i ${{ secrets.HETZNER_SSH_KEY }} -o StrictHostKeyChecking=no mtg_pula.tar ${{ secrets.HETZNER_USERNAME }}@${{ secrets.HETZNER_HOST }}:/tmp/mtg_pula.tar
+        scp -i private_key.pem -o StrictHostKeyChecking=no mtg_pula.tar ${{ secrets.HETZNER_USERNAME }}@${{ secrets.HETZNER_HOST }}:/tmp/mtg_pula.tar
     - name: Verify Docker Image File
       uses: appleboy/ssh-action@v0.1.3
       with:
