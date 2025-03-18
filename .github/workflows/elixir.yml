@@ -51,7 +51,7 @@ jobs:
       with:
         name: mtg_pula_image
         path: mtg_pula.tar
-  deploy:
+    deploy:
     needs: build
     runs-on: ubuntu-22.04
     steps:
@@ -69,10 +69,6 @@ jobs:
     - name: Verify Local Docker Image File
       run: |
         ls -lh mtg_pula.tar
-    - name: Debug Artifact Contents
-      run: |
-        ls -lh mtg_pula.tar
-        if [ -d mtg_pula.tar ]; then echo "mtg_pula.tar is a directory"; fi
     - name: Set File Permissions
       run: |
         chmod 644 mtg_pula.tar
@@ -80,11 +76,17 @@ jobs:
       run: |
         echo "${{ secrets.HETZNER_SSH_KEY }}" > private_key.pem
         chmod 600 private_key.pem
+    - name: Create .env File Locally
+      run: |
+        echo "GUARDIAN_SECRET_KEY=${{ secrets.GUARDIAN_SECRET_KEY }}" > .env
+        echo "SECRET_KEY_BASE=${{ secrets.SECRET_KEY_BASE }}" >> .env
+        echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
+    - name: Upload .env File to Hetzner
+      run: |
+        scp -i private_key.pem -o StrictHostKeyChecking=no .env ${{ secrets.HETZNER_USERNAME }}@${{ secrets.HETZNER_HOST }}:/tmp/.env
     - name: Debug SCP Command
       run: |
-        echo "File path: $(pwd)/mtg_pula.tar"
-        ls -lh $(pwd)/mtg_pula.tar
-        scp -v -i private_key.pem -o StrictHostKeyChecking=no $(pwd)/mtg_pula.tar ${{ secrets.HETZNER_USERNAME }}@${{ secrets.HETZNER_HOST }}:/tmp/mtg_pula.tar
+        scp -v -i private_key.pem -o StrictHostKeyChecking=no ./mtg_pula.tar ${{ secrets.HETZNER_USERNAME }}@${{ secrets.HETZNER_HOST }}:/tmp/mtg_pula.tar
     - name: Verify Docker Image File on Hetzner
       uses: appleboy/ssh-action@v0.1.3
       with:
@@ -93,6 +95,7 @@ jobs:
         password: ${{ secrets.HETZNER_PASSWORD }}
         script: |
           ls -lh /tmp/mtg_pula.tar
+          ls -lh /tmp/.env
     - name: Deploy Docker container on Hetzner
       uses: appleboy/ssh-action@v0.1.3
       with:
@@ -103,4 +106,4 @@ jobs:
           docker load -i /tmp/mtg_pula.tar
           docker stop mtg_pula || true
           docker rm mtg_pula || true
-          docker run -d --name mtg_pula --env-file /path/to/.env -p 4000:4000 mtg_pula:latest
+          docker run -d --name mtg_pula --env-file /tmp/.env -p 4000:4000 mtg_pula:latest
