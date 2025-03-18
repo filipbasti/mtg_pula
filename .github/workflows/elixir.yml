@@ -51,7 +51,6 @@ jobs:
       with:
         name: mtg_pula_image
         path: mtg_pula.tar
-
   deploy:
     needs: build
     runs-on: ubuntu-22.04
@@ -63,13 +62,17 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: mtg_pula_image
-        path: ./mtg_pula.tar
+        path: ./artifact_dir
+    - name: Move Artifact to Current Directory
+      run: |
+        mv ./artifact_dir/mtg_pula.tar ./mtg_pula.tar
     - name: Verify Local Docker Image File
       run: |
         ls -lh mtg_pula.tar
-    - name: Debug File Type
+    - name: Debug Artifact Contents
       run: |
-        file mtg_pula.tar
+        ls -lh mtg_pula.tar
+        if [ -d mtg_pula.tar ]; then echo "mtg_pula.tar is a directory"; fi
     - name: Set File Permissions
       run: |
         chmod 644 mtg_pula.tar
@@ -79,7 +82,9 @@ jobs:
         chmod 600 private_key.pem
     - name: Debug SCP Command
       run: |
-        scp -v -i private_key.pem -o StrictHostKeyChecking=no ./mtg_pula.tar ${{ secrets.HETZNER_USERNAME }}@${{ secrets.HETZNER_HOST }}:/tmp/mtg_pula.tar
+        echo "File path: $(pwd)/mtg_pula.tar"
+        ls -lh $(pwd)/mtg_pula.tar
+        scp -v -i private_key.pem -o StrictHostKeyChecking=no $(pwd)/mtg_pula.tar ${{ secrets.HETZNER_USERNAME }}@${{ secrets.HETZNER_HOST }}:/tmp/mtg_pula.tar
     - name: Verify Docker Image File on Hetzner
       uses: appleboy/ssh-action@v0.1.3
       with:
