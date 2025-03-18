@@ -87,8 +87,8 @@ jobs:
         username: ${{ secrets.HETZNER_USERNAME }}
         password: ${{ secrets.HETZNER_PASSWORD }}
         script: |
-          docker pull your_dockerhub_username/mtg_pula:latest
-          docker run --rm your_dockerhub_username/mtg_pula:latest ls -l /app/bin/server
+          docker pull ${{ secrets.DOCKER_USERNAME }}/mtg_pula:latest
+          docker run --rm ${{ secrets.DOCKER_USERNAME }}/mtg_pula:latest ls -l /app/bin/server
 
     - name: Deploy Docker container on Hetzner
       uses: appleboy/ssh-action@v0.1.3
