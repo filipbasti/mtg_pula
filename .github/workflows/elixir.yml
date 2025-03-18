@@ -80,15 +80,6 @@ jobs:
           echo "SECRET_KEY_BASE=${{ secrets.SECRET_KEY_BASE }}" >> /tmp/.env
           echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> /tmp/.env
 
-    - name: Verify File Permissions in Container
-      uses: appleboy/ssh-action@v0.1.3
-      with:
-        host: ${{ secrets.HETZNER_HOST }}
-        username: ${{ secrets.HETZNER_USERNAME }}
-        password: ${{ secrets.HETZNER_PASSWORD }}
-        script: |
-          docker pull ${{ secrets.DOCKER_USERNAME }}/mtg_pula:latest
-          docker run --rm ${{ secrets.DOCKER_USERNAME }}/mtg_pula:latest ls -l /app/bin/server
 
     - name: Deploy Docker container on Hetzner
       uses: appleboy/ssh-action@v0.1.3
@@ -97,7 +88,7 @@ jobs:
         username: ${{ secrets.HETZNER_USERNAME }}
         password: ${{ secrets.HETZNER_PASSWORD }}
         script: |
-          docker pull {{ secrets.DOCKER_USERNAME }}//mtg_pula:latest
+          docker pull {{ secrets.DOCKER_USERNAME }}/mtg_pula:latest
           docker stop mtg_pula || true
           docker rm mtg_pula || true
           docker run -d --name mtg_pula --env-file /tmp/.env -p 4000:4000 {{ secrets.DOCKER_USERNAME }}//mtg_pula:latest
