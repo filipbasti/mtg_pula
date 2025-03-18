@@ -71,7 +71,7 @@ if config_env() == :prod do
       port: port
     ],
     force_ssl: [hsts: true],
-    check_origin: ["https://interface-mtgpula.onrender.com", "http://localhost:5173"],
+    check_origin: ["https://interface-mtgpula.onrender.com", "http://localhost:5173", "http://116.203.210.54:80"],
     secret_key_base: secret_key_base
 
   # ## SSL Support

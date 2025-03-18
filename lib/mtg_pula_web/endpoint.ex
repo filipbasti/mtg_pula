@@ -48,7 +48,7 @@ defmodule MtgPulaWeb.Endpoint do
   plug Plug.Head
   plug Plug.Session, @session_options
 
-  plug Corsica, origins: ["https://interface-mtgpula.onrender.com", "http://localhost:5173"],
+  plug Corsica, origins: ["https://interface-mtgpula.onrender.com", "http://localhost:5173", "http://116.203.210.54:80"],
   max_age: 86400,
   allow_headers: :all,
   allow_credentials: true,
