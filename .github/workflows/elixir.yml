@@ -79,7 +79,7 @@ jobs:
             chmod 600 private_key.pem  
     - name: Copy Docker image to Hetzner using curl
       run: |
-        scp -i private_key.pem -o StrictHostKeyChecking=no mtg_pula.tar ${{ secrets.HETZNER_USERNAME }}@${{ secrets.HETZNER_HOST }}:/tmp/mtg_pula.tar
+        scp -v -i private_key.pem -o StrictHostKeyChecking=no mtg_pula.tar ${{ secrets.HETZNER_USERNAME }}@${{ secrets.HETZNER_HOST }}:/tmp/mtg_pula.tar
     - name: Verify Docker Image File
       uses: appleboy/ssh-action@v0.1.3
       with:
