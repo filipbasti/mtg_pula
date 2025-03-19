@@ -7,8 +7,7 @@ defmodule MtgPulaWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_mtg_pula_key",
-    signing_salt: "N+oRldfJ",
-    same_site: "none",
+    signing_salt: "N+oRldfJ"
 
   ]
 
