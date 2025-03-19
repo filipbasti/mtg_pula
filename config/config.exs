@@ -39,11 +39,11 @@ if config_env() in [:dev, :test] do
   import_config ".env.exs"
 end
 import_config "#{config_env()}.exs"
-secret = System.get_env("SECRET_KEY_BASE")
+
 
 config :mtg_pula, MtgPulaWeb.Auth.Guardian,
 issuer: "mtg_pula",
-secret_key: secret
+secret_key: "G5UZdqYZTTRJ2GqMwUoeai+XjBG9ZgKn6GCcu9Omf5p0Y+2N68KP5twU6YCxDcrl"
 
 config :guardian, Guardian.DB,
     repo: MtgPula.Repo,
