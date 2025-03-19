@@ -9,7 +9,7 @@ defmodule MtgPulaWeb.Endpoint do
     key: "_mtg_pula_key",
     signing_salt: "N+oRldfJ",
     same_site: "none",
-    secure: true
+
   ]
 
   socket "/socket", MtgPulaWeb.UserSocket,
