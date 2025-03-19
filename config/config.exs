@@ -7,6 +7,7 @@
 # General application configuration
 import Config
 
+IO.inspect(System.get_env("GUARDIAN_SECRET_KEY"), label: "GUARDIAN_SECRET_KEY")
 config :mtg_pula,
   ecto_repos: [MtgPula.Repo],
   generators: [timestamp_type: :utc_datetime, binary_id: true]
@@ -41,7 +42,8 @@ import_config "#{config_env()}.exs"
 
 config :mtg_pula, MtgPulaWeb.Auth.Guardian,
 issuer: "mtg_pula",
-secret_key: System.get_env("GUARDIAN_SECRET_KEY")
+secret_key: System.get_env("GUARDIAN_SECRET_KEY") ||
+    raise "GUARDIAN_SECRET_KEY is not set"
 
 config :guardian, Guardian.DB,
     repo: MtgPula.Repo,
