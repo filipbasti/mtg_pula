@@ -79,6 +79,7 @@ jobs:
           echo "GUARDIAN_SECRET_KEY=${{ secrets.GUARDIAN_SECRET_KEY }}" > /tmp/.env
           echo "SECRET_KEY_BASE=${{ secrets.SECRET_KEY_BASE }}" >> /tmp/.env
           echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> /tmp/.env
+          echo "PHX_HOST=mtg_pula" >> /tmp/.env
 
 
     - name: Deploy Docker container on Hetzner
