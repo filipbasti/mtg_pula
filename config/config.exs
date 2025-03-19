@@ -39,11 +39,12 @@ if config_env() in [:dev, :test] do
   import_config ".env.exs"
 end
 import_config "#{config_env()}.exs"
+secret = System.get_env("GUARDIAN_SECRET_KEY") ||
+    raise "GUARDIAN_SECRET_KEY is not set"
 
 config :mtg_pula, MtgPulaWeb.Auth.Guardian,
 issuer: "mtg_pula",
-secret_key: System.get_env("GUARDIAN_SECRET_KEY") ||
-    raise "GUARDIAN_SECRET_KEY is not set"
+secret_key: secret
 
 config :guardian, Guardian.DB,
     repo: MtgPula.Repo,
