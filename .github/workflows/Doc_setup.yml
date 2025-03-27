@@ -38,7 +38,7 @@ jobs:
     - name: Force push to gh-pages
       run: |
           # Generate docs
-          mix docs
+          mix docs --canonical "https://github.com/filipbasti/mtg_pula"
 
           # Setup
           cd doc
