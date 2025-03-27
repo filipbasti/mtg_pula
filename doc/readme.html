@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.37.3">
+    <meta name="project" content="mtg_pula v0.1.0">
+
+
+    <title>MTG Pula API Documentation — mtg_pula v0.1.0</title>
+
+    <link rel="stylesheet" href="dist/html-elixir-6X3L5KMG.css" />
+
+    <script defer src="dist/sidebar_items-92B5F021.js"></script>
+    <script defer src="docs_config.js"></script>
+    <script defer src="dist/html-ALU6OERS.js"></script>
+
+  </head>
+  <body>
+    <script>(()=>{var t="ex_doc:settings",e="dark";var o="dark",s="light";var E="sidebar_state",n="closed";var r="sidebar_width";var a="sidebar-open";var i=new URLSearchParams(window.location.search),S=i.get("theme")||JSON.parse(localStorage.getItem(t)||"{}").theme;(S===o||S!==s&&window.matchMedia("(prefers-color-scheme: dark)").matches)&&document.body.classList.add(e);var d=sessionStorage.getItem(E),A=d!==n&&!window.matchMedia(`screen and (max-width: ${768}px)`).matches;document.body.classList.toggle(a,A);var c=sessionStorage.getItem(r);c&&document.body.style.setProperty("--sidebarWidth",`${c}px`);var p=/(Macintosh|iPhone|iPad|iPod)/.test(window.navigator.userAgent);document.documentElement.classList.toggle("apple-os",p);})();
+</script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+      <div>
+        <a href="readme.html" class="sidebar-projectName" translate="no">
+mtg_pula
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v0.1.0
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-list-nav" class="sidebar-list-nav" role="tablist" data-extras=""></ul>
+  </div>
+</nav>
+
+<output role="status" id="toast"></output>
+
+<main class="content page-extra" id="main" data-type="extras">
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of mtg_pula</span>
+            <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+          </label>
+          <button type="submit" class="search-button" aria-label="Submit Search" tabindex="-1">
+            <i class="ri-search-2-line ri-lg" aria-hidden="true"></i>
+          </button>
+          <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+            <i class="ri-close-line ri-lg" title="Cancel search"></i>
+          </button>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <div class="heading-with-actions top-heading">
+    <h1>MTG Pula API Documentation</h1>
+
+
+  </div>
+
+<h2 id="overview" class="section-heading">
+  <a href="#overview" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Overview</span>
+</h2>
+<p>MTG Pula is a platform for managing Magic: The Gathering tournaments. Below is a diagram of the system architecture:</p><p><img src="https://i.imgur.com/Tqxzsgs.png" alt="System Architecture" title="System Architecture"/></p><h2 id="features" class="section-heading">
+  <a href="#features" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Features</span>
+</h2>
+<ul><li>User authentication and authorization</li><li>Tournament creation and management</li><li>Real-time updates via Phoenix Channels</li></ul><h2 id="schemas" class="section-heading">
+  <a href="#schemas" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text"><strong>Schemas</strong></span>
+</h2>
+<h3 id="1-account-schema" class="section-heading">
+  <a href="#1-account-schema" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text"><strong>1. <a href="MtgPula.Accounts.Account.html">Account Schema</a></strong></span>
+</h3>
+<ul><li>Represents an account in the system.</li><li>Stores account-related information such as email and hashed passwords.</li></ul><h3 id="2-user-schema" class="section-heading">
+  <a href="#2-user-schema" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text"><strong>2. <a href="MtgPula.Users.User.html">User Schema</a></strong></span>
+</h3>
+<ul><li>Represents a user in the system.</li><li>Stores user-related information such as full name, gender, and biography.</li></ul><h3 id="3-tournament-schema" class="section-heading">
+  <a href="#3-tournament-schema" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text"><strong>3. <a href="MtgPula.Tournaments.Tournament.html">Tournament Schema</a></strong></span>
+</h3>
+<ul><li>Represents a tournament.</li><li>Stores tournament-related information such as name, rounds, and players.</li></ul><h3 id="4-player-schema" class="section-heading">
+  <a href="#4-player-schema" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text"><strong>4. <a href="MtgPula.Tournaments.Player.html">Player Schema</a></strong></span>
+</h3>
+<ul><li>Represents a player participating in a tournament.</li><li>Stores player-related information such as points, deck, and match history.</li></ul><h3 id="5-match-schema" class="section-heading">
+  <a href="#5-match-schema" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text"><strong>5. <a href="MtgPula.Tournaments.Match.html">Match Schema</a></strong></span>
+</h3>
+<ul><li>Represents a match between players in a tournament.</li><li>Stores match-related information such as players, scores, and the winner.</li></ul><hr class="thin"/><h2 id="phoenix-channel-documentation" class="section-heading">
+  <a href="#phoenix-channel-documentation" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text"><strong>Phoenix Channel Documentation</strong></span>
+</h2>
+<hr class="thin"/><ul><li>Tournamemnt channels track <strong><a href="https://hexdocs.pm/phoenix/js/#presence">Presence</a></strong>.</li><li>You can see all events that can be used <strong><a href="MtgPulaWeb.TournamentChannel.html">HERE</a></strong></li><li>If you are using Node based framework, I recommend connecting by <strong><a href="https://www.npmjs.com/package phoenix-channels">Phoenix Channels JavaScript client</a></strong>
+.</li></ul><h3 id="example" class="section-heading">
+  <a href="#example" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text"><strong>Example</strong></span>
+</h3>
+<pre><code class="makeup elixir" translate="no"><span class="w">  
+  </span><span class="n">const</span><span class="w"> </span><span class="p" data-group-id="4012475271-1">{</span><span class="w"> </span><span class="nc">Socket</span><span class="w"> </span><span class="p" data-group-id="4012475271-1">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kn">require</span><span class="p" data-group-id="4012475271-2">(</span><span class="sc">&#39;phoenix-channels&#39;</span><span class="p" data-group-id="4012475271-2">)</span><span class="w">
+  </span><span class="o">//</span><span class="n">connect</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">socket</span><span class="w">
+  </span><span class="n">let</span><span class="w"> </span><span class="n">socket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="nc">Socket</span><span class="p" data-group-id="4012475271-3">(</span><span class="n">baseURL</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="4012475271-4">{</span><span class="w"> </span><span class="ss">params</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="4012475271-5">{</span><span class="w"> </span><span class="ss">token</span><span class="p">:</span><span class="w"> </span><span class="n">userToken</span><span class="w"> </span><span class="p" data-group-id="4012475271-5">}</span><span class="p">,</span><span class="p" data-group-id="4012475271-4">}</span><span class="p" data-group-id="4012475271-3">)</span><span class="w">
+
+  </span><span class="n">socket</span><span class="o">.</span><span class="n">connect</span><span class="p" data-group-id="4012475271-6">(</span><span class="p" data-group-id="4012475271-6">)</span><span class="w">
+
+  </span><span class="o">//</span><span class="w"> </span><span class="nc">Now</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">are</span><span class="w"> </span><span class="n">connected</span><span class="p">,</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">join</span><span class="w"> </span><span class="n">channels</span><span class="w"> </span><span class="k">with</span><span class="w">
+   </span><span class="n">a</span><span class="w"> </span><span class="n">topic</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">example</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">tournament</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">join_code</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="mi">12345</span><span class="p">:</span><span class="w">
+  </span><span class="n">let</span><span class="w"> </span><span class="n">channel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">socket</span><span class="o">.</span><span class="n">channel</span><span class="p" data-group-id="4012475271-7">(</span><span class="s">&quot;tournament:12345&quot;</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="4012475271-8">{</span><span class="p" data-group-id="4012475271-8">}</span><span class="p" data-group-id="4012475271-7">)</span><span class="w">
+  </span><span class="n">channel</span><span class="o">.</span><span class="n">join</span><span class="p" data-group-id="4012475271-9">(</span><span class="p" data-group-id="4012475271-9">)</span><span class="w">
+    </span><span class="o">.</span><span class="k">receive</span><span class="p" data-group-id="4012475271-10">(</span><span class="s">&quot;ok&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">resp</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p" data-group-id="4012475271-11">{</span><span class="w"> </span><span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p" data-group-id="4012475271-12">(</span><span class="s">&quot;Joined successfully&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">resp</span><span class="p" data-group-id="4012475271-12">)</span><span class="w"> </span><span class="p" data-group-id="4012475271-11">}</span><span class="p" data-group-id="4012475271-10">)</span><span class="w">
+    </span><span class="o">.</span><span class="k">receive</span><span class="p" data-group-id="4012475271-13">(</span><span class="s">&quot;error&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">resp</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p" data-group-id="4012475271-14">{</span><span class="w"> </span><span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p" data-group-id="4012475271-15">(</span><span class="s">&quot;Unable to join&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">resp</span><span class="p" data-group-id="4012475271-15">)</span><span class="w"> </span><span class="p" data-group-id="4012475271-14">}</span><span class="p" data-group-id="4012475271-13">)</span><span class="w">
+  </span><span class="o">//</span><span class="n">push</span><span class="w"> </span><span class="n">an</span><span class="w"> </span><span class="n">event</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">socket</span><span class="w">
+  </span><span class="n">channel</span><span class="o">.</span><span class="n">push</span><span class="p" data-group-id="4012475271-16">(</span><span class="s">&quot;add_player&quot;</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="4012475271-17">{</span><span class="ss">user_id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;any_id&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">deck</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;deck&quot;</span><span class="p" data-group-id="4012475271-17">}</span><span class="p" data-group-id="4012475271-16">)</span><span class="w">
+            </span><span class="o">.</span><span class="k">receive</span><span class="p" data-group-id="4012475271-18">(</span><span class="s">&quot;ok&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">resp</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="n">resolve</span><span class="p" data-group-id="4012475271-19">(</span><span class="n">resp</span><span class="p" data-group-id="4012475271-19">)</span><span class="p" data-group-id="4012475271-18">)</span><span class="w">
+            </span><span class="o">.</span><span class="k">receive</span><span class="p" data-group-id="4012475271-20">(</span><span class="s">&quot;error&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">resp</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="n">reject</span><span class="p" data-group-id="4012475271-21">(</span><span class="n">resp</span><span class="p" data-group-id="4012475271-21">)</span><span class="p" data-group-id="4012475271-20">)</span><span class="p">;</span></code></pre><h2 id="rest-api-documentation" class="section-heading">
+  <a href="#rest-api-documentation" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text"><strong>REST API Documentation</strong></span>
+</h2>
+<p>These are all exposed that can be used to access data and modify it. Authentication is done by jwt.</p><hr class="thin"/><h3 id="public-endpoints-no-authentication-required" class="section-heading">
+  <a href="#public-endpoints-no-authentication-required" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text"><strong>Public Endpoints (No Authentication Required)</strong></span>
+</h3>
+<h4><strong>1. GET <code class="inline">/api/</code></strong></h4><ul><li><strong>Description</strong>: Health check endpoint to verify the API is running.</li><li><strong>Request</strong>: No parameters required.</li><li><strong>Response</strong>:<pre><code class="text">MTG PULA IS LIVE!</code></pre></li></ul><hr class="thin"/><h4><strong>2. POST <code class="inline">/api/accounts/create</code></strong></h4><ul><li><strong>Description</strong>: Creates a new account.</li><li><strong>Request</strong>:<ul><li><strong>Body Parameters</strong>:<pre><code class="json">{
+  &quot;account&quot;: {
+    &quot;email&quot;: &quot;user@example.com&quot;,
+    &quot;hash_password&quot;: &quot;password123&quot;
+  }
+}</code></pre></li></ul></li><li><strong>Response</strong>:<pre><code class="json">{
+  &quot;id&quot;: &quot;account_id&quot;,
+  &quot;email&quot;: &quot;user@example.com&quot;,
+  &quot;token&quot;: &quot;jwt_token&quot;
+}</code></pre></li></ul><hr class="thin"/><h4><strong>3. POST <code class="inline">/api/accounts/sign_in</code></strong></h4><ul><li><strong>Description</strong>: Authenticates a user and returns a JWT token.</li><li><strong>Request</strong>:<ul><li><strong>Body Parameters</strong>:<pre><code class="json">{
+  &quot;email&quot;: &quot;user@example.com&quot;,
+  &quot;hash_password&quot;: &quot;password123&quot;
+}</code></pre></li></ul></li><li><strong>Response</strong>:<pre><code class="json">{
+  &quot;id&quot;: &quot;account_id&quot;,
+  &quot;email&quot;: &quot;user@example.com&quot;,
+  &quot;token&quot;: &quot;jwt_token&quot;
+}</code></pre></li></ul><hr class="thin"/><h4><strong>4. GET <code class="inline">/api/tournaments/standings/by_id/:id</code></strong></h4><ul><li><strong>Description</strong>: Retrieves the standings for a specific tournament by its ID.</li><li><strong>Request</strong>:<ul><li><strong>Path Parameters</strong>:<ul><li><code class="inline">id</code> (string, required): The ID of the tournament.</li></ul></li></ul></li><li><strong>Response</strong>:<pre><code class="json">{
+  &quot;standings&quot;: [
+    {
+      &quot;id&quot;: &quot;player_id&quot;,
+      &quot;user_id&quot;: &quot;user_id&quot;,
+      &quot;full_name&quot;: &quot;John Doe&quot;,
+      &quot;deck&quot;: &quot;Mono Red Aggro&quot;,
+      &quot;points&quot;: 15
+    }
+  ]
+}</code></pre></li></ul><hr class="thin"/><h4><strong>5. GET <code class="inline">/api/tournaments</code></strong></h4><ul><li><strong>Description</strong>: Retrieves a list of all tournaments.</li><li><strong>Request</strong>: No parameters required.</li><li><strong>Response</strong>:<pre><code class="json">{
+  &quot;tournaments&quot;: [
+    {
+      &quot;id&quot;: &quot;tournament_id&quot;,
+      &quot;name&quot;: &quot;Summer Cup&quot;,
+      &quot;current_round&quot;: 1,
+      &quot;number_of_rounds&quot;: 5,
+      &quot;join_code&quot;: &quot;ABC123&quot;,
+      &quot;finished&quot;: false
+    }
+  ]
+}</code></pre></li></ul><hr class="thin"/><h3 id="protected-endpoints-require-jwt-authentication" class="section-heading">
+  <a href="#protected-endpoints-require-jwt-authentication" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text"><strong>Protected Endpoints (Require JWT Authentication)</strong></span>
+</h3>
+<h3 id="authentication" class="section-heading">
+  <a href="#authentication" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text"><strong>Authentication</strong></span>
+</h3>
+<p>These endpoints are protected and require a valid JWT token for access. For these endpoints, include the following header in your requests:</p><pre><code class="makeup elixir" translate="no"><span class="ss">Authorization</span><span class="p">:</span><span class="w"> </span><span class="nc">Bearer</span><span class="w"> </span><span class="o">&lt;</span><span class="n">your_jwt_token</span><span class="o">&gt;</span></code></pre><hr class="thin"/><h4><strong>6. GET <code class="inline">/api/accounts/by_id/:id</code></strong></h4><ul><li><strong>Description</strong>: Retrieves account details by ID.</li><li><strong>Authentication</strong>: Requires JWT.</li><li><strong>Request</strong>:<ul><li><strong>Path Parameters</strong>:<ul><li><code class="inline">id</code> (string, required): The ID of the account.</li></ul></li></ul></li><li><strong>Response</strong>:<pre><code class="json">{
+  &quot;id&quot;: &quot;account_id&quot;,
+  &quot;email&quot;: &quot;user@example.com&quot;,
+  &quot;user&quot;: {
+    &quot;id&quot;: &quot;user_id&quot;,
+    &quot;full_name&quot;: &quot;John Doe&quot;,
+    &quot;gender&quot;: &quot;male&quot;,
+    &quot;biography&quot;: &quot;Avid MTG player&quot;
+  }
+}</code></pre></li></ul><hr class="thin"/><h4><strong>7. GET <code class="inline">/api/accounts/current</code></strong></h4><ul><li><strong>Description</strong>: Retrieves the currently authenticated account.</li><li><strong>Authentication</strong>: Requires JWT.</li><li><strong>Request</strong>: No parameters required.</li><li><strong>Response</strong>:<pre><code class="json">{
+  &quot;id&quot;: &quot;account_id&quot;,
+  &quot;email&quot;: &quot;user@example.com&quot;,
+  &quot;user&quot;: {
+    &quot;id&quot;: &quot;user_id&quot;,
+    &quot;full_name&quot;: &quot;John Doe&quot;,
+    &quot;gender&quot;: &quot;male&quot;,
+    &quot;biography&quot;: &quot;Avid MTG player&quot;
+  }
+}</code></pre></li></ul><hr class="thin"/><h4><strong>8. PATCH <code class="inline">/api/accounts/update</code></strong></h4><ul><li><strong>Description</strong>: Updates account details.</li><li><strong>Authentication</strong>: Requires JWT.</li><li><strong>Request</strong>:<ul><li><strong>Body Parameters</strong>:<pre><code class="json">{
+  &quot;account&quot;: {
+    &quot;email&quot;: &quot;new_email@example.com&quot;,
+    &quot;hash_password&quot;: &quot;new_password&quot;
+  }
+}</code></pre></li></ul></li><li><strong>Response</strong>:<pre><code class="json">{
+  &quot;id&quot;: &quot;account_id&quot;,
+  &quot;email&quot;: &quot;new_email@example.com&quot;
+}</code></pre></li></ul><hr class="thin"/><h4><strong>9. POST <code class="inline">/api/accounts/sign_out</code></strong></h4><ul><li><strong>Description</strong>: Signs out the currently authenticated account.</li><li><strong>Authentication</strong>: Requires JWT.</li><li><strong>Request</strong>: No parameters required.</li><li><strong>Response</strong>:<pre><code class="json">{
+  &quot;message&quot;: &quot;Signed out successfully&quot;
+}</code></pre></li></ul><hr class="thin"/><h4><strong>10. POST <code class="inline">/api/accounts/refresh_session</code></strong></h4><ul><li><strong>Description</strong>: Refreshes the session token for the authenticated account.</li><li><strong>Authentication</strong>: Requires JWT.</li><li><strong>Request</strong>: No parameters required.</li><li><strong>Response</strong>:<pre><code class="json">{
+  &quot;token&quot;: &quot;new_jwt_token&quot;
+}</code></pre></li></ul><hr class="thin"/><h4><strong>11. PUT <code class="inline">/api/users/update</code></strong></h4><ul><li><strong>Description</strong>: Updates user details.</li><li><strong>Authentication</strong>: Requires JWT.</li><li><strong>Request</strong>:<ul><li><strong>Body Parameters</strong>:<pre><code class="json">{
+  &quot;user&quot;: {
+    &quot;full_name&quot;: &quot;Jane Doe&quot;,
+    &quot;gender&quot;: &quot;female&quot;,
+    &quot;biography&quot;: &quot;MTG enthusiast&quot;
+  }
+}</code></pre></li></ul></li><li><strong>Response</strong>:<pre><code class="json">{
+  &quot;id&quot;: &quot;user_id&quot;,
+  &quot;full_name&quot;: &quot;Jane Doe&quot;,
+  &quot;gender&quot;: &quot;female&quot;,
+  &quot;biography&quot;: &quot;MTG enthusiast&quot;
+}</code></pre></li></ul><hr class="thin"/><h4><strong>12. POST <code class="inline">/api/tournaments/create</code></strong></h4><ul><li><strong>Description</strong>: Creates a new tournament.</li><li><strong>Authentication</strong>: Requires JWT.</li><li><strong>Request</strong>:<ul><li><strong>Body Parameters</strong>:<pre><code class="json">{
+  &quot;tournament&quot;: {
+    &quot;name&quot;: &quot;Summer Cup&quot;,
+    &quot;number_of_rounds&quot;: 5
+  }
+}</code></pre></li></ul></li><li><strong>Response</strong>:<pre><code class="json">{
+  &quot;id&quot;: &quot;tournament_id&quot;,
+  &quot;name&quot;: &quot;Summer Cup&quot;,
+  &quot;current_round&quot;: 0,
+  &quot;number_of_rounds&quot;: 5,
+  &quot;join_code&quot;: &quot;ABC123&quot;,
+  &quot;finished&quot;: false
+}</code></pre></li></ul><hr class="thin"/><h4><strong>13. POST <code class="inline">/api/tournaments/add_player</code></strong></h4><ul><li><strong>Description</strong>: Adds a player to a tournament.</li><li><strong>Authentication</strong>: Requires JWT.</li><li><strong>Request</strong>:<ul><li><strong>Body Parameters</strong>:<pre><code class="json">{
+  &quot;player&quot;: {
+    &quot;tournament_id&quot;: &quot;tournament_id&quot;,
+    &quot;user_id&quot;: &quot;user_id&quot;,
+    &quot;deck&quot;: &quot;Mono Red Aggro&quot;
+  }
+}</code></pre></li></ul></li><li><strong>Response</strong>:<pre><code class="json">{
+  &quot;id&quot;: &quot;player_id&quot;,
+  &quot;deck&quot;: &quot;Mono Red Aggro&quot;,
+  &quot;points&quot;: 0,
+  &quot;had_bye&quot;: false
+}</code></pre></li></ul><hr class="thin"/><h4><strong>14. GET <code class="inline">/api/tournaments/prepare_round/:tournament_id</code></strong></h4><ul><li><strong>Description</strong>: Prepares the next round for a tournament.</li><li><strong>Authentication</strong>: Requires JWT.</li><li><strong>Request</strong>:<ul><li><strong>Path Parameters</strong>:<ul><li><code class="inline">tournament_id</code> (string, required): The ID of the tournament.</li></ul></li></ul></li><li><strong>Response</strong>:<pre><code class="json">{
+  &quot;data&quot;: [
+    {
+      &quot;match_id&quot;: &quot;match_id&quot;,
+      &quot;player1_id&quot;: &quot;player1_id&quot;,
+      &quot;player2_id&quot;: &quot;player2_id&quot;,
+      &quot;round&quot;: 2
+    }
+  ]
+}</code></pre></li></ul><hr class="thin"/><h4><strong>15. GET <code class="inline">/api/tournaments/current_matches/:tournament_id</code></strong></h4><ul><li><strong>Description</strong>: Retrieves the current matches for a tournament.</li><li><strong>Authentication</strong>: Requires JWT.</li><li><strong>Request</strong>:<ul><li><strong>Path Parameters</strong>:<ul><li><code class="inline">tournament_id</code> (string, required): The ID of the tournament.</li></ul></li></ul></li><li><strong>Response</strong>:<pre><code class="json">{
+  &quot;matches&quot;: [
+    {
+      &quot;match_id&quot;: &quot;match_id&quot;,
+      &quot;player1_id&quot;: &quot;player1_id&quot;,
+      &quot;player2_id&quot;: &quot;player2_id&quot;,
+      &quot;round&quot;: 2
+    }
+  ]
+}</code></pre></li></ul><hr class="thin"/><h4><strong>16. PATCH <code class="inline">/api/tournaments/matches/:id</code></strong></h4><ul><li><strong>Description</strong>: Updates the score and play status of a match.</li><li><strong>Authentication</strong>: Requires JWT.</li><li><strong>Request</strong>:<ul><li><strong>Path Parameters</strong>:<ul><li><code class="inline">id</code> (string, required): The ID of the match.</li></ul></li><li><strong>Body Parameters</strong>:<pre><code class="json">{
+  &quot;match&quot;: {
+    &quot;player_1_wins&quot;: 2,
+    &quot;player_2_wins&quot;: 1,
+    &quot;on_play_id&quot;: &quot;player1_id&quot;
+  }
+}</code></pre></li></ul></li><li><strong>Response</strong>:<pre><code class="json">{
+  &quot;id&quot;: &quot;match_id&quot;,
+  &quot;round&quot;: 1,
+  &quot;player_1_wins&quot;: 2,
+  &quot;player_2_wins&quot;: 1,
+  &quot;player1_id&quot;: &quot;player1_id&quot;,
+  &quot;player2_id&quot;: &quot;player2_id&quot;,
+  &quot;on_play_id&quot;: &quot;player1_id&quot;
+}</code></pre></li></ul><hr class="thin"/>
+</div>
+
+<div class="bottom-actions" id="bottom-actions">
+  <div class="bottom-actions-item">
+
+      <a href="api-reference.html" class="bottom-actions-button" rel="prev">
+        <span class="subheader">
+          ← Previous Page
+        </span>
+        <span class="title">
+API Reference
+        </span>
+      </a>
+
+  </div>
+  <div class="bottom-actions-item">
+
+  </div>
+</div>
+    <footer class="footer">
+      <p>
+
+        <span class="line">
+          <button class="a-main footer-button display-quick-switch" title="Search HexDocs packages">
+            Search HexDocs
+          </button>
+
+            <a href="mtg_pula.epub" title="ePub version">
+              Download ePub version
+            </a>
+
+        </span>
+      </p>
+
+      <p class="built-using">
+        Built using
+        <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.37.3) for the
+
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+      </p>
+
+    </footer>
+  </div>
+</main>
+</div>
+
+  </body>
+</html>
