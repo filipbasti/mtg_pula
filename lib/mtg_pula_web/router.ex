@@ -1,31 +1,34 @@
 defmodule MtgPulaWeb.Router do
-
   use MtgPulaWeb, :router
   use Plug.ErrorHandler
 
   defp handle_errors(conn, %{reason: %Phoenix.Router.NoRouteError{message: message}}) do
-    conn |> json(%{errors: message})|>halt()
-   end
-
-   defp handle_errors(conn, %{reason: %{message: message}})do
-    conn|> json(%{errors: message}) |>halt()
-   end
-
-   defp handle_errors(conn, %{reason: %MtgPulaWeb.Auth.ErrorResponse.Unauthorized{message: message}}) do
-      conn
-      |> put_status(:unauthorized)
-      |> json(%{errors: message})
-      |> halt()
+    conn |> json(%{errors: message}) |> halt()
   end
+
+  defp handle_errors(conn, %{reason: %{message: message}}) do
+    conn |> json(%{errors: message}) |> halt()
+  end
+
+  defp handle_errors(conn, %{
+         reason: %MtgPulaWeb.Auth.ErrorResponse.Unauthorized{message: message}
+       }) do
+    conn
+    |> put_status(:unauthorized)
+    |> json(%{errors: message})
+    |> halt()
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
     plug :fetch_session
-
   end
+
   pipeline :auth do
     plug MtgPulaWeb.Auth.Pipeline
     plug MtgPulaWeb.Auth.SetAccount
   end
+
   scope "/api", MtgPulaWeb do
     pipe_through :api
 
@@ -35,6 +38,7 @@ defmodule MtgPulaWeb.Router do
     get "/tournaments/standings/by_id/:id", TournamentController, :show_standings
     get "/tournaments", TournamentController, :index
   end
+
   scope "/api", MtgPulaWeb do
     pipe_through [:api, :auth]
     get "/accounts/by_id/:id", AccountController, :show

@@ -6,6 +6,7 @@ defmodule MtgPulaWeb.UserController do
   action_fallback MtgPulaWeb.FallbackController
   import MtgPulaWeb.Auth.AuthorizedPlug
   plug :is_authorized when action in [:update, :delete]
+
   def index(conn, _params) do
     users = Users.list_users()
     render(conn, :index, users: users)

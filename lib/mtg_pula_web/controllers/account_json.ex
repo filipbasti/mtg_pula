@@ -1,6 +1,7 @@
 defmodule MtgPulaWeb.AccountJSON do
   alias MtgPula.Accounts.Account
   alias MtgPulaWeb.UserJSON
+
   @doc """
   Renders a list of accounts.
   """
@@ -23,8 +24,7 @@ defmodule MtgPulaWeb.AccountJSON do
     }
   end
 
-  def show2(%{account: account, token: token})
-  do
+  def show2(%{account: account, token: token}) do
     %{
       id: account.id,
       email: account.email,
@@ -32,13 +32,11 @@ defmodule MtgPulaWeb.AccountJSON do
     }
   end
 
-  def show_full_account(%{account: account})
-  do
+  def show_full_account(%{account: account}) do
     %{
       id: account.id,
       email: account.email,
       user: UserJSON.data(account.user)
     }
   end
-
 end

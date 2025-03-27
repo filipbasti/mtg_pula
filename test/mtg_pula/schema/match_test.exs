@@ -1,5 +1,5 @@
 defmodule MtgPula.Schema.MatchTest do
- use MtgPula.Support.SchemaCase
+  use MtgPula.Support.SchemaCase
   alias MtgPula.Tournaments.Match
   import Ecto.Changeset
 
@@ -19,7 +19,15 @@ defmodule MtgPula.Schema.MatchTest do
   ]
 
   @optional [
-    :id, :inserted_at, :updated_at, :winner_id, :is_draw, :player_1_wins, :player_2_wins, :on_play_id, :player2_id
+    :id,
+    :inserted_at,
+    :updated_at,
+    :winner_id,
+    :is_draw,
+    :player_1_wins,
+    :player_2_wins,
+    :on_play_id,
+    :player2_id
   ]
 
   describe "fields and types" do
@@ -29,6 +37,7 @@ defmodule MtgPula.Schema.MatchTest do
           type = Match.__schema__(:type, field)
           {field, type}
         end
+
       assert MapSet.new(actual_fields_with_types) == MapSet.new(@expected_fields_with_types)
     end
   end
@@ -47,9 +56,14 @@ defmodule MtgPula.Schema.MatchTest do
           field == :winner_id ->
             expected_winner =
               cond do
-                valid_params["player_1_wins"] > valid_params["player_2_wins"] -> valid_params["player1_id"]
-                valid_params["player_2_wins"] > valid_params["player_1_wins"] -> valid_params["player2_id"]
-                true -> nil
+                valid_params["player_1_wins"] > valid_params["player_2_wins"] ->
+                  valid_params["player1_id"]
+
+                valid_params["player_2_wins"] > valid_params["player_1_wins"] ->
+                  valid_params["player2_id"]
+
+                true ->
+                  nil
               end
 
             assert actual == expected_winner,
@@ -78,7 +92,9 @@ defmodule MtgPula.Schema.MatchTest do
         assert errors[field], "The field: #{field} is missing from errors"
 
         {_, meta} = errors[field]
-        assert meta[:validation] == :cast, "The validation type, #{meta[:validation]}, is incorrect"
+
+        assert meta[:validation] == :cast,
+               "The validation type, #{meta[:validation]}, is incorrect"
       end
     end
 
@@ -90,14 +106,14 @@ defmodule MtgPula.Schema.MatchTest do
         assert errors[field], "The field: #{field} is missing from errors"
 
         {_, meta} = errors[field]
-        assert meta[:validation] == :required, "The validation type, #{meta[:validation]}, is incorrect"
+
+        assert meta[:validation] == :required,
+               "The validation type, #{meta[:validation]}, is incorrect"
       end
+
       for field <- @optional do
         refute errors[field], "The optional field #{field} is required when it shouldn't be"
       end
-
     end
-
   end
-
 end

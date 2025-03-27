@@ -4,11 +4,11 @@ defmodule MtgPulaWeb.UserSocket do
 
   channel "room:*", MtgPulaWeb.RoomChannel
   channel "tournament:*", MtgPulaWeb.TournamentChannel
+
   def connect(%{"token" => token}, socket, _connect_info) do
     with {:ok, claims} <- Guardian.decode_and_verify(token),
          {:ok, account} <- Guardian.resource_from_claims(claims) do
       {:ok, assign(socket, :account_id, account.id)}
-
     end
   end
 
@@ -16,5 +16,5 @@ defmodule MtgPulaWeb.UserSocket do
     :error
   end
 
- def id(_socket), do: "user_socket:"
+  def id(_socket), do: "user_socket:"
 end

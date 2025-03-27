@@ -11,7 +11,8 @@ defmodule MtgPula.Repo.Migrations.CreateMatches do
       add :player2_id, references(:players, on_delete: :nothing, type: :binary_id)
       add :winner_id, references(:players, on_delete: :nothing, type: :binary_id)
       add :tournament_id, references(:tournaments, on_delete: :nothing, type: :binary_id)
-      add :is_draw, :boolean # New field
+      # New field
+      add :is_draw, :boolean
       add :on_play_id, references(:players, on_delete: :nothing, type: :binary_id)
       timestamps(type: :utc_datetime)
     end

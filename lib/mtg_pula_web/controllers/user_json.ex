@@ -23,6 +23,4 @@ defmodule MtgPulaWeb.UserJSON do
       biography: user.biography
     }
   end
-
-
 end

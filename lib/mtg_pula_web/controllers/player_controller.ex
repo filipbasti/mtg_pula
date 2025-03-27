@@ -19,7 +19,6 @@ defmodule MtgPulaWeb.PlayerController do
     with {:ok, %Player{} = player} <- Tournaments.create_player(player_params) do
       conn
       |> put_status(:created)
-
       |> render(:show, player: player)
     end
   end

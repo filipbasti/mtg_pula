@@ -9,15 +9,17 @@ defmodule MtgPulaWeb.TournamentController do
   import MtgPulaWeb.Auth.AuthorizedPlug
 
   plug :is_authorized when action in [:update, :delete, :prepare_next_round]
+
   def index(conn, _params) do
     tournaments = Tournaments.list_tournaments()
     render(conn, :index, tournaments: tournaments)
   end
 
   def create(conn, %{"tournament" => tournament_params}) do
-    updated_params = tournament_params
-    |> Map.put("user_id", conn.assigns.account.user.id)
-    |> Map.put("current_round", 0)
+    updated_params =
+      tournament_params
+      |> Map.put("user_id", conn.assigns.account.user.id)
+      |> Map.put("current_round", 0)
 
     with {:ok, %Tournament{} = tournament} <- Tournaments.create_tournament(updated_params) do
       conn
@@ -34,7 +36,8 @@ defmodule MtgPulaWeb.TournamentController do
   def update(conn, %{"id" => id, "tournament" => tournament_params}) do
     tournament = Tournaments.get_tournament!(id)
 
-    with {:ok, %Tournament{} = tournament} <- Tournaments.update_tournament(tournament, tournament_params) do
+    with {:ok, %Tournament{} = tournament} <-
+           Tournaments.update_tournament(tournament, tournament_params) do
       render(conn, :show, tournament: tournament)
     end
   end
@@ -49,29 +52,36 @@ defmodule MtgPulaWeb.TournamentController do
 
   def show_standings(conn, %{"id" => id}) do
     IO.inspect(id)
- case Tournaments.standings_on_tournament(id)do
-    {:ok, standings} -> render(conn, :show_standings, standings: standings)
-    {:error, :not_found} -> raise ErrorResponse.NotFound, message: "Standings for this tournament not found"
 
- end
+    case Tournaments.standings_on_tournament(id) do
+      {:ok, standings} ->
+        render(conn, :show_standings, standings: standings)
 
-
-  end
-  def prepare_next_round(conn,  %{"tournament_id" => tournament_id})do
-    case Tournaments.prepare_matches(tournament_id)do
-
-       {:error, :not_found} -> raise ErrorResponse.NotFound, message: "Standings for this tournament not found"
-       {:error, :finished_tourney} -> raise ErrorResponse.Finished, message: "This tournament is already finished"
-        {_tournament, pairings} -> render(conn, :show_pairings, pairings: pairings )
+      {:error, :not_found} ->
+        raise ErrorResponse.NotFound, message: "Standings for this tournament not found"
     end
-
   end
 
-  def current_matches(conn, %{"tournament_id" => tournament_id})do
-    case Tournaments.current_matches(tournament_id)do
-       {:error, :not_found} -> raise ErrorResponse.NotFound, message: "Pairings for this tournament not found"
-        {_tournament, pairings} -> render(conn, :show_matches, pairings: pairings )
-    end
+  def prepare_next_round(conn, %{"tournament_id" => tournament_id}) do
+    case Tournaments.prepare_matches(tournament_id) do
+      {:error, :not_found} ->
+        raise ErrorResponse.NotFound, message: "Standings for this tournament not found"
 
+      {:error, :finished_tourney} ->
+        raise ErrorResponse.Finished, message: "This tournament is already finished"
+
+      {_tournament, pairings} ->
+        render(conn, :show_pairings, pairings: pairings)
+    end
+  end
+
+  def current_matches(conn, %{"tournament_id" => tournament_id}) do
+    case Tournaments.current_matches(tournament_id) do
+      {:error, :not_found} ->
+        raise ErrorResponse.NotFound, message: "Pairings for this tournament not found"
+
+      {_tournament, pairings} ->
+        render(conn, :show_matches, pairings: pairings)
+    end
   end
 end

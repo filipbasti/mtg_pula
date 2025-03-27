@@ -31,16 +31,16 @@ if config_env() == :prod do
   maybe_ipv6 = if System.get_env("ECTO_IPV6") in ~w(true 1), do: [:inet6], else: []
 
   config :mtg_pula, MtgPula.Repo,
-     #ssl: true,
+    # ssl: true,
     url: database_url,
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
     socket_options: maybe_ipv6,
     ssl: true,
     ssl_opts: [
-      cacertfile: "/cacert.pem",  # Path to the CA certificates file in the root directory
+      # Path to the CA certificates file in the root directory
+      cacertfile: "/cacert.pem",
       verify: :verify_none
     ]
-
 
   # The secret key base is used to sign/encrypt cookies and other secrets.
   # A default value is used in config/dev.exs and config/test.exs but you
@@ -54,8 +54,8 @@ if config_env() == :prod do
       You can generate one by calling: mix phx.gen.secret
       """
 
-      host = System.get_env("PHX_HOST") || "localhost"
-      port = String.to_integer(System.get_env("PORT") || "4000")
+  host = System.get_env("PHX_HOST") || "localhost"
+  port = String.to_integer(System.get_env("PORT") || "4000")
 
   config :mtg_pula, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
 
@@ -71,7 +71,12 @@ if config_env() == :prod do
       port: port
     ],
     force_ssl: [hsts: true],
-    check_origin: ["https://interface-mtgpula.onrender.com", "http://localhost:5173", "http://mtg_frontend:80", "http://116.203.210.54"],
+    check_origin: [
+      "https://interface-mtgpula.onrender.com",
+      "http://localhost:5173",
+      "http://mtg_frontend:80",
+      "http://116.203.210.54"
+    ],
     secret_key_base: secret_key_base
 
   # ## SSL Support

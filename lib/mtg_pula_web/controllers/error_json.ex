@@ -9,17 +9,18 @@ defmodule MtgPulaWeb.ErrorJSON do
   # you may add your own clauses, such as:
   #
   def render("500.json", _assigns) do
-   %{
-    status: "500",
-    detail: "Internal Server Error"}
-   end
+    %{
+      status: "500",
+      detail: "Internal Server Error"
+    }
+  end
 
-   def render("403.json", _assigns) do
+  def render("403.json", _assigns) do
     %{
       status: "403",
       detail: "You are not authorized"
     }
-    end
+  end
 
   # By default, Phoenix returns the status message from
   # the template name. For example, "404.json" becomes

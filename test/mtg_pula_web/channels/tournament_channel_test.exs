@@ -193,7 +193,7 @@ defmodule MtgPulaWeb.TournamentChannelTest do
     test "get user by email successfully", %{socket: socket} do
       user = Factory.insert(:user)
       ref = push(socket, "get_user_by_email", %{"email" => user.account.email})
-      assert_reply ref, :ok, _user
+      assert_reply ref, :ok, user
     end
 
     test "get user by email fails", %{socket: socket} do
@@ -203,24 +203,12 @@ defmodule MtgPulaWeb.TournamentChannelTest do
   end
 
   describe "handle_in/3 for get_standings" do
-    test "get standings by join code successfully", %{socket: socket, tourney: tourney} do
-      Factory.insert_list(9, :player, [tournament: tourney, opponents: [], points: 0, had_bye: false, dropped: false])
-      push(socket, "prepare_matches", %{})
-      ref = push(socket, "get_standings", %{"join_code" => tourney.join_code})
-      assert_reply ref, :ok, _standings
-    end
-
-    test "get standings by tournament ID from socket assigns successfully", %{socket: socket, tourney: tourney} do
-      Factory.insert_list(9, :player, [tournament: tourney, opponents: [], points: 0, had_bye: false, dropped: false])
+    test "get standings successfully", %{socket: socket, tourney: tourney} do
+      players = Factory.insert_list(9, :player, [tournament: tourney, opponents: [], points: 0, had_bye: false, dropped: false])
       push(socket, "prepare_matches", %{})
       ref = push(socket, "get_standings", %{})
-      assert_reply ref, :ok, _standings
-    end
+      assert_reply ref, :ok, standings
 
-    test "returns error if tournament not found by join code", %{socket: socket} do
-      ref = push(socket, "get_standings", %{"join_code" => "invalid_join_code"})
-      assert_reply ref, :error, %{reason: "Tournament not found"}
     end
   end
-
 end

@@ -9,7 +9,13 @@ defmodule MtgPula.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      docs: [
+        # The main page in the documentation
+        main: "readme",
+        # Include your README as part of the docs
+        extras: ["README.md"]
+      ]
     ]
   end
 
@@ -47,11 +53,8 @@ defmodule MtgPula.MixProject do
       {:guardian_db, "~> 2.0"},
       {:faker, "~> 0.18", only: :test},
       {:ex_machina, "~> 2.8.0", only: :test},
-      {:corsica, "~> 2.1"}
-
-
-
-
+      {:corsica, "~> 2.1"},
+      {:ex_doc, "~> 0.30", only: :dev, runtime: false}
     ]
   end
 

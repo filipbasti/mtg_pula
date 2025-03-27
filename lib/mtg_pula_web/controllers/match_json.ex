@@ -24,11 +24,6 @@ defmodule MtgPulaWeb.MatchJSON do
       player1_id: match.player1_id,
       player2_id: match.player2_id,
       on_play_id: match.on_play_id
-
     }
   end
-
-
-
-
 end

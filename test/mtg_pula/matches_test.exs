@@ -5,8 +5,9 @@ defmodule MtgPula.MatchesTest do
   setup do
     Ecto.Adapters.SQL.Sandbox.checkout(MtgPula.Repo)
   end
-  describe "create_match/1"do
-    test "success: it inserts an match in the db and returns the match"do
+
+  describe "create_match/1" do
+    test "success: it inserts an match in the db and returns the match" do
       params = Factory.params_with_assocs(:match)
 
       assert {:ok, %Match{} = returned_match} = Tournaments.create_match(params)
@@ -15,15 +16,12 @@ defmodule MtgPula.MatchesTest do
 
       assert returned_match == match_from_db
 
-
-
       for {param_field, expected} <- params do
         schema_field = param_field
         actual = Map.get(match_from_db, schema_field)
 
-        assert actual == expected, "Value did not match for field: #{param_field} \n expected: #{expected}, \n actual: #{actual}"
-
-
+        assert actual == expected,
+               "Value did not match for field: #{param_field} \n expected: #{expected}, \n actual: #{actual}"
       end
     end
 
@@ -31,22 +29,20 @@ defmodule MtgPula.MatchesTest do
       missing_params = %{}
 
       assert {:error, %Changeset{valid?: false}} = Tournaments.create_match(missing_params)
-
     end
-    test "player1 is in player2 opponents and vice versa"do
+
+    test "player1 is in player2 opponents and vice versa" do
       params = Factory.params_with_assocs(:match)
 
       assert {:ok, %Match{} = returned_match} = Tournaments.create_match(params)
-      player1= Tournaments.get_player!(returned_match.player1_id)
+      player1 = Tournaments.get_player!(returned_match.player1_id)
       player2 = Tournaments.get_player!(returned_match.player2_id)
 
-      assert Enum.member?(player1.opponents, player2.id), "player2: #{player2.id} is not in #{player1.opponents}"
-      assert Enum.member?(player2.opponents, player1.id), "player2: #{player1.id} is not in #{player2.opponents}"
+      assert Enum.member?(player1.opponents, player2.id),
+             "player2: #{player2.id} is not in #{player1.opponents}"
 
+      assert Enum.member?(player2.opponents, player1.id),
+             "player2: #{player1.id} is not in #{player2.opponents}"
     end
-
   end
-
-
-
 end

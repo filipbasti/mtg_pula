@@ -1,5 +1,6 @@
 defmodule MtgPula.Support.DataCase do
   use ExUnit.CaseTemplate
+
   using do
     quote do
       alias Ecto.Changeset

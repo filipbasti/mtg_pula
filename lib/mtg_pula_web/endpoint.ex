@@ -8,15 +8,11 @@ defmodule MtgPulaWeb.Endpoint do
     store: :cookie,
     key: "_mtg_pula_key",
     signing_salt: "N+oRldfJ"
-
   ]
 
   socket "/socket", MtgPulaWeb.UserSocket,
     websocket: true,
     longpoll: false
-
-
-
 
   # Serve at "/" the static files from "priv/static" directory.
   #
@@ -47,13 +43,16 @@ defmodule MtgPulaWeb.Endpoint do
   plug Plug.Head
   plug Plug.Session, @session_options
 
-  plug Corsica, origins: ["https://interface-mtgpula.onrender.com", "http://localhost:5173", "http://116.203.210.54" ],
-  max_age: 86400,
-  allow_headers: :all,
-  allow_credentials: true,
-  allow_methods: :all
-
-
+  plug Corsica,
+    origins: [
+      "https://interface-mtgpula.onrender.com",
+      "http://localhost:5173",
+      "http://116.203.210.54"
+    ],
+    max_age: 86400,
+    allow_headers: :all,
+    allow_credentials: true,
+    allow_methods: :all
 
   plug MtgPulaWeb.Router
 end

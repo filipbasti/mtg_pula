@@ -8,7 +8,6 @@ defmodule MtgPula.Users do
 
   alias MtgPula.Users.User
 
-
   @doc """
   Returns the list of users.
 

@@ -4,7 +4,6 @@ defmodule MtgPulaWeb.MatchController do
   alias MtgPula.Tournaments
   alias MtgPula.Tournaments.Match
 
-
   def update_score_and_play(conn, %{"id" => id, "match" => match_params}) do
     match = Tournaments.get_match!(id)
 
@@ -12,7 +11,4 @@ defmodule MtgPulaWeb.MatchController do
       render(conn, :show, match: match)
     end
   end
-
-
-
 end

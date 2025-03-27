@@ -26,82 +26,81 @@ defmodule MtgPulaWeb.TournamentJSON do
     }
   end
 
-  def show_pairings(%{pairings: pairings })do
-    reduced = Enum.reduce(pairings, [], fn {player1, player2}, acc ->
-      if player2 ==:bye do
-        acc ++ [%{
-
-          player1_id: player1.id,
-
-          bye: true
-
-          }]
+  def show_pairings(%{pairings: pairings}) do
+    reduced =
+      Enum.reduce(pairings, [], fn {player1, player2}, acc ->
+        if player2 == :bye do
+          acc ++
+            [
+              %{
+                player1_id: player1.id,
+                bye: true
+              }
+            ]
         else
-          acc ++ [%{
-            player1_id: player1.id ,
+          acc ++
+            [
+              %{
+                player1_id: player1.id,
+                player2_id: player2.id
+              }
+            ]
+        end
+      end)
 
-            player2_id: player2.id,
-
-
-            }]
-       end
-
-
-
-    end)
     %{data: reduced}
-
   end
 
-  def show_matches(%{pairings: pairings })do
-    reduced = Enum.reduce(pairings, [], fn x, acc ->
-      if x.player2_id == nil do
-        acc ++ [%{
-          match_id: x.id,
-          player1_id: x.player1.id,
-          player1_fullname: x.player1.user.full_name,
-          bye: true
-
-          }]
+  def show_matches(%{pairings: pairings}) do
+    reduced =
+      Enum.reduce(pairings, [], fn x, acc ->
+        if x.player2_id == nil do
+          acc ++
+            [
+              %{
+                match_id: x.id,
+                player1_id: x.player1.id,
+                player1_fullname: x.player1.user.full_name,
+                bye: true
+              }
+            ]
         else
-          acc ++ [%{
-            match_id: x.id,
-            round: x.round,
-            player1_id: x.player1.id,
-            player1_fullname: x.player1.user.full_name,
-            player2_id: x.player2.id,
-            player2_fullname: x.player2.user.full_name
+          acc ++
+            [
+              %{
+                match_id: x.id,
+                round: x.round,
+                player1_id: x.player1.id,
+                player1_fullname: x.player1.user.full_name,
+                player2_id: x.player2.id,
+                player2_fullname: x.player2.user.full_name
+              }
+            ]
+        end
+      end)
 
-            }]
-       end
-
-
-
-    end)
     %{data: reduced}
-
   end
 
-  def show_standings(%{standings: standings})do
-  reduced = Enum.reduce(standings, [], fn x, acc ->
+  def show_standings(%{standings: standings}) do
+    reduced =
+      Enum.reduce(standings, [], fn x, acc ->
+        acc ++
+          [
+            %{
+              id: x.id,
+              user_id: x.user_id,
+              full_name: x.user.full_name,
+              deck: x.deck,
+              points: x.points,
+              omw: x.omw,
+              gw: x.gw,
+              ogp: x.ogp,
+              opponents: x.opponents
+            }
+          ]
+      end)
 
-    acc ++ [%{
-      id: x.id,
-      user_id: x.user_id,
-      full_name: x.user.full_name,
-      deck: x.deck,
-      points: x.points,
-      omw: x.omw,
-      gw: x.gw,
-      ogp: x.ogp,
-      opponents: x.opponents
-      }]
-
-
-  end)
-  %{data: reduced}
+    %{data: reduced}
   end
-
-
-
 end
