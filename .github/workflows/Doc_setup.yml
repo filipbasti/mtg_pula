@@ -43,7 +43,7 @@ jobs:
           # Setup
           cd doc
           git init --initial-branch gh-pages
-          git remote add origin main
+          git remote add origin git@https://github.com/filipbasti/mtg_pula
           git config user.name "filipbasti"
           git config user.email "filip.vodenjak@gmail.com"
           eval `ssh-agent -s`
