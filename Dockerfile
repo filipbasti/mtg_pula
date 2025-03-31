@@ -94,5 +94,5 @@ RUN chmod +x /app/bin/server
 # advised to add an init process such as tini via `apt-get install`
 # above and adding an entrypoint. See https://github.com/krallin/tini for details
 # ENTRYPOINT ["/tini", "--"]
-
+RUN mix ecto.migrate
 CMD ["/app/bin/server"]
