@@ -11,10 +11,8 @@ defmodule MtgPula.MixProject do
       aliases: aliases(),
       deps: deps(),
       docs: [
-        # The main page in the documentation
         main: "readme",
-        # Include your README as part of the docs
-        extras: ["README.md"]
+        extras: ["README.exdoc.md"]
       ]
     ]
   end
