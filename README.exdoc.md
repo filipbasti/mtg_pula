@@ -5,7 +5,7 @@
 MTG Pula is a platform for managing Magic: The Gathering tournaments. Below is a diagram of the system architecture:
 
 ![System Architecture](https://i.imgur.com/Tqxzsgs.png "System Architecture")
-
+![Use Case Diagram](https://i.imgur.com/K23zIxl.png "Use Case diagram")
 ## Features
 - User authentication and authorization
 - Tournament creation and management
