@@ -168,6 +168,28 @@ This channel allows clients to join tournament topics, manage players, update ma
       {:reply, {:error, %{reason: "You are not authorized to add players"}}, socket}
     end
   end
+  def handle_in("drop_player", %{player_id: player_id}, socket) do
+    if socket.assigns.role == "organizer" do
+
+      case Tournaments.drop_player(player_id) do
+        {:ok, player} ->
+          player_json = TournamentChannelJSON.render("player.json", player)
+          broadcast!(socket, "player_dropped", %{player: player_json})
+          {:reply, {:ok, %{player: player_json}}, socket}
+
+        {:error, changeset} ->
+          {:reply,
+           {:error,
+            %{
+              reason: "Failed to drop player",
+              changeset_errors: translate_errors(changeset)
+            }}, socket}
+      end
+    else
+      {:reply, {:error, %{reason: "You are not authorized to drop players"}}, socket}
+    end
+
+  end
 
   def handle_in("get_players", _params, socket) do
     tournament_id = socket.assigns.tournament_id
