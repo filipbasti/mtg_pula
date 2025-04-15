@@ -59,6 +59,7 @@ defmodule MtgPulaWeb.TournamentJSON do
             [
               %{
                 match_id: x.id,
+                round: x.round,
                 player1_id: x.player1.id,
                 player1_fullname: x.player1.user.full_name,
                 bye: true
@@ -72,6 +73,8 @@ defmodule MtgPulaWeb.TournamentJSON do
                 round: x.round,
                 player1_id: x.player1.id,
                 player1_fullname: x.player1.user.full_name,
+                player_1_wins: x.player_1_wins,
+                player_2_wins: x.player_2_wins,
                 player2_id: x.player2.id,
                 player2_fullname: x.player2.user.full_name
               }

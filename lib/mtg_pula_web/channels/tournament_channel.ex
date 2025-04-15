@@ -168,7 +168,7 @@ This channel allows clients to join tournament topics, manage players, update ma
       {:reply, {:error, %{reason: "You are not authorized to add players"}}, socket}
     end
   end
-  def handle_in("drop_player", %{player_id: player_id}, socket) do
+  def handle_in("drop_player", %{"player_id" => player_id}, socket) do
     if socket.assigns.role == "organizer" do
 
       case Tournaments.drop_player(player_id) do

@@ -37,6 +37,7 @@ defmodule MtgPulaWeb.Router do
     post "/accounts/sign_in", AccountController, :sign_in
     get "/tournaments/standings/by_id/:id", TournamentController, :show_standings
     get "/tournaments", TournamentController, :index
+    get "/tournaments/matches/by_join_code/:join_code", TournamentController, :tournament_matches
   end
 
   scope "/api", MtgPulaWeb do

@@ -733,4 +733,20 @@ defmodule MtgPula.Tournaments do
       _e -> {:error, :not_found}
     end
   end
+  def tournament_matches(join_code) do
+    try do
+      tournament = get_tournament_by_join_code(join_code)
+
+      q =
+        from m in Match,
+          where:  m.tournament_id == ^tournament.id,
+          preload: [player1: :user, player2: :user],
+          order_by: [asc: m.round]
+      matches = Repo.all(q)
+
+      {:ok, matches}
+    rescue
+      _e -> {:error, :not_found}
+    end
+  end
 end

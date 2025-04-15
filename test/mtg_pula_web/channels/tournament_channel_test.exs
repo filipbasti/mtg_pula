@@ -26,7 +26,35 @@ defmodule MtgPulaWeb.TournamentChannelTest do
       assert socket.assigns.account_id == account.id
     end
   end
+  describe "handle_in for drop_player"do
+    setup %{socket: socket} do
+      user = Factory.insert(:user)
+      params = %{"user_id" => user.id, "deck" => "Deck 1", dropped: false, had_bye: false}
+      ref = push(socket, "add_player", params)
+      assert_reply ref, :ok, params
+      added_player = params.player
+      %{added_player: added_player}
+    end
 
+    test "drop player successfully", %{socket: socket, added_player: added_player} do
+      ref = push(socket, "drop_player", %{player_id: added_player.id})
+      assert_reply ref, :ok, _added_player
+      assert_broadcast "player_dropped", _added_player
+    end
+
+    test "non-organizer player tries to drop a player", %{tourney: tourney, added_player: added_player} do
+      user = Factory.insert(:user)
+
+      {:ok, _, socket} =
+        MtgPulaWeb.UserSocket
+        |> socket("account_id", %{account_id: user.account.id})
+        |> subscribe_and_join(MtgPulaWeb.TournamentChannel, "tournament:#{tourney.join_code}")
+
+      params = %{"player_id" => added_player.id}
+      ref = push(socket, "drop_player", params)
+      assert_reply ref, :error, %{reason: "You are not authorized to drop players"}
+    end
+  end
   describe "handle_in/3 for add_player" do
     test "add_player successfully", %{socket: socket} do
       user = Factory.insert(:user)

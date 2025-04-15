@@ -170,8 +170,44 @@ These are all exposed that can be used to access data and modify it. Authenticat
     ]
   }
   ```
+#### **6. GET `/api/tournaments/matches/by_join_code/:join_code`**
+- **Description**: Retrieves all matches for a tournament using its join code.
+- **Request**:
+  - **Path Parameters**:
+    - `join_code` (string, required): The join code of the tournament.
+- **Response**:
+  ```json
+  {
+    "data": [
+      {
+        "match_id": "match_id",
+        "round": 1,
+        "player1_id": "player1_id",
+        "player1_fullname": "John Doe",
+        "player_1_wins": 2,
+        "player_2_wins": 1,
+        "player2_id": "player2_id",
+        "player2_fullname": "Jane Smith"
+      },
+      {
+        "match_id": "match_id_2",
+        "round": 1,
+        "player1_id": "player3_id",
+        "player1_fullname": "Alice Johnson",
+        "bye": true
+      }
+    ]
+  }
+  ```
+- **Error Response**:
+  ```json
+  {
+    "errors": "Pairings for this tournament not found"
+  }
+  ```
 
 ---
+
 
 ### **Protected Endpoints (Require JWT Authentication)**
 

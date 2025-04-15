@@ -84,4 +84,14 @@ defmodule MtgPulaWeb.TournamentController do
         render(conn, :show_matches, pairings: pairings)
     end
   end
+
+  def tournament_matches(conn, %{"join_code" => join_code}) do
+    case Tournaments.tournament_matches(join_code) do
+      {:error, :not_found} ->
+        raise ErrorResponse.NotFound, message: "Pairings for this tournament not found"
+
+      {_tournament, pairings} ->
+        render(conn, :show_matches, pairings: pairings)
+    end
+  end
 end
