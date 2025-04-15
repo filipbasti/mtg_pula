@@ -76,6 +76,7 @@ defmodule MtgPulaWeb.TournamentJSON do
                 player_1_wins: x.player_1_wins,
                 player_2_wins: x.player_2_wins,
                 player2_id: x.player2.id,
+                on_play_id: x.on_play_id,
                 player2_fullname: x.player2.user.full_name
               }
             ]
