@@ -12,7 +12,7 @@
 
     <link rel="stylesheet" href="dist/html-elixir-6X3L5KMG.css" />
 
-    <script defer src="dist/sidebar_items-92B5F021.js"></script>
+    <script defer src="dist/sidebar_items-CA9E08A1.js"></script>
     <script defer src="docs_config.js"></script>
     <script defer src="dist/html-ALU6OERS.js"></script>
 
@@ -85,7 +85,8 @@ mtg_pula
   </a>
   <span class="text">Overview</span>
 </h2>
-<p>MTG Pula is a platform for managing Magic: The Gathering tournaments. Below is a diagram of the system architecture:</p><p><img src="https://i.imgur.com/Tqxzsgs.png" alt="System Architecture" title="System Architecture"/></p><h2 id="features" class="section-heading">
+<p>MTG Pula is a platform for managing Magic: The Gathering tournaments. Below is a diagram of the system architecture:</p><p><img src="https://i.imgur.com/Tqxzsgs.png" alt="System Architecture" title="System Architecture"/>
+<img src="https://i.imgur.com/K23zIxl.png" alt="Use Case Diagram" title="Use Case diagram"/></p><h2 id="features" class="section-heading">
   <a href="#features" class="hover-link">
     <i class="ri-link-m" aria-hidden="true"></i>
   </a>
@@ -141,22 +142,22 @@ mtg_pula
   <span class="text"><strong>Example</strong></span>
 </h3>
 <pre><code class="makeup elixir" translate="no"><span class="w">  
-  </span><span class="n">const</span><span class="w"> </span><span class="p" data-group-id="4012475271-1">{</span><span class="w"> </span><span class="nc">Socket</span><span class="w"> </span><span class="p" data-group-id="4012475271-1">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kn">require</span><span class="p" data-group-id="4012475271-2">(</span><span class="sc">&#39;phoenix-channels&#39;</span><span class="p" data-group-id="4012475271-2">)</span><span class="w">
+  </span><span class="n">const</span><span class="w"> </span><span class="p" data-group-id="7505649041-1">{</span><span class="w"> </span><span class="nc">Socket</span><span class="w"> </span><span class="p" data-group-id="7505649041-1">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kn">require</span><span class="p" data-group-id="7505649041-2">(</span><span class="sc">&#39;phoenix-channels&#39;</span><span class="p" data-group-id="7505649041-2">)</span><span class="w">
   </span><span class="o">//</span><span class="n">connect</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">socket</span><span class="w">
-  </span><span class="n">let</span><span class="w"> </span><span class="n">socket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="nc">Socket</span><span class="p" data-group-id="4012475271-3">(</span><span class="n">baseURL</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="4012475271-4">{</span><span class="w"> </span><span class="ss">params</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="4012475271-5">{</span><span class="w"> </span><span class="ss">token</span><span class="p">:</span><span class="w"> </span><span class="n">userToken</span><span class="w"> </span><span class="p" data-group-id="4012475271-5">}</span><span class="p">,</span><span class="p" data-group-id="4012475271-4">}</span><span class="p" data-group-id="4012475271-3">)</span><span class="w">
+  </span><span class="n">let</span><span class="w"> </span><span class="n">socket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="nc">Socket</span><span class="p" data-group-id="7505649041-3">(</span><span class="n">baseURL</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="7505649041-4">{</span><span class="w"> </span><span class="ss">params</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="7505649041-5">{</span><span class="w"> </span><span class="ss">token</span><span class="p">:</span><span class="w"> </span><span class="n">userToken</span><span class="w"> </span><span class="p" data-group-id="7505649041-5">}</span><span class="p">,</span><span class="p" data-group-id="7505649041-4">}</span><span class="p" data-group-id="7505649041-3">)</span><span class="w">
 
-  </span><span class="n">socket</span><span class="o">.</span><span class="n">connect</span><span class="p" data-group-id="4012475271-6">(</span><span class="p" data-group-id="4012475271-6">)</span><span class="w">
+  </span><span class="n">socket</span><span class="o">.</span><span class="n">connect</span><span class="p" data-group-id="7505649041-6">(</span><span class="p" data-group-id="7505649041-6">)</span><span class="w">
 
   </span><span class="o">//</span><span class="w"> </span><span class="nc">Now</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">are</span><span class="w"> </span><span class="n">connected</span><span class="p">,</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">join</span><span class="w"> </span><span class="n">channels</span><span class="w"> </span><span class="k">with</span><span class="w">
    </span><span class="n">a</span><span class="w"> </span><span class="n">topic</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">example</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">tournament</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">join_code</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="mi">12345</span><span class="p">:</span><span class="w">
-  </span><span class="n">let</span><span class="w"> </span><span class="n">channel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">socket</span><span class="o">.</span><span class="n">channel</span><span class="p" data-group-id="4012475271-7">(</span><span class="s">&quot;tournament:12345&quot;</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="4012475271-8">{</span><span class="p" data-group-id="4012475271-8">}</span><span class="p" data-group-id="4012475271-7">)</span><span class="w">
-  </span><span class="n">channel</span><span class="o">.</span><span class="n">join</span><span class="p" data-group-id="4012475271-9">(</span><span class="p" data-group-id="4012475271-9">)</span><span class="w">
-    </span><span class="o">.</span><span class="k">receive</span><span class="p" data-group-id="4012475271-10">(</span><span class="s">&quot;ok&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">resp</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p" data-group-id="4012475271-11">{</span><span class="w"> </span><span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p" data-group-id="4012475271-12">(</span><span class="s">&quot;Joined successfully&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">resp</span><span class="p" data-group-id="4012475271-12">)</span><span class="w"> </span><span class="p" data-group-id="4012475271-11">}</span><span class="p" data-group-id="4012475271-10">)</span><span class="w">
-    </span><span class="o">.</span><span class="k">receive</span><span class="p" data-group-id="4012475271-13">(</span><span class="s">&quot;error&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">resp</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p" data-group-id="4012475271-14">{</span><span class="w"> </span><span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p" data-group-id="4012475271-15">(</span><span class="s">&quot;Unable to join&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">resp</span><span class="p" data-group-id="4012475271-15">)</span><span class="w"> </span><span class="p" data-group-id="4012475271-14">}</span><span class="p" data-group-id="4012475271-13">)</span><span class="w">
+  </span><span class="n">let</span><span class="w"> </span><span class="n">channel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">socket</span><span class="o">.</span><span class="n">channel</span><span class="p" data-group-id="7505649041-7">(</span><span class="s">&quot;tournament:12345&quot;</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="7505649041-8">{</span><span class="p" data-group-id="7505649041-8">}</span><span class="p" data-group-id="7505649041-7">)</span><span class="w">
+  </span><span class="n">channel</span><span class="o">.</span><span class="n">join</span><span class="p" data-group-id="7505649041-9">(</span><span class="p" data-group-id="7505649041-9">)</span><span class="w">
+    </span><span class="o">.</span><span class="k">receive</span><span class="p" data-group-id="7505649041-10">(</span><span class="s">&quot;ok&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">resp</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p" data-group-id="7505649041-11">{</span><span class="w"> </span><span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p" data-group-id="7505649041-12">(</span><span class="s">&quot;Joined successfully&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">resp</span><span class="p" data-group-id="7505649041-12">)</span><span class="w"> </span><span class="p" data-group-id="7505649041-11">}</span><span class="p" data-group-id="7505649041-10">)</span><span class="w">
+    </span><span class="o">.</span><span class="k">receive</span><span class="p" data-group-id="7505649041-13">(</span><span class="s">&quot;error&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">resp</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p" data-group-id="7505649041-14">{</span><span class="w"> </span><span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p" data-group-id="7505649041-15">(</span><span class="s">&quot;Unable to join&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">resp</span><span class="p" data-group-id="7505649041-15">)</span><span class="w"> </span><span class="p" data-group-id="7505649041-14">}</span><span class="p" data-group-id="7505649041-13">)</span><span class="w">
   </span><span class="o">//</span><span class="n">push</span><span class="w"> </span><span class="n">an</span><span class="w"> </span><span class="n">event</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">socket</span><span class="w">
-  </span><span class="n">channel</span><span class="o">.</span><span class="n">push</span><span class="p" data-group-id="4012475271-16">(</span><span class="s">&quot;add_player&quot;</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="4012475271-17">{</span><span class="ss">user_id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;any_id&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">deck</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;deck&quot;</span><span class="p" data-group-id="4012475271-17">}</span><span class="p" data-group-id="4012475271-16">)</span><span class="w">
-            </span><span class="o">.</span><span class="k">receive</span><span class="p" data-group-id="4012475271-18">(</span><span class="s">&quot;ok&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">resp</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="n">resolve</span><span class="p" data-group-id="4012475271-19">(</span><span class="n">resp</span><span class="p" data-group-id="4012475271-19">)</span><span class="p" data-group-id="4012475271-18">)</span><span class="w">
-            </span><span class="o">.</span><span class="k">receive</span><span class="p" data-group-id="4012475271-20">(</span><span class="s">&quot;error&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">resp</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="n">reject</span><span class="p" data-group-id="4012475271-21">(</span><span class="n">resp</span><span class="p" data-group-id="4012475271-21">)</span><span class="p" data-group-id="4012475271-20">)</span><span class="p">;</span></code></pre><h2 id="rest-api-documentation" class="section-heading">
+  </span><span class="n">channel</span><span class="o">.</span><span class="n">push</span><span class="p" data-group-id="7505649041-16">(</span><span class="s">&quot;add_player&quot;</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="7505649041-17">{</span><span class="ss">user_id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;any_id&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">deck</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;deck&quot;</span><span class="p" data-group-id="7505649041-17">}</span><span class="p" data-group-id="7505649041-16">)</span><span class="w">
+            </span><span class="o">.</span><span class="k">receive</span><span class="p" data-group-id="7505649041-18">(</span><span class="s">&quot;ok&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">resp</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="n">resolve</span><span class="p" data-group-id="7505649041-19">(</span><span class="n">resp</span><span class="p" data-group-id="7505649041-19">)</span><span class="p" data-group-id="7505649041-18">)</span><span class="w">
+            </span><span class="o">.</span><span class="k">receive</span><span class="p" data-group-id="7505649041-20">(</span><span class="s">&quot;error&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">resp</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="n">reject</span><span class="p" data-group-id="7505649041-21">(</span><span class="n">resp</span><span class="p" data-group-id="7505649041-21">)</span><span class="p" data-group-id="7505649041-20">)</span><span class="p">;</span></code></pre><h2 id="rest-api-documentation" class="section-heading">
   <a href="#rest-api-documentation" class="hover-link">
     <i class="ri-link-m" aria-hidden="true"></i>
   </a>
@@ -205,6 +206,28 @@ mtg_pula
       &quot;finished&quot;: false
     }
   ]
+}</code></pre></li></ul><h4><strong>6. GET <code class="inline">/api/tournaments/matches/by_join_code/:join_code</code></strong></h4><ul><li><strong>Description</strong>: Retrieves all matches for a tournament using its join code.</li><li><strong>Request</strong>:<ul><li><strong>Path Parameters</strong>:<ul><li><code class="inline">join_code</code> (string, required): The join code of the tournament.</li></ul></li></ul></li><li><strong>Response</strong>:<pre><code class="json">{
+  &quot;data&quot;: [
+    {
+      &quot;match_id&quot;: &quot;match_id&quot;,
+      &quot;round&quot;: 1,
+      &quot;player1_id&quot;: &quot;player1_id&quot;,
+      &quot;player1_fullname&quot;: &quot;John Doe&quot;,
+      &quot;player_1_wins&quot;: 2,
+      &quot;player_2_wins&quot;: 1,
+      &quot;player2_id&quot;: &quot;player2_id&quot;,
+      &quot;player2_fullname&quot;: &quot;Jane Smith&quot;
+    },
+    {
+      &quot;match_id&quot;: &quot;match_id_2&quot;,
+      &quot;round&quot;: 1,
+      &quot;player1_id&quot;: &quot;player3_id&quot;,
+      &quot;player1_fullname&quot;: &quot;Alice Johnson&quot;,
+      &quot;bye&quot;: true
+    }
+  ]
+}</code></pre></li><li><strong>Error Response</strong>:<pre><code class="json">{
+  &quot;errors&quot;: &quot;Pairings for this tournament not found&quot;
 }</code></pre></li></ul><hr class="thin"/><h3 id="protected-endpoints-require-jwt-authentication" class="section-heading">
   <a href="#protected-endpoints-require-jwt-authentication" class="hover-link">
     <i class="ri-link-m" aria-hidden="true"></i>
@@ -217,7 +240,7 @@ mtg_pula
   </a>
   <span class="text"><strong>Authentication</strong></span>
 </h3>
-<p>These endpoints are protected and require a valid JWT token for access. For these endpoints, include the following header in your requests:</p><pre><code class="makeup elixir" translate="no"><span class="ss">Authorization</span><span class="p">:</span><span class="w"> </span><span class="nc">Bearer</span><span class="w"> </span><span class="o">&lt;</span><span class="n">your_jwt_token</span><span class="o">&gt;</span></code></pre><hr class="thin"/><h4><strong>6. GET <code class="inline">/api/accounts/by_id/:id</code></strong></h4><ul><li><strong>Description</strong>: Retrieves account details by ID.</li><li><strong>Authentication</strong>: Requires JWT.</li><li><strong>Request</strong>:<ul><li><strong>Path Parameters</strong>:<ul><li><code class="inline">id</code> (string, required): The ID of the account.</li></ul></li></ul></li><li><strong>Response</strong>:<pre><code class="json">{
+<p>These endpoints are protected and require a valid JWT token for access. For these endpoints, include the following header in your requests:</p><pre><code class="makeup elixir" translate="no"><span class="ss">Authorization</span><span class="p">:</span><span class="w"> </span><span class="nc">Bearer</span><span class="w"> </span><span class="o">&lt;</span><span class="n">your_jwt_token</span><span class="o">&gt;</span></code></pre><hr class="thin"/><h4><strong>7. GET <code class="inline">/api/accounts/by_id/:id</code></strong></h4><ul><li><strong>Description</strong>: Retrieves account details by ID.</li><li><strong>Authentication</strong>: Requires JWT.</li><li><strong>Request</strong>:<ul><li><strong>Path Parameters</strong>:<ul><li><code class="inline">id</code> (string, required): The ID of the account.</li></ul></li></ul></li><li><strong>Response</strong>:<pre><code class="json">{
   &quot;id&quot;: &quot;account_id&quot;,
   &quot;email&quot;: &quot;user@example.com&quot;,
   &quot;user&quot;: {
@@ -226,7 +249,7 @@ mtg_pula
     &quot;gender&quot;: &quot;male&quot;,
     &quot;biography&quot;: &quot;Avid MTG player&quot;
   }
-}</code></pre></li></ul><hr class="thin"/><h4><strong>7. GET <code class="inline">/api/accounts/current</code></strong></h4><ul><li><strong>Description</strong>: Retrieves the currently authenticated account.</li><li><strong>Authentication</strong>: Requires JWT.</li><li><strong>Request</strong>: No parameters required.</li><li><strong>Response</strong>:<pre><code class="json">{
+}</code></pre></li></ul><hr class="thin"/><h4><strong>8. GET <code class="inline">/api/accounts/current</code></strong></h4><ul><li><strong>Description</strong>: Retrieves the currently authenticated account.</li><li><strong>Authentication</strong>: Requires JWT.</li><li><strong>Request</strong>: No parameters required.</li><li><strong>Response</strong>:<pre><code class="json">{
   &quot;id&quot;: &quot;account_id&quot;,
   &quot;email&quot;: &quot;user@example.com&quot;,
   &quot;user&quot;: {
@@ -235,7 +258,7 @@ mtg_pula
     &quot;gender&quot;: &quot;male&quot;,
     &quot;biography&quot;: &quot;Avid MTG player&quot;
   }
-}</code></pre></li></ul><hr class="thin"/><h4><strong>8. PATCH <code class="inline">/api/accounts/update</code></strong></h4><ul><li><strong>Description</strong>: Updates account details.</li><li><strong>Authentication</strong>: Requires JWT.</li><li><strong>Request</strong>:<ul><li><strong>Body Parameters</strong>:<pre><code class="json">{
+}</code></pre></li></ul><hr class="thin"/><h4><strong>9. PATCH <code class="inline">/api/accounts/update</code></strong></h4><ul><li><strong>Description</strong>: Updates account details.</li><li><strong>Authentication</strong>: Requires JWT.</li><li><strong>Request</strong>:<ul><li><strong>Body Parameters</strong>:<pre><code class="json">{
   &quot;account&quot;: {
     &quot;email&quot;: &quot;new_email@example.com&quot;,
     &quot;hash_password&quot;: &quot;new_password&quot;
@@ -243,11 +266,11 @@ mtg_pula
 }</code></pre></li></ul></li><li><strong>Response</strong>:<pre><code class="json">{
   &quot;id&quot;: &quot;account_id&quot;,
   &quot;email&quot;: &quot;new_email@example.com&quot;
-}</code></pre></li></ul><hr class="thin"/><h4><strong>9. POST <code class="inline">/api/accounts/sign_out</code></strong></h4><ul><li><strong>Description</strong>: Signs out the currently authenticated account.</li><li><strong>Authentication</strong>: Requires JWT.</li><li><strong>Request</strong>: No parameters required.</li><li><strong>Response</strong>:<pre><code class="json">{
+}</code></pre></li></ul><hr class="thin"/><h4><strong>10. POST <code class="inline">/api/accounts/sign_out</code></strong></h4><ul><li><strong>Description</strong>: Signs out the currently authenticated account.</li><li><strong>Authentication</strong>: Requires JWT.</li><li><strong>Request</strong>: No parameters required.</li><li><strong>Response</strong>:<pre><code class="json">{
   &quot;message&quot;: &quot;Signed out successfully&quot;
-}</code></pre></li></ul><hr class="thin"/><h4><strong>10. POST <code class="inline">/api/accounts/refresh_session</code></strong></h4><ul><li><strong>Description</strong>: Refreshes the session token for the authenticated account.</li><li><strong>Authentication</strong>: Requires JWT.</li><li><strong>Request</strong>: No parameters required.</li><li><strong>Response</strong>:<pre><code class="json">{
+}</code></pre></li></ul><hr class="thin"/><h4><strong>11. POST <code class="inline">/api/accounts/refresh_session</code></strong></h4><ul><li><strong>Description</strong>: Refreshes the session token for the authenticated account.</li><li><strong>Authentication</strong>: Requires JWT.</li><li><strong>Request</strong>: No parameters required.</li><li><strong>Response</strong>:<pre><code class="json">{
   &quot;token&quot;: &quot;new_jwt_token&quot;
-}</code></pre></li></ul><hr class="thin"/><h4><strong>11. PUT <code class="inline">/api/users/update</code></strong></h4><ul><li><strong>Description</strong>: Updates user details.</li><li><strong>Authentication</strong>: Requires JWT.</li><li><strong>Request</strong>:<ul><li><strong>Body Parameters</strong>:<pre><code class="json">{
+}</code></pre></li></ul><hr class="thin"/><h4><strong>12. PUT <code class="inline">/api/users/update</code></strong></h4><ul><li><strong>Description</strong>: Updates user details.</li><li><strong>Authentication</strong>: Requires JWT.</li><li><strong>Request</strong>:<ul><li><strong>Body Parameters</strong>:<pre><code class="json">{
   &quot;user&quot;: {
     &quot;full_name&quot;: &quot;Jane Doe&quot;,
     &quot;gender&quot;: &quot;female&quot;,
@@ -258,7 +281,7 @@ mtg_pula
   &quot;full_name&quot;: &quot;Jane Doe&quot;,
   &quot;gender&quot;: &quot;female&quot;,
   &quot;biography&quot;: &quot;MTG enthusiast&quot;
-}</code></pre></li></ul><hr class="thin"/><h4><strong>12. POST <code class="inline">/api/tournaments/create</code></strong></h4><ul><li><strong>Description</strong>: Creates a new tournament.</li><li><strong>Authentication</strong>: Requires JWT.</li><li><strong>Request</strong>:<ul><li><strong>Body Parameters</strong>:<pre><code class="json">{
+}</code></pre></li></ul><hr class="thin"/><h4><strong>13. POST <code class="inline">/api/tournaments/create</code></strong></h4><ul><li><strong>Description</strong>: Creates a new tournament.</li><li><strong>Authentication</strong>: Requires JWT.</li><li><strong>Request</strong>:<ul><li><strong>Body Parameters</strong>:<pre><code class="json">{
   &quot;tournament&quot;: {
     &quot;name&quot;: &quot;Summer Cup&quot;,
     &quot;number_of_rounds&quot;: 5
@@ -270,7 +293,7 @@ mtg_pula
   &quot;number_of_rounds&quot;: 5,
   &quot;join_code&quot;: &quot;ABC123&quot;,
   &quot;finished&quot;: false
-}</code></pre></li></ul><hr class="thin"/><h4><strong>13. POST <code class="inline">/api/tournaments/add_player</code></strong></h4><ul><li><strong>Description</strong>: Adds a player to a tournament.</li><li><strong>Authentication</strong>: Requires JWT.</li><li><strong>Request</strong>:<ul><li><strong>Body Parameters</strong>:<pre><code class="json">{
+}</code></pre></li></ul><hr class="thin"/><h4><strong>14. POST <code class="inline">/api/tournaments/add_player</code></strong></h4><ul><li><strong>Description</strong>: Adds a player to a tournament.</li><li><strong>Authentication</strong>: Requires JWT.</li><li><strong>Request</strong>:<ul><li><strong>Body Parameters</strong>:<pre><code class="json">{
   &quot;player&quot;: {
     &quot;tournament_id&quot;: &quot;tournament_id&quot;,
     &quot;user_id&quot;: &quot;user_id&quot;,
@@ -281,7 +304,7 @@ mtg_pula
   &quot;deck&quot;: &quot;Mono Red Aggro&quot;,
   &quot;points&quot;: 0,
   &quot;had_bye&quot;: false
-}</code></pre></li></ul><hr class="thin"/><h4><strong>14. GET <code class="inline">/api/tournaments/prepare_round/:tournament_id</code></strong></h4><ul><li><strong>Description</strong>: Prepares the next round for a tournament.</li><li><strong>Authentication</strong>: Requires JWT.</li><li><strong>Request</strong>:<ul><li><strong>Path Parameters</strong>:<ul><li><code class="inline">tournament_id</code> (string, required): The ID of the tournament.</li></ul></li></ul></li><li><strong>Response</strong>:<pre><code class="json">{
+}</code></pre></li></ul><hr class="thin"/><h4><strong>15. GET <code class="inline">/api/tournaments/prepare_round/:tournament_id</code></strong></h4><ul><li><strong>Description</strong>: Prepares the next round for a tournament.</li><li><strong>Authentication</strong>: Requires JWT.</li><li><strong>Request</strong>:<ul><li><strong>Path Parameters</strong>:<ul><li><code class="inline">tournament_id</code> (string, required): The ID of the tournament.</li></ul></li></ul></li><li><strong>Response</strong>:<pre><code class="json">{
   &quot;data&quot;: [
     {
       &quot;match_id&quot;: &quot;match_id&quot;,
@@ -290,7 +313,7 @@ mtg_pula
       &quot;round&quot;: 2
     }
   ]
-}</code></pre></li></ul><hr class="thin"/><h4><strong>15. GET <code class="inline">/api/tournaments/current_matches/:tournament_id</code></strong></h4><ul><li><strong>Description</strong>: Retrieves the current matches for a tournament.</li><li><strong>Authentication</strong>: Requires JWT.</li><li><strong>Request</strong>:<ul><li><strong>Path Parameters</strong>:<ul><li><code class="inline">tournament_id</code> (string, required): The ID of the tournament.</li></ul></li></ul></li><li><strong>Response</strong>:<pre><code class="json">{
+}</code></pre></li></ul><hr class="thin"/><h4><strong>16. GET <code class="inline">/api/tournaments/current_matches/:tournament_id</code></strong></h4><ul><li><strong>Description</strong>: Retrieves the current matches for a tournament.</li><li><strong>Authentication</strong>: Requires JWT.</li><li><strong>Request</strong>:<ul><li><strong>Path Parameters</strong>:<ul><li><code class="inline">tournament_id</code> (string, required): The ID of the tournament.</li></ul></li></ul></li><li><strong>Response</strong>:<pre><code class="json">{
   &quot;matches&quot;: [
     {
       &quot;match_id&quot;: &quot;match_id&quot;,
@@ -299,7 +322,7 @@ mtg_pula
       &quot;round&quot;: 2
     }
   ]
-}</code></pre></li></ul><hr class="thin"/><h4><strong>16. PATCH <code class="inline">/api/tournaments/matches/:id</code></strong></h4><ul><li><strong>Description</strong>: Updates the score and play status of a match.</li><li><strong>Authentication</strong>: Requires JWT.</li><li><strong>Request</strong>:<ul><li><strong>Path Parameters</strong>:<ul><li><code class="inline">id</code> (string, required): The ID of the match.</li></ul></li><li><strong>Body Parameters</strong>:<pre><code class="json">{
+}</code></pre></li></ul><hr class="thin"/><h4><strong>17. PATCH <code class="inline">/api/tournaments/matches/:id</code></strong></h4><ul><li><strong>Description</strong>: Updates the score and play status of a match.</li><li><strong>Authentication</strong>: Requires JWT.</li><li><strong>Request</strong>:<ul><li><strong>Path Parameters</strong>:<ul><li><code class="inline">id</code> (string, required): The ID of the match.</li></ul></li><li><strong>Body Parameters</strong>:<pre><code class="json">{
   &quot;match&quot;: {
     &quot;player_1_wins&quot;: 2,
     &quot;player_2_wins&quot;: 1,

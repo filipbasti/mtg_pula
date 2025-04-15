@@ -220,7 +220,7 @@ Authorization: Bearer <your_jwt_token>
 ```
 
 ---
-#### **6. GET `/api/accounts/by_id/:id`**
+#### **7. GET `/api/accounts/by_id/:id`**
 - **Description**: Retrieves account details by ID.
 - **Authentication**: Requires JWT.
 - **Request**:
@@ -242,7 +242,7 @@ Authorization: Bearer <your_jwt_token>
 
 ---
 
-#### **7. GET `/api/accounts/current`**
+#### **8. GET `/api/accounts/current`**
 - **Description**: Retrieves the currently authenticated account.
 - **Authentication**: Requires JWT.
 - **Request**: No parameters required.
@@ -262,7 +262,7 @@ Authorization: Bearer <your_jwt_token>
 
 ---
 
-#### **8. PATCH `/api/accounts/update`**
+#### **9. PATCH `/api/accounts/update`**
 - **Description**: Updates account details.
 - **Authentication**: Requires JWT.
 - **Request**:
@@ -285,7 +285,7 @@ Authorization: Bearer <your_jwt_token>
 
 ---
 
-#### **9. POST `/api/accounts/sign_out`**
+#### **10. POST `/api/accounts/sign_out`**
 - **Description**: Signs out the currently authenticated account.
 - **Authentication**: Requires JWT.
 - **Request**: No parameters required.
@@ -298,7 +298,7 @@ Authorization: Bearer <your_jwt_token>
 
 ---
 
-#### **10. POST `/api/accounts/refresh_session`**
+#### **11. POST `/api/accounts/refresh_session`**
 - **Description**: Refreshes the session token for the authenticated account.
 - **Authentication**: Requires JWT.
 - **Request**: No parameters required.
@@ -311,7 +311,7 @@ Authorization: Bearer <your_jwt_token>
 
 ---
 
-#### **11. PUT `/api/users/update`**
+#### **12. PUT `/api/users/update`**
 - **Description**: Updates user details.
 - **Authentication**: Requires JWT.
 - **Request**:
@@ -337,7 +337,7 @@ Authorization: Bearer <your_jwt_token>
 
 ---
 
-#### **12. POST `/api/tournaments/create`**
+#### **13. POST `/api/tournaments/create`**
 - **Description**: Creates a new tournament.
 - **Authentication**: Requires JWT.
 - **Request**:
@@ -364,7 +364,7 @@ Authorization: Bearer <your_jwt_token>
 
 ---
 
-#### **13. POST `/api/tournaments/add_player`**
+#### **14. POST `/api/tournaments/add_player`**
 - **Description**: Adds a player to a tournament.
 - **Authentication**: Requires JWT.
 - **Request**:
@@ -390,7 +390,7 @@ Authorization: Bearer <your_jwt_token>
 
 ---
 
-#### **14. GET `/api/tournaments/prepare_round/:tournament_id`**
+#### **15. GET `/api/tournaments/prepare_round/:tournament_id`**
 - **Description**: Prepares the next round for a tournament.
 - **Authentication**: Requires JWT.
 - **Request**:
@@ -412,7 +412,7 @@ Authorization: Bearer <your_jwt_token>
 
 ---
 
-#### **15. GET `/api/tournaments/current_matches/:tournament_id`**
+#### **16. GET `/api/tournaments/current_matches/:tournament_id`**
 - **Description**: Retrieves the current matches for a tournament.
 - **Authentication**: Requires JWT.
 - **Request**:
@@ -434,7 +434,7 @@ Authorization: Bearer <your_jwt_token>
 
 ---
 
-#### **16. PATCH `/api/tournaments/matches/:id`**
+#### **17. PATCH `/api/tournaments/matches/:id`**
 - **Description**: Updates the score and play status of a match.
 - **Authentication**: Requires JWT.
 - **Request**:
