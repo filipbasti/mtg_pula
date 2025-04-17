@@ -73,16 +73,15 @@ if config_env() == :prod do
 
     ],
     https: [
-      port: 4043,  # The port for HTTPS
-      cipher_suite: :strong,
-      certfile: "/etc/letsencrypt/live/mtgpula.site/fullchain.pem",  # Path to SSL cert
-      keyfile: "/etc/letsencrypt/live/mtgpula.site/privkey.pem"      # Path to SSL key
+      port: 443,
+      certfile: "/etc/letsencrypt/live/mtgpula.site/fullchain.pem",
+      keyfile: "/etc/letsencrypt/live/mtgpula.site/privkey.pem"
     ],
     force_ssl: [hsts: true],
     check_origin: [
     "http://localhost:5173",
     "http://116.203.210.54",
-    "http://www.mtgpula.site",
+    "https://www.mtgpula.site",
     ],
     secret_key_base: secret_key_base
 
