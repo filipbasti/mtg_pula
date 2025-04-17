@@ -745,13 +745,12 @@ defmodule MtgPula.Tournaments do
         {:error, :no_pairings_to_backtrack}
 
       [{player1, player2} | rest] ->
-        rest_full_names = Enum.map(rest, fn {player1, player2} -> {player1.user.full_name, player2.user.full_name} end)
 
         # Remove the last pairing and return the players to the unpaired pool
 
         updated_unpaired = [player, player1, player2 | unpaired]
         # Check if the last pairing was a bye
-        unpaired_full_names = Enum.map(updated_unpaired, fn player -> player.user.full_name end)
+
 
         updated_unpaired =
           updated_unpaired
