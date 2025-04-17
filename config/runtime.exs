@@ -60,6 +60,7 @@ if config_env() == :prod do
   config :mtg_pula, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
 
   config :mtg_pula, MtgPulaWeb.Endpoint,
+
     url: [host: host, port: port, scheme: "https"],
     server: true,
     http: [
@@ -72,16 +73,17 @@ if config_env() == :prod do
 
 
     ],
-    #https: [
-     # port: 443,
-     # certfile: "/etc/letsencrypt/live/mtgpula.site/fullchain.pem",
-      #keyfile: "/etc/letsencrypt/live/mtgpula.site/privkey.pem"
-    #],
+    https: [
+      otp_app: :mtg_pula,
+      port: 4043,
+     certfile: "/etc/letsencrypt/live/mtgpula.site/fullchain.pem",
+      keyfile: "/etc/letsencrypt/live/mtgpula.site/privkey.pem"
+    ],
     force_ssl: [hsts: true],
     check_origin: [
     "http://localhost:5173",
     "http://116.203.210.54",
-    "https://www.mtgpula.site",
+    "https://www.mtgpula.site"
     ],
     secret_key_base: secret_key_base
 
