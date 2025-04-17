@@ -52,6 +52,7 @@ defmodule MtgPula.MixProject do
       {:faker, "~> 0.18", only: :test},
       {:ex_machina, "~> 2.8.0", only: :test},
       {:corsica, "~> 2.1"},
+      {:combinatorics, "~> 0.1.0"},
       {:ex_doc, "~> 0.30", only: :dev, runtime: false}
     ]
   end

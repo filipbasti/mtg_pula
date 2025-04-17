@@ -494,11 +494,14 @@ defmodule MtgPula.Tournaments do
         {_tail, casted} = Ecto.UUID.cast(y)
 
         query = from w in Match, where: w.winner_id == ^casted, select: count()
+
         match_wins = Repo.one(query)
+
+
 
         q_matches =
           from m in Match,
-            where: m.player1_id == ^casted or m.player2_id == ^casted,
+            where: (m.player1_id == ^casted or m.player2_id == ^casted) and not (is_nil(m.player1_id) or is_nil(m.player2_id)),
             select: count()
 
         n_matches = Repo.one(q_matches)
@@ -672,47 +675,109 @@ defmodule MtgPula.Tournaments do
 
   """
 
-  def make_pairings([], pairings), do: pairings
-
-  def make_pairings([player | rest], pairings) do
-    case find_pair(player, rest) do
-      {pair, remaining} ->
-        make_pairings(remaining, [{player, pair} | pairings])
-
-      nil ->
-        # Reorder the list by rank (assuming player.points is the ranking criteria)
-        sorted_rest = Enum.sort_by(rest, &{&1.points, &1.omw, &1.gw, &1.ogp}, :asc)
-
-        # Find the next lowest-ranked player who hasn't had a bye
-        {bye_player, remaining} =
-          case Enum.find(sorted_rest, fn p -> not p.had_bye end) do
-            # Fallback to the current player if all have had a bye
-            nil -> {player, rest}
-            found_player -> {found_player, List.delete(sorted_rest, found_player)}
-          end
-
-        {:ok, updated_player} = update_player(bye_player, %{had_bye: true})
-
-        make_pairings(remaining, pairings ++ [{updated_player, :bye}])
-    end
-  end
-
-  @doc """
-      Goes through all the players that
-      are left to match them to a player that hasnt been paired with already.
-
-  """
-
-  def find_pair(player, rest) do
-    Enum.reduce_while(rest, nil, fn potential_opponent, _acc ->
-      if Enum.member?(player.opponents, potential_opponent.id) do
-        {:cont, nil}
-      else
-        {:halt, {potential_opponent, List.delete(rest, potential_opponent)}}
+  def assign_bye(players) do
+    sorted_rest = Enum.sort_by(players, &{&1.points, &1.omw, &1.gw, &1.ogp}, :asc)
+    {bye_player, remaining} =
+      case Enum.find(sorted_rest, fn p -> not p.had_bye end) do
+        # Fallback to the current player if all have had a bye
+        nil -> players
+        found_player -> {found_player, List.delete(sorted_rest, found_player)}
       end
-    end)
+      {bye_player, remaining}
+    end
+
+
+
+    def make_pairings(players, _pairings) do
+
+      if rem(length(players), 2) == 1 do
+        {bye_player, remaining} = assign_bye(players)
+        remaining = Enum.sort_by(remaining, &{&1.points, &1.omw, &1.gw, &1.ogp}, :desc)
+        {:ok, updated_player} = update_player(bye_player, %{had_bye: true})
+        pairings = try_pairings(remaining, [])
+        pairings ++ [{updated_player, :bye}]
+      else
+        # If the number of players is even, no bye is assigned
+        sorted_players = Enum.sort_by(players, &{&1.points, &1.omw, &1.gw, &1.ogp}, :desc)
+        try_pairings(sorted_players, [])
+      end
+
+
+    end
+   def try_pairings([], pairings), do: pairings
+
+   def try_pairings([player | rest], pairings) do
+     case find_pair(player, rest) do
+       {pair, remaining} ->
+        try_pairings(remaining, [{player, pair} | pairings])
+
+       nil ->
+         # If no pair is found, backtrack to the last successful pairing
+         case backtrack_pairings(player, pairings, rest) do
+           {:ok, new_pairings, unpaired} ->
+
+             try_pairings(unpaired, new_pairings)
+
+           {:error, _message} ->
+             # No more pairings to backtrack, return the current state
+
+             handle_remaining_players([player | rest], pairings)
+         end
+
+
+     end
+   end
+   defp handle_remaining_players([last_player], pairings) do
+    # If only one player remains, assign a bye
+    [{last_player, :bye} | pairings]
   end
 
+  defp handle_remaining_players([], pairings), do: pairings
+
+  defp handle_remaining_players(players, pairings) do
+
+    try_pairings(players, pairings)
+  end
+   def backtrack_pairings(player, pairings, unpaired)do
+    case pairings do
+      [] ->
+        # No pairings to backtrack, return the current state
+        {:error, :no_pairings_to_backtrack}
+
+      [{player1, player2} | rest] ->
+        rest_full_names = Enum.map(rest, fn {player1, player2} -> {player1.user.full_name, player2.user.full_name} end)
+
+        # Remove the last pairing and return the players to the unpaired pool
+
+        updated_unpaired = [player, player1, player2 | unpaired]
+        # Check if the last pairing was a bye
+        unpaired_full_names = Enum.map(updated_unpaired, fn player -> player.user.full_name end)
+
+        updated_unpaired =
+          updated_unpaired
+          |> Enum.uniq()
+          |> Enum.sort_by(&{&1.points, &1.omw, &1.gw, &1.ogp}, :asc)
+
+
+        {:ok, rest, updated_unpaired}
+    end
+    end
+
+   @doc """
+       Goes through all the players that
+       are left to match them to a player that hasnt been paired with already.
+
+   """
+
+   def find_pair(player, rest) do
+     Enum.reduce_while(rest, nil, fn potential_opponent, _acc ->
+       if Enum.member?(player.opponents, potential_opponent.id) do
+         {:cont, nil}
+       else
+         {:halt, {potential_opponent, List.delete(rest, potential_opponent)}}
+       end
+     end)
+   end
   @doc """
 
   Finds and returns the current round  matches
