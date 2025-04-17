@@ -70,16 +70,15 @@ if config_env() == :prod do
       ip: {0, 0, 0, 0},
       port: port,
 
-      protocol_options: [idle_timeout: 30_000]
+
     ],
     force_ssl: [hsts: true],
     check_origin: [
-      "http://#{host}",
-      "http://localhost:5173",
 
+      "http://localhost:5173",
       "http://116.203.210.54",
       "http://www.mtgpula.site",
-      "http://mtgpula.site",
+
 
 
     ],
