@@ -7,7 +7,7 @@
 # General application configuration
 import Config
 
-IO.inspect(System.get_env("GUARDIAN_SECRET_KEY"), label: "GUARDIAN_SECRET_KEY")
+
 
 config :mtg_pula,
   ecto_repos: [MtgPula.Repo],

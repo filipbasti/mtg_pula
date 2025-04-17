@@ -60,7 +60,7 @@ if config_env() == :prod do
   config :mtg_pula, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
 
   config :mtg_pula, MtgPulaWeb.Endpoint,
-    url: [host: host, port: port, scheme: "https"],
+    url: [host: host, port: port, scheme: "http"],
     server: true,
     http: [
       # Enable IPv6 and bind on all interfaces.
@@ -76,7 +76,10 @@ if config_env() == :prod do
       "http://localhost:5173",
       "http://mtg_frontend:80",
       "http://116.203.210.54",
-      "http://www.mtgpula.site"
+      "http://www.mtgpula.site",
+      "http://mtgpula.site",
+
+
     ],
     secret_key_base: secret_key_base
 
