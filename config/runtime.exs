@@ -60,7 +60,7 @@ if config_env() == :prod do
   config :mtg_pula, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
 
   config :mtg_pula, MtgPulaWeb.Endpoint,
-    url: [host: host, port: port, scheme: "http"],
+    url: [host: host, port: port, scheme: "https"],
     server: true,
     http: [
       # Enable IPv6 and bind on all interfaces.
@@ -68,13 +68,15 @@ if config_env() == :prod do
       # See the documentation on https://hexdocs.pm/bandit/Bandit.html#t:options/0
       # for details about using IPv6 vs IPv4 and loopback vs public addresses.
       ip: {0, 0, 0, 0},
-      port: port
-    ],
+      port: port,
 
+      protocol_options: [idle_timeout: 30_000]
+    ],
+    force_ssl: [hsts: true],
     check_origin: [
-      "https://interface-mtgpula.onrender.com",
+      "http://#{host}",
       "http://localhost:5173",
-      "http://mtg_frontend:80",
+
       "http://116.203.210.54",
       "http://www.mtgpula.site",
       "http://mtgpula.site",
