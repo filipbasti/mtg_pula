@@ -92,4 +92,4 @@ jobs:
           docker pull ${{ secrets.DOCKER_USERNAME }}/mtg_pula:latest
           docker stop mtg_pula || true
           docker rm mtg_pula || true
-          docker run -d --name mtg_pula --env-file /tmp/.env -p 4000:4000 --network mtg_network ${{ secrets.DOCKER_USERNAME }}/mtg_pula:latest
+          docker run -d --name mtg_pula --env-file /tmp/.env -p 4000:4000 -p 4043:4043 --network mtg_network -v /etc/letsencrypt:/etc/letsencrypt:ro ${{ secrets.DOCKER_USERNAME }}/mtg_pula:latest
