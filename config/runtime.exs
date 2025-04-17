@@ -70,7 +70,7 @@ if config_env() == :prod do
       ip: {0, 0, 0, 0},
       port: port
     ],
-    force_ssl: [hsts: true],
+
     check_origin: [
       "https://interface-mtgpula.onrender.com",
       "http://localhost:5173",
