@@ -73,15 +73,14 @@ if config_env() == :prod do
 
     ],
     force_ssl: [hsts: true],
-    check_origin: [
-
-      "http://localhost:5173",
-      "http://116.203.210.54",
-      "http://www.mtgpula.site",
+    check_origin: false,
 
 
-
-    ],
+    #[
+    #"http://localhost:5173",
+    #"http://116.203.210.54",
+    #"http://www.mtgpula.site",
+    #],
     secret_key_base: secret_key_base
 
   # ## SSL Support
