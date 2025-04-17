@@ -88,7 +88,7 @@ ENV MIX_ENV="prod"
 # Only copy the final release from the build stage
 COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/mtg_pula ./
 
-USER nobody
+#USER nobody
 RUN chmod +x /app/bin/server
 # If using an environment that doesn't automatically reap zombie processes, it is
 # advised to add an init process such as tini via `apt-get install`
