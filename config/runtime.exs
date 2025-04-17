@@ -72,11 +72,11 @@ if config_env() == :prod do
 
 
     ],
-    https: [
-      port: 443,
-      certfile: "/etc/letsencrypt/live/mtgpula.site/fullchain.pem",
-      keyfile: "/etc/letsencrypt/live/mtgpula.site/privkey.pem"
-    ],
+    #https: [
+     # port: 443,
+     # certfile: "/etc/letsencrypt/live/mtgpula.site/fullchain.pem",
+      #keyfile: "/etc/letsencrypt/live/mtgpula.site/privkey.pem"
+    #],
     force_ssl: [hsts: true],
     check_origin: [
     "http://localhost:5173",

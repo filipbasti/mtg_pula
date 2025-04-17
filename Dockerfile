@@ -81,7 +81,7 @@ RUN chown nobody /app
 
 # Copy the CA certificates file to the root directory
 COPY cacert.pem /cacert.pem
-VOLUME ["/etc/letsencrypt/live"]
+
 # set runner ENV
 ENV MIX_ENV="prod"
 
