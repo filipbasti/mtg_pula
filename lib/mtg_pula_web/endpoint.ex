@@ -47,7 +47,8 @@ defmodule MtgPulaWeb.Endpoint do
     origins: [
       "https://interface-mtgpula.onrender.com",
       "http://localhost:5173",
-      "http://116.203.210.54"
+      "http://116.203.210.54",
+      "http://www.mtgpula.site/"
     ],
     max_age: 86400,
     allow_headers: :all,
