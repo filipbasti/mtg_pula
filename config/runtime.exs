@@ -76,7 +76,7 @@ if config_env() == :prod do
       "http://localhost:5173",
       "http://mtg_frontend:80",
       "http://116.203.210.54",
-      "http://www.mtgpula.site/"
+      "http://www.mtgpula.site"
     ],
     secret_key_base: secret_key_base
 
