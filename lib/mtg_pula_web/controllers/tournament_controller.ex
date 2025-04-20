@@ -91,7 +91,7 @@ defmodule MtgPulaWeb.TournamentController do
         raise ErrorResponse.NotFound, message: "Pairings for this tournament not found"
 
       {_tournament, pairings} ->
-        render(conn, :show_matches, pairings: pairings)
+        render(conn, :show_matches_deck, pairings: pairings)
     end
   end
 end
