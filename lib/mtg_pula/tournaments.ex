@@ -799,8 +799,9 @@ defmodule MtgPula.Tournaments do
   end
   def tournament_matches(join_code) do
     try do
+      IO.inspect(join_code)
       tournament = get_tournament_by_join_code(join_code)
-
+      IO.inspect(tournament)
       q =
         from m in Match,
           where:  m.tournament_id == ^tournament.id,
@@ -810,7 +811,9 @@ defmodule MtgPula.Tournaments do
 
       {:ok, matches}
     rescue
-      _e -> {:error, :not_found}
+      e ->
+        IO.inspect(e)
+        {:error, :not_found}
     end
   end
 end
