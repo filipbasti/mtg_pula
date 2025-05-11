@@ -49,7 +49,8 @@ defmodule MtgPulaWeb.Endpoint do
       "http://localhost:5173",
       "http://116.203.210.54",
       "http://www.mtgpula.site",
-      "https://www.mtgpula.site"
+      "https://www.mtgpula.site",
+  	  "https://mtgpula.site"
     ],
     max_age: 86400,
     allow_headers: :all,
