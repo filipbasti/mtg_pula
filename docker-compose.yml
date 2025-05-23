@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: mtg_user
+      POSTGRES_PASSWORD: test
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"  # Optional: expose DB for debugging
+
+  app:
+    build:
+      context: .  # Make sure your Dockerfile is here
+      dockerfile: Dockerfile.dev
+    environment:
+      MIX_ENV: dev
+      DATABASE_URL: postgres://mtg_user:test@db:5432
+      SECRET_KEY_BASE:  J66dLPAn57iakCEGc0bW+Aqs135qZxJiPCHSvl0L9jPAm0NnBpG7y9zwbBVGB9fN # Set in .env or exported in your shell
+      GUARDIAN_SECRET_KEY: J66dLPAn57iakCEGc0bW+Aqs135qZxJiPCHSvl0L9jPAm0NnBpG7y9zwbBVGB9fN
+
+    depends_on:
+      - db
+    
+    ports:
+      - "4000:4000"  # Adjust if your app listens on another port
+    command: >
+      sh -c "/app/bin/mtg_pula eval 'MtgPula.Release.migrate' && /app/bin/mtg_pula start"
+    
+volumes:
+  pgdata:

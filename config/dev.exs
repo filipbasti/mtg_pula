@@ -2,10 +2,12 @@ import Config
 
 # Configure your database
 config :mtg_pula, MtgPula.Repo,
-  username: "postgres",
-  password: "javolimkrafnu123",
-  hostname: "192.168.0.4",
-  database: "mtg_pula_dev",
+  url: System.get_env("DATABASE_URL"),
+   username: "mtg_user",
+  password: "test",
+  hostname: "db",
+  database: "mtg_db",
+  port: 5432,
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
@@ -20,12 +22,13 @@ config :mtg_pula, MtgPula.Repo,
 config :mtg_pula, MtgPulaWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
-  http: [ip: {127, 0, 0, 1}, port: 4000],
+  http: [ip: {0, 0, 0, 0}, port: 4000],
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
   secret_key_base: "J66dLPAn57iakCEGc0bW+Aqs135qZxJiPCHSvl0L9jPAm0NnBpG7y9zwbBVGB9fN",
-  watchers: []
+  watchers: [],
+  server: true
 
 # ## SSL Support
 #
