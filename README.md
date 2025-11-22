@@ -8,7 +8,7 @@ MTG Pula is a platform for managing Magic: The Gathering tournaments.
 - Real-time updates via Phoenix Channels
 
 ## Documentation
-The full API documentation is available [here](https://filipbasti.github.io/mtg_pula/readme.html).
+The full API documentation is available [here](https://filipbasti.github.io/mtg_pula/readme-exdoc.html).
 
 ## Getting Started
 To run the project locally:
