@@ -16,9 +16,8 @@ ARG ELIXIR_VERSION=1.17.3
 ARG OTP_VERSION=27.1.3
 ARG DEBIAN_VERSION=bullseye
 
-ARG BUILDER_IMAGE="hexpm/elixir:${ELIXIR_VERSION}-erlang-${OTP_VERSION}-debian-${DEBIAN_VERSION}-slim"
+ARG BUILDER_IMAGE="hexpm/elixir:${ELIXIR_VERSION}-erlang-${OTP_VERSION}-debian-${DEBIAN_VERSION}"
 ARG RUNNER_IMAGE="debian:${DEBIAN_VERSION}-slim"
-
 FROM ${BUILDER_IMAGE} as builder
 
 # install build dependencies
