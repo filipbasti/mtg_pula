@@ -69,5 +69,5 @@ jobs:
           tags: ${{ secrets.DOCKER_USERNAME }}/mtg_pula:armv7
           platforms: linux/arm/v7
           build-args: |
-            BUILDER_IMAGE=arm32v7/elixir:1.18-otp-27
+            BUILDER_IMAGE=arm32v7/elixir:1.14-otp-26
             RUNNER_IMAGE=arm32v7/debian:bullseye
