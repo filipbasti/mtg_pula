@@ -13,7 +13,7 @@
 #
 # Multi-arch base images (support amd64, arm64, arm/v7)
 
-ARG BUILDER_IMAGE="arm32v7/elixir:latest"
+ARG BUILDER_IMAGE="arm32v7/elixir:1.18-otp-27"
 ARG RUNNER_IMAGE="arm32v7/debian:bullseye-20251117-slim"
 FROM ${BUILDER_IMAGE} as builder
 
