@@ -12,11 +12,8 @@
 #   - Ex: hexpm/elixir:1.17.3-erlang-27.1.3-debian-bullseye-20250224-slim
 #
 # Multi-arch base images (support amd64, arm64, arm/v7)
-ARG ELIXIR_VERSION=1.17.3
-ARG OTP_VERSION=27.1.3
-
-ARG BUILDER_IMAGE="hexpm/elixir:${ELIXIR_VERSION}-erlang-${OTP_VERSION}-ubuntu-jammy-20240701"
-ARG RUNNER_IMAGE="ubuntu:jammy"
+ARG BUILDER_IMAGE="hexpm/elixir:1.14.3-erlang-25.3-debian-bullseye-20230227-slim"
+ARG RUNNER_IMAGE="debian:bullseye-20230522-slim"
 FROM ${BUILDER_IMAGE} as builder
 
 # install build dependencies
