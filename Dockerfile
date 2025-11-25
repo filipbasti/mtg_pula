@@ -12,9 +12,15 @@
 #   - Ex: hexpm/elixir:1.17.3-erlang-27.1.3-debian-bullseye-20250224-slim
 #
 # Multi-arch base images (support amd64, arm64, arm/v7)
-ARG BUILDER_IMAGE=arm32v7/elixir:1.14-otp-26
-ARG RUNNER_IMAGE=arm32v7/debian:bullseye
-FROM ${BUILDER_IMAGE} as builder
+
+# --- CHANGE 1: Use specific, stable, multi-arch tags for the builder ---
+# Using the standard 'hexpm/elixir' repo which supports multi-arch including armv7
+ARG BUILDER_IMAGE=hexpm/elixir:1.17.3-erlang-27.1.3-debian-bullseye-slim
+
+# --- CHANGE 2: Use standard 'debian' repo for runner, supports multi-arch automatically ---
+ARG RUNNER_IMAGE=debian:bullseye-slim
+
+FROM ${BUILDER_IMAGE} AS builder
 
 # install build dependencies
 RUN apt-get update -y && apt-get install -y build-essential git \
@@ -23,7 +29,7 @@ RUN apt-get update -y && apt-get install -y build-essential git \
 # prepare build dir
 WORKDIR /app
 
-# Copy the CA certificates file to the root directory
+# Copy the CA certificates file to the root directory (Ensure this file exists in your local directory)
 COPY cacert.pem /cacert.pem
 
 # install hex + rebar
@@ -36,7 +42,7 @@ ENV MIX_ENV="prod"
 # install mix dependencies
 COPY mix.exs mix.lock ./
 RUN mix deps.get --only $MIX_ENV
-RUN mkdir config
+RUN mkdir -p config # Ensure config dir creation is robust
 
 # copy compile-time config files before we compile dependencies
 # to ensure any relevant config change will trigger the dependencies
@@ -61,8 +67,9 @@ RUN mix release
 # the compiled release and other runtime necessities
 FROM ${RUNNER_IMAGE}
 
+# --- CHANGE 3: Added curl to runtime dependencies, often necessary ---
 RUN apt-get update -y && \
-  apt-get install -y libstdc++6 openssl libncurses5 locales ca-certificates \
+  apt-get install -y libstdc++6 openssl libncurses5 locales ca-certificates curl \
   && apt-get clean && rm -f /var/lib/apt/lists/*_*
 
 # Set the locale
@@ -86,9 +93,11 @@ COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/mtg_pula ./
 
 #USER nobody
 RUN chmod +x /app/bin/server
-# If using an environment that doesn't automatically reap zombie processes, it is
-# advised to add an init process such as tini via `apt-get install`
-# above and adding an entrypoint. See https://github.com/krallin/tini for details
-# ENTRYPOINT ["/tini", "--"]
 
+# Expose the port your Phoenix app runs on (usually 4000)
+EXPOSE 4000
+
+# Use tini as an init process to handle signals and zombie processes correctly
+RUN apt-get update -y && apt-get install -y tini && apt-get clean && rm -f /var/lib/apt/lists/*_*
+ENTRYPOINT ["/usr/bin/tini", "--"]
 CMD ["/app/bin/server"]
